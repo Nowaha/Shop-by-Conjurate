@@ -68,8 +68,10 @@ public class Input implements Listener
             String fullmsg = event.getMessage();
             final String msg = ChatColor.stripColor(event.getMessage());
             if (msg.equalsIgnoreCase("-cancel")) {
-                Editor.editItem(player, new Manager().getPage(this.page), this.slot);
-                this.destroy();
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    Editor.editItem(player, new Manager().getPage(this.page), this.slot);
+                    this.destroy();
+                });
                 return;
             }
             if (msg.equalsIgnoreCase("&&")) {
@@ -78,10 +80,7 @@ public class Input implements Listener
             final Page page = this.getPage();
             if (page != null) {
                 final PlayerInputEvent e = new PlayerInputEvent(player, page, this.id, fullmsg, this.slot, this);
-                Bukkit.getServer().getPluginManager().callEvent((Event)e);
-                if (e.isCancelled()) {
-                    event.setCancelled(true);
-                }
+                Bukkit.getScheduler().runTask(plugin, () -> Bukkit.getServer().getPluginManager().callEvent(e));
             }
             else {
                 this.destroy();

@@ -1,22 +1,26 @@
 package conj.Shop.data;
 
+import conj.Shop.control.Manager;
+import conj.Shop.enums.Config;
+import conj.Shop.tools.XMaterial;
 import org.bukkit.ChatColor;
-import org.bukkit.event.player.*;
-import org.bukkit.*;
-import net.md_5.bungee.api.*;
-import conj.Shop.enums.*;
-import conj.Shop.control.*;
-import org.bukkit.block.*;
-import org.bukkit.event.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.block.*;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 public class Sign implements Listener
 {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void interactSign(final PlayerInteractEvent event) {
         final Block block = event.getClickedBlock();
-        if (event.getAction().equals((Object)Action.RIGHT_CLICK_BLOCK) && block != null && (block.getType().equals((Object)Material.WALL_SIGN) || block.getType().equals((Object)Material.SIGN))) {
+        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block != null &&
+            (XMaterial.isSign(block.getType()) || XMaterial.isWallSign(block.getType()))) {
             final org.bukkit.block.Sign sign = (org.bukkit.block.Sign)block.getState();
             final String line = sign.getLine(0);
             final String pagename = sign.getLine(1);
@@ -34,7 +38,8 @@ public class Sign implements Listener
     public void interactSign(final BlockBreakEvent event) {
         final Player player = event.getPlayer();
         final Block block = event.getBlock();
-        if (block.getType().equals((Object)Material.WALL_SIGN) || block.getType().equals((Object)Material.SIGN)) {
+
+        if (XMaterial.isSign(block.getType()) || XMaterial.isWallSign(block.getType())) {
             final org.bukkit.block.Sign sign = (org.bukkit.block.Sign)block.getState();
             if (sign.getLine(0) != null && sign.getLine(0).equalsIgnoreCase(Config.SIGN_TAG.toString()) && !player.hasPermission("shop.sign.break")) {
                 event.setCancelled(true);

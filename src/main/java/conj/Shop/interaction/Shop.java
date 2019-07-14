@@ -93,7 +93,7 @@ public class Shop implements Listener
         final PageSlot ps = page.getPageSlot(slot);
         if (event.getPageData().equals(PageData.SHOP)) {
             if (event.isTopInventory()) {
-                if (!event.getItem().getType().equals((Object)Material.AIR)) {
+                if (event.getItem() != null && !event.getItem().getType().equals((Object)Material.AIR)) {
                     if (!ps.canSee(player)) {
                         return;
                     }
@@ -244,7 +244,7 @@ public class Shop implements Listener
         final int slot = event.getSlot();
         final Page page = event.getPage();
         if (event.getPageData().equals(PageData.PURCHASE_ITEM) || event.getPageData().equals(PageData.SELL_ITEM)) {
-            if (event.getItem().getType().equals((Object)Material.AIR)) {
+            if (event.getItem() == null || event.getItem().getType().equals((Object)Material.AIR)) {
                 return;
             }
             if (event.isTopInventory()) {
@@ -446,10 +446,10 @@ public class Shop implements Listener
         }
         Debug.log("Setup BUY GUI affordable took: " + Manager.getDuration(start));
         final Page buypage = Manager.get().getPage(Config.PURCHASE_GUI.toString());
-        final Inventory mainInv = this.getBuyInventory().getInventory();
+        final InventoryCreator mainInv = this.getBuyInventory();
         final String title = Placeholder.placehold(player, Placeholder.placehold(player, mainInv.getTitle(), page, slot, amount, status, true));
         Debug.log("Get BUY GUI inventory took: " + Manager.getDuration(start));
-        final Inventory viewInv = Placeholder.placehold(player, mainInv, page, buypage, slot, amount, status, true);
+        final Inventory viewInv = Placeholder.placehold(player, mainInv.getInventory(), page, buypage, slot, amount, status, true);
         Debug.log("Placehold BUY GUI inventory took: " + Manager.getDuration(start));
         final GUI gui = new GUI((Plugin)Initiate.getPlugin((Class)Initiate.class), PageData.PURCHASE_ITEM, viewInv, page);
         gui.setTitle(title);
@@ -466,19 +466,19 @@ public class Shop implements Listener
         final long start = System.currentTimeMillis();
         Debug.log("Setup TRADE GUI affordable took: " + Manager.getDuration(start));
         final Page tradepage = Manager.get().getPage(Config.TRADE_GUI.toString());
-        final Inventory mainInv = this.getTradeInventory().getInventory();
+        final InventoryCreator mainInv = this.getBuyInventory();
         final String title = Placeholder.placehold(player, Placeholder.placehold(player, mainInv.getTitle(), page, slot));
         final PageSlot ps = page.getPageSlot(slot);
         if (ps != null) {
             for (final ItemStack i : ps.getItems()) {
-                if (mainInv.firstEmpty() == -1) {
+                if (mainInv.getInventory().firstEmpty() == -1) {
                     break;
                 }
-                mainInv.setItem(mainInv.firstEmpty(), i);
+                mainInv.setItem(mainInv.getInventory().firstEmpty(), i);
             }
         }
         Debug.log("Get TRADE GUI inventory took: " + Manager.getDuration(start));
-        final Inventory viewInv = Placeholder.placehold(player, mainInv, page, tradepage, slot, 0, "confirmed", true);
+        final Inventory viewInv = Placeholder.placehold(player, mainInv.getInventory(), page, tradepage, slot, 0, "confirmed", true);
         Debug.log("Placehold TRADE GUI inventory took: " + Manager.getDuration(start));
         final GUI gui = new GUI((Plugin)Initiate.getPlugin((Class)Initiate.class), PageData.TRADE_ITEM, viewInv, page);
         gui.setTitle(title);
@@ -498,9 +498,9 @@ public class Shop implements Listener
             amount = pi.getAmount(page.getInventory().getItem(slot));
         }
         final Page sellpage = Manager.get().getPage(Config.SELL_GUI.toString());
-        final Inventory mainInv = this.getSellInventory().getInventory();
+        final InventoryCreator mainInv = this.getBuyInventory();
         final String title = Placeholder.placehold(player, Placeholder.placehold(player, mainInv.getTitle(), page, slot, amount, status, false));
-        final Inventory viewInv = Placeholder.placehold(player, mainInv, page, sellpage, slot, amount, status, false);
+        final Inventory viewInv = Placeholder.placehold(player, mainInv.getInventory(), page, sellpage, slot, amount, status, false);
         final GUI gui = new GUI((Plugin)Initiate.getPlugin((Class)Initiate.class), PageData.SELL_ITEM, viewInv, page);
         gui.setTitle(title);
         gui.addPass("guipage", Config.SELL_GUI.toString());

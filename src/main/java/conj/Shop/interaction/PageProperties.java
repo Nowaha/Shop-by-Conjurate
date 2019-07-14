@@ -125,7 +125,7 @@ public class PageProperties implements Listener
             if (page.getFill() != null) {
                 inv.setItem(13, page.getFill());
             }
-            inv.setItem(22, new ItemStack(Material.SIGN));
+            inv.setItem(22, new ItemStack(XMaterial.matchXMaterial("SIGN").parseMaterial()));
             inv.setDisplay(22, ChatColor.GREEN + "Click an item in your inventory");
             inv.addLore(22, ChatColor.GREEN + "to set it as the fill item");
             inv.setBlank(Material.BLUE_STAINED_GLASS_PANE, 11);

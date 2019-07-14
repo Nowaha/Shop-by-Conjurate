@@ -296,4 +296,8 @@ public class InventoryCreator
         }
         return false;
     }
+
+    public String getTitle() {
+        return title;
+    }
 }
