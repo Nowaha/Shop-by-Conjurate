@@ -1,60 +1,22 @@
 package conj.Shop.interaction;
 
-import conj.Shop.events.*;
-import conj.Shop.enums.*;
-import org.bukkit.entity.*;
-import conj.Shop.data.*;
-import org.bukkit.inventory.*;
-import org.bukkit.event.*;
-import conj.Shop.base.*;
-import org.bukkit.plugin.*;
-import org.bukkit.*;
-import conj.Shop.tools.*;
-import org.apache.commons.lang.*;
+import conj.Shop.base.Initiate;
+import conj.Shop.data.Page;
+import conj.Shop.enums.PageData;
+import conj.Shop.events.PageClickEvent;
+import conj.Shop.tools.GUI;
+import conj.Shop.tools.InventoryCreator;
+import conj.Shop.tools.ItemCreator;
+import org.apache.commons.lang.WordUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 public class PageProperties implements Listener {
-    @EventHandler
-    public void PageviewClick(final PageClickEvent event) {
-        final Player player = event.getPlayer();
-        final int slot = event.getSlot();
-        final Page page = event.getPage();
-        final ItemStack item = event.getItem();
-        if (event.getPageData().equals(PageData.PAGE_PROPERTIES)) {
-            if (event.isTopInventory()) {
-                if (!page.isGUI()) {
-                    if (slot == 0) {
-                        open(player, page, 2);
-                    } else if (slot == 1) {
-                        page.setCloses(!page.closesOnTransaction());
-                        open(player, page, 1);
-                    } else if (slot == 2) {
-                        page.setInstantConfirm(!page.instantConfirms());
-                        open(player, page, 1);
-                    } else if (slot == 3) {
-                        page.setHideAffordability(!page.hidesAffordability());
-                        open(player, page, 1);
-                    } else if (slot == 4) {
-                        page.setDefaultQuantity((page.getDefaultQuantity() == 0) ? 1 : 0);
-                        open(player, page, 1);
-                    } else if (slot == 8) {
-                        page.gui = !page.isGUI();
-                        open(player, page, 1);
-                    }
-                } else if (slot == 0) {
-                    page.gui = !page.isGUI();
-                    open(player, page, 1);
-                }
-            }
-        } else if (event.getPageData().equals(PageData.PAGE_PROPERTIES_FILL_SLOTS)) {
-            if (!event.isTopInventory()) {
-                page.setFill(item);
-                open(player, page, 2);
-            } else if (event.isTopInventory() && slot == 4) {
-                open(player, page, 1);
-            }
-        }
-    }
-
     public static void open(final Player player, final Page page, final int id) {
         if (page == null || player == null) {
             return;
@@ -119,6 +81,48 @@ public class PageProperties implements Listener {
             inv.addLore(22, ChatColor.GREEN + "to set it as the fill item");
             inv.setBlank(Material.BLUE_STAINED_GLASS_PANE, 11);
             gui.open(player);
+        }
+    }
+
+    @EventHandler
+    public void PageviewClick(final PageClickEvent event) {
+        final Player player = event.getPlayer();
+        final int slot = event.getSlot();
+        final Page page = event.getPage();
+        final ItemStack item = event.getItem();
+        if (event.getPageData().equals(PageData.PAGE_PROPERTIES)) {
+            if (event.isTopInventory()) {
+                if (!page.isGUI()) {
+                    if (slot == 0) {
+                        open(player, page, 2);
+                    } else if (slot == 1) {
+                        page.setCloses(!page.closesOnTransaction());
+                        open(player, page, 1);
+                    } else if (slot == 2) {
+                        page.setInstantConfirm(!page.instantConfirms());
+                        open(player, page, 1);
+                    } else if (slot == 3) {
+                        page.setHideAffordability(!page.hidesAffordability());
+                        open(player, page, 1);
+                    } else if (slot == 4) {
+                        page.setDefaultQuantity((page.getDefaultQuantity() == 0) ? 1 : 0);
+                        open(player, page, 1);
+                    } else if (slot == 8) {
+                        page.gui = !page.isGUI();
+                        open(player, page, 1);
+                    }
+                } else if (slot == 0) {
+                    page.gui = !page.isGUI();
+                    open(player, page, 1);
+                }
+            }
+        } else if (event.getPageData().equals(PageData.PAGE_PROPERTIES_FILL_SLOTS)) {
+            if (!event.isTopInventory()) {
+                page.setFill(item);
+                open(player, page, 2);
+            } else if (event.isTopInventory() && slot == 4) {
+                open(player, page, 1);
+            }
         }
     }
 }

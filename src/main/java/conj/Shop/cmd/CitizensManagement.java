@@ -1,24 +1,24 @@
 package conj.Shop.cmd;
 
+import conj.Shop.control.Control;
+import conj.Shop.control.Manager;
+import conj.Shop.enums.Config;
+import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import org.bukkit.entity.*;
-import org.bukkit.*;
-import conj.Shop.enums.*;
-import net.citizensnpcs.api.*;
-import org.bukkit.command.*;
-import conj.Shop.control.*;
-import net.citizensnpcs.api.npc.*;
-import java.util.*;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public class CitizensManagement
-{
+import java.util.List;
+
+public class CitizensManagement {
     public void run(final Player player, final Command cmd, final String label, final String[] args) {
         final Manager manager = new Manager();
         if (args.length < 2) {
             if (!Manager.getAvailableCommands(player, "citizen").isEmpty()) {
                 player.sendMessage(ChatColor.GRAY + "/shop citizen help");
-            }
-            else {
+            } else {
                 player.sendMessage(Config.PERMISSION_ERROR.toString());
             }
             return;
@@ -30,7 +30,7 @@ public class CitizensManagement
                     player.sendMessage(Config.PERMISSION_ERROR.toString());
                     return;
                 }
-                final NPC npc = CitizensAPI.getDefaultNPCSelector().getSelected((CommandSender)player);
+                final NPC npc = CitizensAPI.getDefaultNPCSelector().getSelected((CommandSender) player);
                 if (npc != null) {
                     if (args.length > 3) {
                         final String sub = args[2];
@@ -47,8 +47,7 @@ public class CitizensManagement
                             final boolean added = manager.addCitizenPermission(npc.getId(), text);
                             player.sendMessage(new String(added ? (ChatColor.GREEN + "Added permission " + text + " to " + npc.getFullName()) : (ChatColor.RED + "Failed to add permission " + text + " to " + npc.getFullName())));
                             return;
-                        }
-                        else if (sub.equalsIgnoreCase("remove")) {
+                        } else if (sub.equalsIgnoreCase("remove")) {
                             if (!player.hasPermission("shop.citizen.permission.remove")) {
                                 player.sendMessage(Config.PERMISSION_ERROR.toString());
                                 return;
@@ -62,8 +61,7 @@ public class CitizensManagement
                             player.sendMessage(new String(removed ? (ChatColor.GREEN + "Removed permission " + text + " from " + npc.getFullName()) : (ChatColor.RED + "Failed to remove permission " + text + " from " + npc.getFullName())));
                             return;
                         }
-                    }
-                    else if (args.length == 3) {
+                    } else if (args.length == 3) {
                         final String sub = args[2];
                         if (sub.equalsIgnoreCase("clear")) {
                             if (!player.hasPermission("shop.citizen.permission.clear")) {
@@ -83,8 +81,7 @@ public class CitizensManagement
                     return;
                 }
                 player.sendMessage(ChatColor.RED + "You need to select an NPC");
-            }
-            else if (command.equalsIgnoreCase("help")) {
+            } else if (command.equalsIgnoreCase("help")) {
                 final List<String> help = Manager.getAvailableCommands(player, "citizen");
                 if (help.isEmpty()) {
                     player.sendMessage(Config.PERMISSION_ERROR.toString());
@@ -94,8 +91,8 @@ public class CitizensManagement
                 if (args.length == 3) {
                     try {
                         index = Integer.parseInt(args[2]);
+                    } catch (NumberFormatException ex) {
                     }
-                    catch (NumberFormatException ex) {}
                 }
                 final String header = ChatColor.GRAY + "  === " + ChatColor.DARK_GREEN + "Shop Citizen Help" + ChatColor.GRAY + " === " + ChatColor.DARK_GREEN + "Page " + ChatColor.GREEN + "%index%" + ChatColor.GRAY + "/" + ChatColor.GREEN + "%size%" + ChatColor.GRAY + " ===";
                 Control.list(player, help, index, header, 7);
@@ -103,8 +100,7 @@ public class CitizensManagement
             }
             if (!Manager.getAvailableCommands(player, "citizen").isEmpty()) {
                 player.sendMessage(ChatColor.GRAY + "/shop citizen help");
-            }
-            else {
+            } else {
                 player.sendMessage(Config.PERMISSION_ERROR.toString());
             }
             return;
@@ -113,7 +109,7 @@ public class CitizensManagement
             player.sendMessage(Config.PERMISSION_ERROR.toString());
             return;
         }
-        final NPC npc = CitizensAPI.getDefaultNPCSelector().getSelected((CommandSender)player);
+        final NPC npc = CitizensAPI.getDefaultNPCSelector().getSelected((CommandSender) player);
         if (npc == null) {
             player.sendMessage(ChatColor.RED + "You need to select an NPC");
             return;

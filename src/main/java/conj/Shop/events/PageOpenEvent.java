@@ -1,14 +1,21 @@
 package conj.Shop.events;
 
-import org.bukkit.event.*;
-import conj.Shop.data.*;
-import conj.Shop.tools.*;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
-import conj.Shop.enums.*;
+import conj.Shop.data.Page;
+import conj.Shop.enums.PageData;
+import conj.Shop.tools.GUI;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.Inventory;
 
 public class PageOpenEvent extends Event implements Cancellable {
     private static final HandlerList handlers;
+
+    static {
+        handlers = new HandlerList();
+    }
+
     private Page page;
     private GUI gui;
     private Player player;
@@ -17,10 +24,6 @@ public class PageOpenEvent extends Event implements Cancellable {
     private boolean cancelled;
     private PageData pagedata;
 
-    static {
-        handlers = new HandlerList();
-    }
-
     public PageOpenEvent(final Player player, final PageData pagedata, final GUI gui, final Page page, final int slot, final Inventory inventory) {
         this.page = page;
         this.slot = slot;
@@ -28,6 +31,10 @@ public class PageOpenEvent extends Event implements Cancellable {
         this.gui = gui;
         this.pagedata = pagedata;
         this.inventory = inventory;
+    }
+
+    public static HandlerList getHandlerList() {
+        return PageOpenEvent.handlers;
     }
 
     public Page getPage() {
@@ -55,10 +62,6 @@ public class PageOpenEvent extends Event implements Cancellable {
     }
 
     public HandlerList getHandlers() {
-        return PageOpenEvent.handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return PageOpenEvent.handlers;
     }
 

@@ -1,31 +1,36 @@
 package conj.Shop.base;
 
-import org.bukkit.plugin.java.*;
-import conj.UA.api.files.*;
-import net.milkbowl.vault.economy.*;
-import net.milkbowl.vault.permission.*;
-import net.milkbowl.vault.chat.*;
+import conj.Shop.auto.Autobackup;
+import conj.Shop.auto.Autosave;
+import conj.Shop.control.Control;
+import conj.Shop.data.Page;
+import conj.Shop.data.Sign;
+import conj.Shop.data.Update;
+import conj.Shop.enums.Config;
+import conj.Shop.interaction.Editor;
+import conj.Shop.interaction.PageProperties;
+import conj.Shop.interaction.Shop;
+import conj.Shop.interaction.TradeEditor;
+import conj.Shop.tools.Debug;
+import conj.Shop.tools.NPCAddon;
+import conj.Shop.tools.PlaceholderAddon;
+import conj.UA.api.files.ShopFile;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.trait.TraitInfo;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.*;
-
-import conj.Shop.control.*;
-import org.bukkit.command.*;
-import org.bukkit.event.*;
-import conj.Shop.interaction.*;
-
-import java.io.*;
-
-import conj.Shop.enums.*;
-import conj.Shop.data.*;
-import org.bukkit.*;
-import net.citizensnpcs.api.*;
-import conj.Shop.tools.*;
-import net.citizensnpcs.api.trait.*;
-import conj.Shop.auto.*;
-
-import java.util.*;
-
-import org.bukkit.plugin.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 public class Initiate extends JavaPlugin {
     public static ShopFile sf;

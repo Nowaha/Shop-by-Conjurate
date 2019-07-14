@@ -1,9 +1,10 @@
 package conj.Shop.tools;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class StringUtil
-{
+public class StringUtil {
     public static String toString(final List<String> list) {
         if (list == null) {
             return null;
@@ -14,7 +15,7 @@ public class StringUtil
         }
         return string;
     }
-    
+
     public static List<String> fromString(final String string) {
         if (string == null) {
             return null;

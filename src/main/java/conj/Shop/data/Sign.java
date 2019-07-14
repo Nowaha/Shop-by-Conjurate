@@ -1,15 +1,17 @@
 package conj.Shop.data;
 
+import conj.Shop.control.Manager;
+import conj.Shop.enums.Config;
 import org.bukkit.ChatColor;
-import org.bukkit.event.player.*;
-import org.bukkit.*;
-import net.md_5.bungee.api.*;
-import conj.Shop.enums.*;
-import conj.Shop.control.*;
-import org.bukkit.block.*;
-import org.bukkit.event.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.block.*;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 public class Sign implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)

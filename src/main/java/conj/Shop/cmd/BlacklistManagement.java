@@ -1,21 +1,23 @@
 package conj.Shop.cmd;
 
-import org.bukkit.entity.*;
-import org.bukkit.command.*;
-import conj.Shop.enums.*;
-import conj.Shop.control.*;
-import org.bukkit.*;
-import java.util.*;
+import conj.Shop.control.Control;
+import conj.Shop.control.Manager;
+import conj.Shop.enums.Config;
+import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.entity.Player;
 
-public class BlacklistManagement
-{
+import java.util.ArrayList;
+import java.util.List;
+
+public class BlacklistManagement {
     public void run(final Player player, final Command cmd, final String label, final String[] args) {
         final Manager manager = new Manager();
         if (args.length < 2) {
             if (!Manager.getAvailableCommands(player, "blacklist").isEmpty()) {
                 player.sendMessage(ChatColor.GRAY + "/shop blacklist help");
-            }
-            else {
+            } else {
                 player.sendMessage(Config.PERMISSION_ERROR.toString());
             }
             return;
@@ -33,8 +35,7 @@ public class BlacklistManagement
             }
             manager.blacklistAdd(world.getName());
             player.sendMessage(ChatColor.GREEN + world.getName() + " has been added to the blacklist");
-        }
-        else {
+        } else {
             if (!command.equalsIgnoreCase("remove")) {
                 if (command.equalsIgnoreCase("list")) {
                     if (!player.hasPermission("shop.blacklist.list")) {
@@ -45,8 +46,8 @@ public class BlacklistManagement
                     if (args.length == 3) {
                         try {
                             index = Integer.parseInt(args[2]);
+                        } catch (NumberFormatException ex) {
                         }
-                        catch (NumberFormatException ex) {}
                     }
                     final String header = ChatColor.GRAY + "  === " + ChatColor.DARK_GREEN + "Shop Blacklist" + ChatColor.GRAY + " === " + ChatColor.DARK_GREEN + "Page " + ChatColor.GREEN + "%index%" + ChatColor.GRAY + "/" + ChatColor.GREEN + "%size%" + ChatColor.GRAY + " ===";
                     final List<String> help = new ArrayList<String>();
@@ -54,8 +55,7 @@ public class BlacklistManagement
                         help.add(ChatColor.GRAY + "- " + ChatColor.GOLD + world2);
                     }
                     Control.list(player, help, index, header, 9);
-                }
-                else if (command.equalsIgnoreCase("help")) {
+                } else if (command.equalsIgnoreCase("help")) {
                     final List<String> help2 = Manager.getAvailableCommands(player, "blacklist");
                     if (help2.isEmpty()) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
@@ -65,8 +65,8 @@ public class BlacklistManagement
                     if (args.length == 3) {
                         try {
                             index2 = Integer.parseInt(args[2]);
+                        } catch (NumberFormatException ex2) {
                         }
-                        catch (NumberFormatException ex2) {}
                     }
                     final String header2 = ChatColor.GRAY + "  === " + ChatColor.DARK_GREEN + "Shop Blacklist Help" + ChatColor.GRAY + " === " + ChatColor.DARK_GREEN + "Page " + ChatColor.GREEN + "%index%" + ChatColor.GRAY + "/" + ChatColor.GREEN + "%size%" + ChatColor.GRAY + " ===";
                     Control.list(player, help2, index2, header2, 7);

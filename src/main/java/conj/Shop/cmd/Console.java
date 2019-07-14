@@ -1,19 +1,16 @@
 package conj.Shop.cmd;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.*;
-import conj.Shop.control.*;
-import conj.Shop.enums.*;
-import org.bukkit.entity.*;
-import conj.Shop.tools.*;
-import net.md_5.bungee.api.*;
-import conj.Shop.base.*;
-import conj.Shop.data.*;
+import conj.Shop.base.Initiate;
+import conj.Shop.control.Manager;
+import conj.Shop.data.Page;
+import conj.Shop.enums.Config;
+import conj.Shop.tools.Placeholder;
 import org.bukkit.*;
-import java.util.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public class Console
-{
+public class Console {
     public boolean run(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         final Manager manager = new Manager();
         final int length = args.length;
@@ -37,8 +34,7 @@ public class Console
                         return true;
                     }
                 }
-            }
-            else if (command.equalsIgnoreCase("page")) {
+            } else if (command.equalsIgnoreCase("page")) {
                 if (!sender.hasPermission("shop.console.page")) {
                     sender.sendMessage(Config.PERMISSION_ERROR.toString());
                     return true;
@@ -55,8 +51,7 @@ public class Console
                         }
                         return true;
                     }
-                }
-                else if (args.length == 6) {
+                } else if (args.length == 6) {
                     final String sub = args[1];
                     if (sub.equalsIgnoreCase("move")) {
                         final String pagename2 = args[2];
@@ -65,29 +60,25 @@ public class Console
                         try {
                             from = Integer.parseInt(args[3]);
                             to = Integer.parseInt(args[4]);
-                        }
-                        catch (NumberFormatException ne) {
+                        } catch (NumberFormatException ne) {
                             return true;
                         }
                         final Page page = manager.getPage(pagename2);
                         if (page != null) {
                             if (args[5].equalsIgnoreCase("soft")) {
                                 page.moveItemSoft(from, to);
-                            }
-                            else if (args[5].equalsIgnoreCase("hard")) {
+                            } else if (args[5].equalsIgnoreCase("hard")) {
                                 page.moveItem(from, to);
                             }
                             page.updateViewers(true);
                         }
                     }
                 }
-            }
-            else if (command.equalsIgnoreCase("help")) {
+            } else if (command.equalsIgnoreCase("help")) {
                 if (!(sender instanceof Player)) {
                     return true;
                 }
-            }
-            else {
+            } else {
                 if (command.equalsIgnoreCase("teleport")) {
                     if (args.length < 6) {
                         return false;
@@ -117,11 +108,10 @@ public class Console
                         if (args.length >= 8) {
                             pitch = Float.parseFloat(args[7]);
                         }
-                        final Location location = new Location(world, x, y, z, yaw - 180.0f, (float)pitch);
+                        final Location location = new Location(world, x, y, z, yaw - 180.0f, (float) pitch);
                         player2.teleport(location);
                         return true;
-                    }
-                    catch (NumberFormatException ex) {
+                    } catch (NumberFormatException ex) {
                         return false;
                     }
                 }
@@ -142,8 +132,7 @@ public class Console
                                 }
                                 return true;
                             }
-                        }
-                        else if (arg2.equalsIgnoreCase("broadcast")) {
+                        } else if (arg2.equalsIgnoreCase("broadcast")) {
                             final StringBuilder sb2 = new StringBuilder();
                             for (int x3 = 2; x3 < args.length; ++x3) {
                                 sb2.append(args[x3]).append(" ");
@@ -153,8 +142,7 @@ public class Console
                             return true;
                         }
                     }
-                }
-                else {
+                } else {
                     if (command.equalsIgnoreCase("take")) {
                         if (args.length < 4) {
                             return false;
@@ -174,8 +162,7 @@ public class Console
                             final double amount = Double.parseDouble(arg3);
                             Initiate.econ.withdrawPlayer(op, amount);
                             return true;
-                        }
-                        catch (NumberFormatException ex2) {
+                        } catch (NumberFormatException ex2) {
                             return false;
                         }
                     }
@@ -193,8 +180,7 @@ public class Console
                                 }
                             }
                         }
-                    }
-                    else if (command.equalsIgnoreCase("close")) {
+                    } else if (command.equalsIgnoreCase("close")) {
                         if (args.length >= 3) {
                             final String arg2 = args[1];
                             final String arg3 = args[2];
@@ -206,8 +192,7 @@ public class Console
                                 }
                             }
                         }
-                    }
-                    else if (command.equalsIgnoreCase("reload") && !(sender instanceof Player)) {
+                    } else if (command.equalsIgnoreCase("reload") && !(sender instanceof Player)) {
                         Config.load();
                         return true;
                     }

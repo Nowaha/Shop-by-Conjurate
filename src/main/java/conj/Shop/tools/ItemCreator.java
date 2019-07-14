@@ -1,34 +1,35 @@
 package conj.Shop.tools;
 
-import org.bukkit.inventory.*;
-import org.bukkit.*;
-import org.apache.commons.lang.*;
-import org.bukkit.enchantments.*;
-import org.bukkit.entity.*;
-import conj.Shop.data.*;
-import org.bukkit.inventory.meta.*;
+import conj.Shop.data.Page;
+import org.apache.commons.lang.WordUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import java.util.*;
 
-public class ItemCreator
-{
+public class ItemCreator {
     private ItemStack item;
-    
+
     public ItemCreator(final ItemStack item) {
         this.item = item;
     }
-    
+
     public void setType(final Material type) {
         this.item.setType(type);
     }
-    
+
     public ItemStack getItem() {
         return this.item;
     }
-    
+
     public boolean hasPlaceholder(final String string) {
         return string.contains("%");
     }
-    
+
     public boolean hasPlaceholder(final List<String> strings) {
         final Iterator<String> iterator = strings.iterator();
         if (iterator.hasNext()) {
@@ -37,7 +38,7 @@ public class ItemCreator
         }
         return false;
     }
-    
+
     public boolean hasLore(final String lore) {
         for (final String s : this.getLore()) {
             if (s.contains(lore)) {
@@ -46,15 +47,14 @@ public class ItemCreator
         }
         return false;
     }
-    
+
     public ItemStack replace(final String replace, final String replacement) {
         if (this.hasLore(replace)) {
             final List<String> placehold = new ArrayList<String>();
             for (final String s : this.getLore()) {
                 if (s.contains(replace)) {
                     placehold.add(s.replaceAll(replace, replacement));
-                }
-                else {
+                } else {
                     placehold.add(s);
                 }
             }
@@ -69,14 +69,14 @@ public class ItemCreator
         }
         return this.item;
     }
-    
+
     public String getNameExact() {
         if (!this.hasDisplayName()) {
             return null;
         }
         return this.getName();
     }
-    
+
     public String getName() {
         if (this.item == null) {
             return ChatColor.RED + "null";
@@ -88,7 +88,7 @@ public class ItemCreator
         name = WordUtils.capitalizeFully(name);
         return this.filterName(name, this.item.getDurability());
     }
-    
+
     public String filterName(String type, final int damage) {
         if (type.equalsIgnoreCase("Ink Sack")) {
             switch (damage) {
@@ -153,8 +153,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Wood")) {
+        } else if (type.equalsIgnoreCase("Wood")) {
             switch (damage) {
                 case 0: {
                     type = "Oak Wood Planks";
@@ -181,8 +180,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Log")) {
+        } else if (type.equalsIgnoreCase("Log")) {
             switch (damage) {
                 case 0: {
                     type = "Oak Wood";
@@ -201,8 +199,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Log 2")) {
+        } else if (type.equalsIgnoreCase("Log 2")) {
             switch (damage) {
                 case 0: {
                     type = "Acacia Wood";
@@ -213,8 +210,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Sapling")) {
+        } else if (type.equalsIgnoreCase("Sapling")) {
             switch (damage) {
                 case 0: {
                     type = "Oak Sapling";
@@ -241,8 +237,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Leaves")) {
+        } else if (type.equalsIgnoreCase("Leaves")) {
             switch (damage) {
                 case 0: {
                     type = "Oak Leaves";
@@ -261,8 +256,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Leaves 2")) {
+        } else if (type.equalsIgnoreCase("Leaves 2")) {
             switch (damage) {
                 case 0: {
                     type = "Acacia Leaves";
@@ -273,8 +267,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Red Rose")) {
+        } else if (type.equalsIgnoreCase("Red Rose")) {
             switch (damage) {
                 case 0: {
                     type = "Poppy";
@@ -313,8 +306,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Double Plant")) {
+        } else if (type.equalsIgnoreCase("Double Plant")) {
             switch (damage) {
                 case 0: {
                     type = "Sunflower";
@@ -341,8 +333,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Wool")) {
+        } else if (type.equalsIgnoreCase("Wool")) {
             switch (damage) {
                 case 0: {
                     type = "White Wool";
@@ -409,8 +400,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Stained Glass")) {
+        } else if (type.equalsIgnoreCase("Stained Glass")) {
             switch (damage) {
                 case 0: {
                     type = "White Stained Glass";
@@ -477,8 +467,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Stained Glass Pane")) {
+        } else if (type.equalsIgnoreCase("Stained Glass Pane")) {
             switch (damage) {
                 case 0: {
                     type = "White Stained Glass Pane";
@@ -545,8 +534,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Smooth Brick")) {
+        } else if (type.equalsIgnoreCase("Smooth Brick")) {
             switch (damage) {
                 case 0: {
                     type = "Stone Bricks";
@@ -565,8 +553,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Monster Eggs")) {
+        } else if (type.equalsIgnoreCase("Monster Eggs")) {
             switch (damage) {
                 case 0: {
                     type = "Stone Monster Egg";
@@ -593,16 +580,14 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Sponge")) {
+        } else if (type.equalsIgnoreCase("Sponge")) {
             switch (damage) {
                 case 1: {
                     type = "Wet Sponge";
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Skull Item")) {
+        } else if (type.equalsIgnoreCase("Skull Item")) {
             switch (damage) {
                 case 0: {
                     type = "Skeleton Skull";
@@ -629,8 +614,7 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Raw Fish")) {
+        } else if (type.equalsIgnoreCase("Raw Fish")) {
             switch (damage) {
                 case 1: {
                     type = "Raw Salmon";
@@ -645,24 +629,21 @@ public class ItemCreator
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Cooked Fish")) {
+        } else if (type.equalsIgnoreCase("Cooked Fish")) {
             switch (damage) {
                 case 1: {
                     type = "Cooked Salmon";
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Carrot Item")) {
+        } else if (type.equalsIgnoreCase("Carrot Item")) {
             switch (damage) {
                 case 0: {
                     type = "Carrot";
                     break;
                 }
             }
-        }
-        else if (type.equalsIgnoreCase("Stone")) {
+        } else if (type.equalsIgnoreCase("Stone")) {
             switch (damage) {
                 case 1: {
                     type = "Granite";
@@ -692,19 +673,19 @@ public class ItemCreator
         }
         return type;
     }
-    
+
     public List<String> getLore() {
         List<String> lore = new ArrayList<String>();
         if (this.item != null && this.item.hasItemMeta() && this.item.getItemMeta().hasLore()) {
-            lore = (List<String>)this.item.getItemMeta().getLore();
+            lore = (List<String>) this.item.getItemMeta().getLore();
         }
         return lore;
     }
-    
+
     public boolean hasEnchantments() {
         return this.item.hasItemMeta() && this.item.getItemMeta().hasEnchants();
     }
-    
+
     public String getEnchants() {
         String enchantments = "";
         if (this.item.hasItemMeta() && this.hasEnchantments()) {
@@ -714,7 +695,7 @@ public class ItemCreator
         }
         return enchantments;
     }
-    
+
     public ItemStack resetName() {
         final ItemStack newitem = new ItemStack(this.item.getType(), this.item.getAmount(), this.item.getDurability());
         final ItemCreator newitemc = new ItemCreator(newitem);
@@ -728,7 +709,7 @@ public class ItemCreator
         }
         return this.item = newitem;
     }
-    
+
     public ItemStack placehold(final Player player) {
         if (this.hasPlaceholder(this.getName())) {
             String n = this.getName();
@@ -742,7 +723,7 @@ public class ItemCreator
         }
         return this.item;
     }
-    
+
     public ItemStack placehold(final Player player, final Page page) {
         this.item = this.placehold(player);
         if (this.hasPlaceholder(this.getName())) {
@@ -757,7 +738,7 @@ public class ItemCreator
         }
         return this.item;
     }
-    
+
     public ItemStack placehold(final Player player, final Page page, final int slot) {
         this.item = this.placehold(player);
         if (this.hasPlaceholder(this.getName())) {
@@ -772,7 +753,7 @@ public class ItemCreator
         }
         return this.item;
     }
-    
+
     public ItemStack setName(final String name) {
         final ItemMeta m = this.item.getItemMeta();
         if (m != null) {
@@ -781,16 +762,16 @@ public class ItemCreator
         }
         return this.item;
     }
-    
+
     public ItemStack setLore(final List<String> lore) {
         final ItemMeta m = this.item.getItemMeta();
         if (m != null) {
-            m.setLore((List)lore);
+            m.setLore((List) lore);
             this.item.setItemMeta(m);
         }
         return this.item;
     }
-    
+
     public ItemStack setEnchants(final Map<Enchantment, Integer> enchants) {
         final ItemMeta m = this.item.getItemMeta();
         for (final Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
@@ -801,31 +782,31 @@ public class ItemCreator
         this.item.setItemMeta(m);
         return this.item;
     }
-    
+
     public ItemStack addLore(final String lore) {
         final ItemMeta m = this.item.getItemMeta();
         List<String> l = new ArrayList<String>();
         if (m.hasLore()) {
-            l = (List<String>)m.getLore();
+            l = (List<String>) m.getLore();
         }
         l.add(lore);
-        m.setLore((List)l);
+        m.setLore((List) l);
         this.item.setItemMeta(m);
         return this.item;
     }
-    
+
     public ItemStack removeLore(final String lore) {
         final ItemMeta m = this.item.getItemMeta();
         List<String> l = new ArrayList<String>();
         if (m.hasLore()) {
-            l = (List<String>)m.getLore();
+            l = (List<String>) m.getLore();
         }
         l.remove(lore);
-        m.setLore((List)l);
+        m.setLore((List) l);
         this.item.setItemMeta(m);
         return this.item;
     }
-    
+
     public String getEnchantmentString() {
         if (this.item.getEnchantments().isEmpty()) {
             return null;
@@ -840,7 +821,7 @@ public class ItemCreator
         }
         return enchantString;
     }
-    
+
     public void applyEnchantmentString(final String enchants) {
         final List<String> split1 = Arrays.asList(enchants.split("/"));
         for (final String s : split1) {
@@ -856,12 +837,12 @@ public class ItemCreator
             this.item.addEnchantment(e, level);
         }
     }
-    
+
     public boolean hasDisplayName() {
         final ItemMeta m = this.item.getItemMeta();
         return m != null && m.hasDisplayName();
     }
-    
+
     public boolean hasLore() {
         final ItemMeta m = this.item.getItemMeta();
         return m != null && m.hasLore();

@@ -1,16 +1,23 @@
 package conj.Shop.events;
 
-import org.bukkit.event.*;
-import conj.Shop.data.*;
-import conj.Shop.tools.*;
-import org.bukkit.entity.*;
-import conj.Shop.enums.*;
-import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.*;
+import conj.Shop.data.Page;
+import conj.Shop.enums.PageData;
+import conj.Shop.tools.GUI;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-public class PageClickEvent extends Event implements Cancellable
-{
+public class PageClickEvent extends Event implements Cancellable {
     private static final HandlerList handlers;
+
+    static {
+        handlers = new HandlerList();
+    }
+
     private Page page;
     private GUI gui;
     private Player player;
@@ -23,11 +30,7 @@ public class PageClickEvent extends Event implements Cancellable
     private Inventory topinv;
     private boolean cancelled;
     private boolean top;
-    
-    static {
-        handlers = new HandlerList();
-    }
-    
+
     public PageClickEvent(final Player player, final PageData action, final GUI gui, final Page page, final int slot, final int rawslot, final ItemStack item, final Inventory topinv, final Inventory inv, final ClickType click, final boolean top) {
         this.item = item;
         this.page = page;
@@ -41,63 +44,63 @@ public class PageClickEvent extends Event implements Cancellable
         this.click = click;
         this.top = top;
     }
-    
-    public Page getPage() {
-        return this.page;
-    }
-    
-    public GUI getGUI() {
-        return this.gui;
-    }
-    
-    public Inventory getTopInventory() {
-        return this.topinv;
-    }
-    
-    public Inventory getInventory() {
-        return this.inv;
-    }
-    
-    public PageData getPageData() {
-        return this.action;
-    }
-    
-    public ClickType getClick() {
-        return this.click;
-    }
-    
-    public boolean isTopInventory() {
-        return this.top;
-    }
-    
-    public int getSlot() {
-        return this.slot;
-    }
-    
-    public int getRawSlot() {
-        return this.rawslot;
-    }
-    
-    public ItemStack getItem() {
-        return this.item;
-    }
-    
-    public Player getPlayer() {
-        return this.player;
-    }
-    
-    public HandlerList getHandlers() {
-        return PageClickEvent.handlers;
-    }
-    
+
     public static HandlerList getHandlerList() {
         return PageClickEvent.handlers;
     }
-    
+
+    public Page getPage() {
+        return this.page;
+    }
+
+    public GUI getGUI() {
+        return this.gui;
+    }
+
+    public Inventory getTopInventory() {
+        return this.topinv;
+    }
+
+    public Inventory getInventory() {
+        return this.inv;
+    }
+
+    public PageData getPageData() {
+        return this.action;
+    }
+
+    public ClickType getClick() {
+        return this.click;
+    }
+
+    public boolean isTopInventory() {
+        return this.top;
+    }
+
+    public int getSlot() {
+        return this.slot;
+    }
+
+    public int getRawSlot() {
+        return this.rawslot;
+    }
+
+    public ItemStack getItem() {
+        return this.item;
+    }
+
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    public HandlerList getHandlers() {
+        return PageClickEvent.handlers;
+    }
+
     public boolean isCancelled() {
         return this.cancelled;
     }
-    
+
     public void setCancelled(final boolean cancelled) {
         this.cancelled = cancelled;
     }

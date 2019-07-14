@@ -1,25 +1,95 @@
 package conj.Shop.interaction;
 
-import conj.Shop.control.*;
-import org.bukkit.block.Container;
-import org.bukkit.event.*;
-import org.bukkit.event.player.*;
-
-import java.util.*;
-
-import conj.Shop.events.*;
-import org.bukkit.inventory.*;
-import org.bukkit.*;
-import org.bukkit.event.inventory.*;
-import conj.Shop.base.*;
-import org.bukkit.command.*;
-import org.bukkit.entity.*;
-import conj.Shop.data.*;
+import conj.Shop.base.Initiate;
+import conj.Shop.control.Manager;
+import conj.Shop.data.Page;
+import conj.Shop.data.PageSlot;
 import conj.Shop.enums.*;
-import org.bukkit.plugin.*;
+import conj.Shop.events.PageClickEvent;
+import conj.Shop.events.PageCloseEvent;
 import conj.Shop.tools.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Container;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Shop implements Listener {
+    public static List<ItemStack> getAddedItems(final OfflinePlayer player, final Inventory inventory, final Page page) {
+        final List<ItemStack> added = new ArrayList<ItemStack>();
+        final Inventory copy = Bukkit.createInventory((InventoryHolder) null, inventory.getSize());
+        copy.setContents(inventory.getContents());
+        for (final int slot : page.getVisibleSlots(player.getPlayer())) {
+            copy.setItem(slot, (ItemStack) null);
+        }
+        ItemStack[] contents;
+        for (int length = (contents = copy.getContents()).length, j = 0; j < length; ++j) {
+            final ItemStack i = contents[j];
+            if (i != null) {
+                added.add(i);
+            }
+        }
+        return added;
+    }
+
+    public static double sellInventory(final OfflinePlayer player, final Inventory inventory, final Page page) {
+        if (inventory == null) {
+            return 0.0;
+        }
+        final double earnings = getInventoryWorth(player, inventory, page);
+        if (earnings > 0.0) {
+            Initiate.econ.depositPlayer(player, earnings);
+        }
+        return earnings;
+    }
+
+    public static double getInventoryWorth(final OfflinePlayer player, final Inventory inventory, final Page page) {
+        if (inventory == null) {
+            return 0.0;
+        }
+        double worth = 0.0;
+        for (final ItemStack i : getAddedItems(player, inventory, page)) {
+            if (i != null) {
+                worth += Manager.get().getWorth(i);
+            }
+        }
+        return worth;
+    }
+
+    public static double getInventoryWorth(final Inventory inventory) {
+        if (inventory == null) {
+            return 0.0;
+        }
+        double worth = 0.0;
+        ItemStack[] contents;
+        for (int length = (contents = inventory.getContents()).length, j = 0; j < length; ++j) {
+            final ItemStack i = contents[j];
+            if (i != null) {
+                worth += Manager.get().getWorth(i);
+            }
+        }
+        return worth;
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void pickupPrevention(final PlayerPickupItemEvent event) {
         final Manager manager = Manager.get();
@@ -586,61 +656,5 @@ public class Shop implements Listener {
         inv.addLore(49, " ");
         inv.addLore(49, "&2%confirm%");
         return inv;
-    }
-
-    public static List<ItemStack> getAddedItems(final OfflinePlayer player, final Inventory inventory, final Page page) {
-        final List<ItemStack> added = new ArrayList<ItemStack>();
-        final Inventory copy = Bukkit.createInventory((InventoryHolder) null, inventory.getSize());
-        copy.setContents(inventory.getContents());
-        for (final int slot : page.getVisibleSlots(player.getPlayer())) {
-            copy.setItem(slot, (ItemStack) null);
-        }
-        ItemStack[] contents;
-        for (int length = (contents = copy.getContents()).length, j = 0; j < length; ++j) {
-            final ItemStack i = contents[j];
-            if (i != null) {
-                added.add(i);
-            }
-        }
-        return added;
-    }
-
-    public static double sellInventory(final OfflinePlayer player, final Inventory inventory, final Page page) {
-        if (inventory == null) {
-            return 0.0;
-        }
-        final double earnings = getInventoryWorth(player, inventory, page);
-        if (earnings > 0.0) {
-            Initiate.econ.depositPlayer(player, earnings);
-        }
-        return earnings;
-    }
-
-    public static double getInventoryWorth(final OfflinePlayer player, final Inventory inventory, final Page page) {
-        if (inventory == null) {
-            return 0.0;
-        }
-        double worth = 0.0;
-        for (final ItemStack i : getAddedItems(player, inventory, page)) {
-            if (i != null) {
-                worth += Manager.get().getWorth(i);
-            }
-        }
-        return worth;
-    }
-
-    public static double getInventoryWorth(final Inventory inventory) {
-        if (inventory == null) {
-            return 0.0;
-        }
-        double worth = 0.0;
-        ItemStack[] contents;
-        for (int length = (contents = inventory.getContents()).length, j = 0; j < length; ++j) {
-            final ItemStack i = contents[j];
-            if (i != null) {
-                worth += Manager.get().getWorth(i);
-            }
-        }
-        return worth;
     }
 }
