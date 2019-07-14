@@ -20,11 +20,11 @@ public class ShopFile {
     private String directory;
 
     public ShopFile(final String directory) {
-        this.directory = String.valueOf(directory) + "/data";
+        this.directory = directory + "/data";
     }
 
     public SmartFile getPageFile(final String page) {
-        return new SmartFile(String.valueOf(this.directory) + "/pages", page, ".yml");
+        return new SmartFile(this.directory + "/pages", page, ".yml");
     }
 
     public SmartFile getCitizensFile() {
@@ -46,7 +46,7 @@ public class ShopFile {
             for (final String citizen : data.getConfigurationSection("").getKeys(false)) {
                 try {
                     final int cid = Integer.parseInt(citizen);
-                    final String page = data.getString(String.valueOf(citizen) + ".page");
+                    final String page = data.getString(citizen + ".page");
                     if (page == null) {
                         continue;
                     }
@@ -57,7 +57,7 @@ public class ShopFile {
             for (final String citizen : data.getConfigurationSection("").getKeys(false)) {
                 try {
                     final int cid = Integer.parseInt(citizen);
-                    final List<String> permissions = (List<String>) data.getStringList(String.valueOf(citizen) + ".permission");
+                    final List<String> permissions = data.getStringList(citizen + ".permission");
                     if (permissions == null) {
                         continue;
                     }
@@ -71,7 +71,7 @@ public class ShopFile {
     public void loadMiscData() {
         final SmartFile sf = this.getMiscFile();
         final FileConfiguration data = sf.getConfig();
-        final List<String> blacklist = (List<String>) data.getStringList("blacklist");
+        final List<String> blacklist = data.getStringList("blacklist");
         if (blacklist != null) {
             for (final String s : blacklist) {
                 if (Bukkit.getWorld(s) != null) {
@@ -93,7 +93,7 @@ public class ShopFile {
 
     public List<Page> loadPages() {
         final List<Page> pages = new ArrayList<Page>();
-        final File folder = new File(String.valueOf(this.directory) + "/pages/");
+        final File folder = new File(this.directory + "/pages/");
         if (!folder.exists()) {
             folder.mkdirs();
         }
@@ -130,7 +130,7 @@ public class ShopFile {
                                 try {
                                     slot = Integer.parseInt(slotstring);
                                 } catch (NumberFormatException nfe) {
-                                    Debug.log(String.valueOf(pagename) + " slot " + slot + " failed to load.");
+                                    Debug.log(pagename + " slot " + slot + " failed to load.");
                                     continue;
                                 }
                                 final String page = fc.getString("data.inventory.slotdata." + slotstring + ".page");
@@ -186,10 +186,10 @@ public class ShopFile {
             sf.reset();
             final long start = System.currentTimeMillis();
             final FileConfiguration data = sf.getConfig();
-            data.set("data.properties.type", (Object) p.type);
-            data.set("data.properties.title", (Object) p.title);
-            data.set("data.properties.size", (Object) p.size);
-            data.set("data.properties.gui", (Object) p.gui);
+            data.set("data.properties.type", p.type);
+            data.set("data.properties.title", p.title);
+            data.set("data.properties.size", p.size);
+            data.set("data.properties.gui", p.gui);
             for (final Map.Entry<String, Object> v : p.pagedata.entrySet()) {
                 if (v.getValue() == null) {
                     break;
@@ -199,31 +199,31 @@ public class ShopFile {
                 }
                 data.set("data.properties.pagedata." + v.getKey(), v.getValue());
             }
-            data.set("data.inventory.slots", (Object) p.slots);
-            data.set("data.inventory.items", (Object) p.items);
+            data.set("data.inventory.slots", p.slots);
+            data.set("data.inventory.items", p.items);
             for (final PageSlot ps : p.pageslots.values()) {
-                data.set("data.inventory.slotdata." + ps.getSlot() + ".page", (Object) ps.getPage());
-                data.set("data.inventory.slotdata." + ps.getSlot() + ".cost", (Object) ps.getCost());
-                data.set("data.inventory.slotdata." + ps.getSlot() + ".sell", (Object) ps.getSell());
-                data.set("data.inventory.slotdata." + ps.getSlot() + ".cooldown", (Object) ps.getCooldown());
-                data.set("data.inventory.slotdata." + ps.getSlot() + ".visibility", (Object) ps.getHidemode().toString());
-                data.set("data.inventory.slotdata." + ps.getSlot() + ".function", (Object) ps.getFunction().toString());
-                data.set("data.inventory.slotdata." + ps.getSlot() + ".guifunction", (Object) ps.getGUIFunction().toString());
+                data.set("data.inventory.slotdata." + ps.getSlot() + ".page", ps.getPage());
+                data.set("data.inventory.slotdata." + ps.getSlot() + ".cost", ps.getCost());
+                data.set("data.inventory.slotdata." + ps.getSlot() + ".sell", ps.getSell());
+                data.set("data.inventory.slotdata." + ps.getSlot() + ".cooldown", ps.getCooldown());
+                data.set("data.inventory.slotdata." + ps.getSlot() + ".visibility", ps.getHidemode().toString());
+                data.set("data.inventory.slotdata." + ps.getSlot() + ".function", ps.getFunction().toString());
+                data.set("data.inventory.slotdata." + ps.getSlot() + ".guifunction", ps.getGUIFunction().toString());
                 if (!ps.getCommands().isEmpty()) {
-                    data.set("data.inventory.slotdata." + ps.getSlot() + ".command", (Object) ps.getCommands());
+                    data.set("data.inventory.slotdata." + ps.getSlot() + ".command", ps.getCommands());
                 }
                 if (!ps.getPermissions().isEmpty()) {
-                    data.set("data.inventory.slotdata." + ps.getSlot() + ".permission", (Object) ps.getPermissions());
+                    data.set("data.inventory.slotdata." + ps.getSlot() + ".permission", ps.getPermissions());
                 }
                 if (!ps.getHidePermissions().isEmpty()) {
-                    data.set("data.inventory.slotdata." + ps.getSlot() + ".hidepermission", (Object) ps.getHidePermissions());
+                    data.set("data.inventory.slotdata." + ps.getSlot() + ".hidepermission", ps.getHidePermissions());
                 }
                 if (!ps.getPageLore().isEmpty()) {
-                    data.set("data.inventory.slotdata." + ps.getSlot() + ".pagelore", (Object) ps.getPageLore());
+                    data.set("data.inventory.slotdata." + ps.getSlot() + ".pagelore", ps.getPageLore());
                 }
                 for (final Map.Entry<String, Long> d : ps.getCooldowns().entrySet()) {
                     if (ps.inCooldown(d.getValue())) {
-                        data.set("data.inventory.slotdata." + ps.getSlot() + ".cd." + d.getKey(), (Object) d.getValue());
+                        data.set("data.inventory.slotdata." + ps.getSlot() + ".cd." + d.getKey(), d.getValue());
                     }
                 }
                 for (final Map.Entry<String, Object> d2 : ps.getSlotData().entrySet()) {
@@ -236,7 +236,7 @@ public class ShopFile {
                     data.set("data.inventory.slotdata." + ps.getSlot() + ".slotdata." + d2.getKey(), d2.getValue());
                 }
                 if (!ps.items.isEmpty()) {
-                    data.set("data.inventory.slotdata." + ps.getSlot() + ".items", (Object) ps.items);
+                    data.set("data.inventory.slotdata." + ps.getSlot() + ".items", ps.items);
                 }
             }
             sf.save(data);
@@ -250,10 +250,10 @@ public class ShopFile {
         sf.reset();
         final FileConfiguration data = sf.getConfig();
         for (final Map.Entry<Integer, String> v : Manager.cnpcs.entrySet()) {
-            data.set(String.valueOf(String.valueOf(v.getKey())) + ".page", (Object) v.getValue());
+            data.set(String.valueOf(v.getKey()) + ".page", v.getValue());
         }
         for (final Map.Entry<Integer, List<String>> v2 : Manager.cnpcpermissions.entrySet()) {
-            data.set(String.valueOf(String.valueOf(v2.getKey())) + ".permission", (Object) v2.getValue());
+            data.set(String.valueOf(v2.getKey()) + ".permission", v2.getValue());
         }
         sf.save(data);
         Debug.log("Citizens write took: " + Manager.getDuration(start));
@@ -262,14 +262,14 @@ public class ShopFile {
     public void saveWorthData() {
         final SmartFile sf = this.getWorthFile();
         final FileConfiguration data = sf.getConfig();
-        data.set("Worth", (Object) Manager.worth);
+        data.set("Worth", Manager.worth);
         sf.save(data);
     }
 
     public void saveMiscData() {
         final SmartFile sf = this.getMiscFile();
         final FileConfiguration data = sf.getConfig();
-        data.set("blacklist", (Object) Manager.blacklist);
+        data.set("blacklist", Manager.blacklist);
         sf.save(data);
     }
 }

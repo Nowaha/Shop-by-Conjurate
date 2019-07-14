@@ -13,7 +13,7 @@ public enum Function {
 
     private String description;
 
-    private Function(final String s, final int n, final String description) {
+    Function(final String s, final int n, final String description) {
         this.description = description;
     }
 

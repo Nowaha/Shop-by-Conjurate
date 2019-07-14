@@ -36,28 +36,28 @@ public enum Config {
     private int numeral;
     private boolean active;
 
-    private Config(final String s, final int n, final String base, final String message) {
+    Config(final String s, final int n, final String base, final String message) {
         this.base = base;
         this.message = message;
     }
 
-    private Config(final String base, final List<String> messages) {
+    Config(final String base, final List<String> messages) {
         this.base = base;
         this.messages = messages;
     }
 
-    private Config(final String s, final int n, final String base, final boolean active) {
+    Config(final String s, final int n, final String base, final boolean active) {
         this.base = base;
         this.active = active;
     }
 
-    private Config(final String s, final int n, final String base, final int numeral) {
+    Config(final String s, final int n, final String base, final int numeral) {
         this.base = base;
         this.numeral = numeral;
     }
 
     public static void save() {
-        final Plugin plugin = (Plugin) Initiate.getPlugin((Class) Initiate.class);
+        final Plugin plugin = Initiate.getPlugin((Class) Initiate.class);
         Config[] values;
         for (int length = (values = values()).length, i = 0; i < length; ++i) {
             final Config c = values[i];
@@ -67,13 +67,13 @@ public enum Config {
     }
 
     public static void load() {
-        final Plugin plugin = (Plugin) Initiate.getPlugin((Class) Initiate.class);
+        final Plugin plugin = Initiate.getPlugin((Class) Initiate.class);
         plugin.reloadConfig();
         Config[] values;
         for (int length = (values = values()).length, i = 0; i < length; ++i) {
             final Config c = values[i];
-            if (plugin.getConfig().get(String.valueOf(c.base) + "." + c.name()) != null) {
-                final Object o = plugin.getConfig().get(String.valueOf(c.base) + "." + c.name());
+            if (plugin.getConfig().get(c.base + "." + c.name()) != null) {
+                final Object o = plugin.getConfig().get(c.base + "." + c.name());
                 try {
                     if (o instanceof Boolean) {
                         final boolean ob = (boolean) o;
@@ -96,7 +96,7 @@ public enum Config {
                 }
             } else {
                 final Object old = plugin.getConfig().get(c.name());
-                plugin.getConfig().set(String.valueOf(c.base) + "." + c.name(), (old == null) ? c.getValue() : old);
+                plugin.getConfig().set(c.base + "." + c.name(), (old == null) ? c.getValue() : old);
             }
         }
         plugin.saveConfig();
@@ -153,7 +153,7 @@ public enum Config {
         if (this.messages != null) {
             String build = "";
             for (final String s : this.messages) {
-                build = String.valueOf(build) + s;
+                build = build + s;
             }
             return ChatColor.translateAlternateColorCodes('&', this.message);
         }

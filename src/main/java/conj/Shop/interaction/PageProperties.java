@@ -23,27 +23,27 @@ public class PageProperties implements Listener {
         }
         if (id == 1) {
             final InventoryCreator inv = new InventoryCreator(ChatColor.BLUE + page.getID() + ChatColor.DARK_GRAY + "\u2590 Page Properties", 1);
-            final GUI gui = new GUI((Plugin) Initiate.getPlugin((Class) Initiate.class), PageData.PAGE_PROPERTIES, inv.getInventory(), page);
+            final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.PAGE_PROPERTIES, inv.getInventory(), page);
             if (!page.isGUI()) {
                 inv.setItem(1, new ItemStack(Material.BEACON));
                 inv.setDisplay(1, ChatColor.BLUE + "Close on transaction");
-                inv.addLore(1, new String(page.closesOnTransaction() ? (ChatColor.GREEN + "    True") : (ChatColor.RED + "    False")));
+                inv.addLore(1, page.closesOnTransaction() ? (ChatColor.GREEN + "    True") : (ChatColor.RED + "    False"));
                 inv.addLore(1, ChatColor.GRAY + "Click to toggle");
                 inv.setItem(2, new ItemStack(Material.FEATHER));
                 inv.setDisplay(2, ChatColor.BLUE + "Instant confirm transaction");
-                inv.addLore(2, new String(page.instantConfirms() ? (ChatColor.GREEN + "    True") : (ChatColor.RED + "    False")));
+                inv.addLore(2, page.instantConfirms() ? (ChatColor.GREEN + "    True") : (ChatColor.RED + "    False"));
                 inv.addLore(2, ChatColor.GRAY + "Click to toggle");
                 inv.setItem(3, new ItemStack(Material.GOLD_INGOT));
                 inv.setDisplay(3, ChatColor.BLUE + "Hide affordability");
-                inv.addLore(3, new String(page.hidesAffordability() ? (ChatColor.GREEN + "    True") : (ChatColor.RED + "    False")));
+                inv.addLore(3, page.hidesAffordability() ? (ChatColor.GREEN + "    True") : (ChatColor.RED + "    False"));
                 inv.addLore(3, ChatColor.GRAY + "Click to toggle");
                 inv.setItem(4, new ItemStack(Material.CLOCK));
                 inv.setDisplay(4, ChatColor.BLUE + "Default quantity");
-                inv.addLore(4, new String(ChatColor.GREEN + "    " + page.getDefaultQuantity()));
+                inv.addLore(4, ChatColor.GREEN + "    " + page.getDefaultQuantity());
                 inv.addLore(4, ChatColor.GRAY + "Click to change");
                 inv.setItem(8, new ItemStack(Material.COMMAND_BLOCK));
                 inv.setDisplay(8, ChatColor.BLUE + "GUI");
-                inv.addLore(8, new String(page.isGUI() ? (ChatColor.GREEN + "    True") : (ChatColor.RED + "    False")));
+                inv.addLore(8, page.isGUI() ? (ChatColor.GREEN + "    True") : (ChatColor.RED + "    False"));
                 inv.addLore(8, ChatColor.GRAY + "Click to toggle");
                 inv.setItem(0, new ItemStack(Material.BUCKET));
                 inv.setDisplay(0, ChatColor.BLUE + "Fill slots");
@@ -62,14 +62,14 @@ public class PageProperties implements Listener {
             } else {
                 inv.setItem(0, new ItemStack(Material.COMMAND_BLOCK));
                 inv.setDisplay(0, ChatColor.BLUE + "GUI");
-                inv.addLore(0, new String(page.isGUI() ? (ChatColor.GREEN + "    True") : (ChatColor.RED + "    False")));
+                inv.addLore(0, page.isGUI() ? (ChatColor.GREEN + "    True") : (ChatColor.RED + "    False"));
                 inv.addLore(0, ChatColor.GRAY + "Click to toggle");
             }
             inv.setBlank(Material.BLUE_STAINED_GLASS_PANE, 11);
             gui.open(player);
         } else if (id == 2) {
             final InventoryCreator inv = new InventoryCreator(ChatColor.BLUE + page.getID() + ChatColor.DARK_GRAY + "\u2590 Fill Slots", 3);
-            final GUI gui = new GUI((Plugin) Initiate.getPlugin((Class) Initiate.class), PageData.PAGE_PROPERTIES_FILL_SLOTS, inv.getInventory(), page);
+            final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.PAGE_PROPERTIES_FILL_SLOTS, inv.getInventory(), page);
             inv.setItem(4, new ItemStack(Material.COMPASS));
             inv.setDisplay(4, ChatColor.RED + "Back");
             inv.addLore(4, ChatColor.GRAY + "Return to properties");

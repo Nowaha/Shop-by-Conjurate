@@ -17,9 +17,7 @@ public class NPCAddon extends Trait {
 
     public static void setCitizenPage(final int id, final String page) {
         if (page == null) {
-            if (Manager.cnpcs.containsKey(id)) {
-                Manager.cnpcs.remove(id);
-            }
+            Manager.cnpcs.remove(id);
             return;
         }
         Manager.cnpcs.put(id, page);
@@ -27,7 +25,7 @@ public class NPCAddon extends Trait {
 
     @EventHandler
     public void click(final NPCRightClickEvent event) {
-        if (event.getNPC().hasTrait((Class) NPCAddon.class)) {
+        if (event.getNPC().hasTrait(NPCAddon.class)) {
             final Player player = event.getClicker();
             final Manager manager = new Manager();
             final Page page = manager.getPage(event.getNPC());

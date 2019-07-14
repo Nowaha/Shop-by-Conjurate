@@ -121,7 +121,7 @@ public class Control implements CommandExecutor {
                                 return false;
                             }
                             Debug.debug = !Debug.debug;
-                            player.sendMessage(String.valueOf(new String(Debug.debug ? new StringBuilder().append(ChatColor.GREEN).toString() : new StringBuilder().append(ChatColor.RED).toString())) + "Debug has been " + new String(Debug.debug ? "enabled" : "disabled"));
+                            player.sendMessage((Debug.debug ? new StringBuilder().append(ChatColor.GREEN).toString() : new StringBuilder().append(ChatColor.RED).toString()) + "Debug has been " + (Debug.debug ? "enabled" : "disabled"));
                             return false;
                         } else if (command.equals("reload")) {
                             if (!player.hasPermission("shop.reload")) {

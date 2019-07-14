@@ -21,7 +21,7 @@ public class WorthManagement {
                 player.sendMessage(Config.PERMISSION_ERROR.toString());
                 return;
             }
-            if (player.getItemInHand() != null && !player.getItemInHand().getType().equals((Object) Material.AIR)) {
+            if (player.getItemInHand() != null && !player.getItemInHand().getType().equals(Material.AIR)) {
                 final double worth = Manager.get().getWorth(player.getItemInHand());
                 final double fworth = Manager.get().getFlatWorth(player.getItemInHand());
                 player.sendMessage(ChatColor.BLUE + Editor.getItemName(player.getItemInHand()) + ChatColor.DARK_GRAY + ":" + ChatColor.AQUA + player.getItemInHand().getDurability() + ChatColor.GRAY + " : " + ChatColor.GREEN + worth + ChatColor.DARK_GRAY + " (" + ChatColor.GRAY + "x" + ChatColor.GOLD + player.getItemInHand().getAmount() + ChatColor.DARK_GRAY + ")" + ChatColor.GRAY + " : " + ChatColor.GREEN + fworth + ChatColor.DARK_GRAY + " (" + ChatColor.GRAY + "x" + ChatColor.GOLD + "1" + ChatColor.DARK_GRAY + ")");
@@ -37,7 +37,7 @@ public class WorthManagement {
                         return;
                     }
                     if (args.length == 3) {
-                        if (player.getItemInHand() != null && !player.getItemInHand().getType().equals((Object) Material.AIR)) {
+                        if (player.getItemInHand() != null && !player.getItemInHand().getType().equals(Material.AIR)) {
                             final String str = args[2];
                             double amount = 0.0;
                             try {

@@ -677,7 +677,7 @@ public class ItemCreator {
     public List<String> getLore() {
         List<String> lore = new ArrayList<String>();
         if (this.item != null && this.item.hasItemMeta() && this.item.getItemMeta().hasLore()) {
-            lore = (List<String>) this.item.getItemMeta().getLore();
+            lore = this.item.getItemMeta().getLore();
         }
         return lore;
     }
@@ -690,7 +690,7 @@ public class ItemCreator {
         String enchantments = "";
         if (this.item.hasItemMeta() && this.hasEnchantments()) {
             for (final Map.Entry<Enchantment, Integer> e : this.item.getEnchantments().entrySet()) {
-                enchantments = String.valueOf(enchantments) + "[" + e.getKey().getName() + "#" + e.getValue() + "]";
+                enchantments = enchantments + "[" + e.getKey().getName() + "#" + e.getValue() + "]";
             }
         }
         return enchantments;
@@ -766,7 +766,7 @@ public class ItemCreator {
     public ItemStack setLore(final List<String> lore) {
         final ItemMeta m = this.item.getItemMeta();
         if (m != null) {
-            m.setLore((List) lore);
+            m.setLore(lore);
             this.item.setItemMeta(m);
         }
         return this.item;
@@ -787,10 +787,10 @@ public class ItemCreator {
         final ItemMeta m = this.item.getItemMeta();
         List<String> l = new ArrayList<String>();
         if (m.hasLore()) {
-            l = (List<String>) m.getLore();
+            l = m.getLore();
         }
         l.add(lore);
-        m.setLore((List) l);
+        m.setLore(l);
         this.item.setItemMeta(m);
         return this.item;
     }
@@ -799,10 +799,10 @@ public class ItemCreator {
         final ItemMeta m = this.item.getItemMeta();
         List<String> l = new ArrayList<String>();
         if (m.hasLore()) {
-            l = (List<String>) m.getLore();
+            l = m.getLore();
         }
         l.remove(lore);
-        m.setLore((List) l);
+        m.setLore(l);
         this.item.setItemMeta(m);
         return this.item;
     }
@@ -814,16 +814,16 @@ public class ItemCreator {
         String enchantString = "";
         final int max = 0;
         for (final Map.Entry<Enchantment, Integer> e : this.item.getEnchantments().entrySet()) {
-            enchantString = String.valueOf(enchantString) + e.getKey().getName() + ":" + e.getValue();
+            enchantString = enchantString + e.getKey().getName() + ":" + e.getValue();
             if (max < this.item.getEnchantments().size()) {
-                enchantString = String.valueOf(enchantString) + "/";
+                enchantString = enchantString + "/";
             }
         }
         return enchantString;
     }
 
     public void applyEnchantmentString(final String enchants) {
-        final List<String> split1 = Arrays.asList(enchants.split("/"));
+        final String[] split1 = enchants.split("/");
         for (final String s : split1) {
             final String[] split2 = s.split(":");
             if (split2.length < 2) {

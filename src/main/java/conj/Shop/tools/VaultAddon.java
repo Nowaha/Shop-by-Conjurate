@@ -12,17 +12,17 @@ public class VaultAddon {
     }
 
     public boolean canAfford(final Player player, final double cost) {
-        final double balance = this.economy.getBalance((OfflinePlayer) player);
+        final double balance = this.economy.getBalance(player);
         return balance >= cost;
     }
 
     public boolean canAfford(final Player player, final double cost, final int quantity) {
-        final double balance = this.economy.getBalance((OfflinePlayer) player);
+        final double balance = this.economy.getBalance(player);
         return balance >= cost * quantity;
     }
 
     public int getAffordable(final Player player, final double cost, final int quantity) {
-        final double balance = this.economy.getBalance((OfflinePlayer) player);
+        final double balance = this.economy.getBalance(player);
         int affordable = 0;
         for (int x = 1; x <= quantity; ++x) {
             final double c = cost * x;

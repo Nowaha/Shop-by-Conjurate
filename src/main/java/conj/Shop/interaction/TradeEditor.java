@@ -31,7 +31,7 @@ public class TradeEditor implements Listener {
                 if (!ps.getFunction().equals(Function.TRADE)) {
                     return;
                 }
-                if (event.getClick().equals((Object) ClickType.LEFT)) {
+                if (event.getClick().equals(ClickType.LEFT)) {
                     this.openTradeEditor(player, page, itemslot);
                 }
             }
@@ -43,11 +43,11 @@ public class TradeEditor implements Listener {
                     Editor.editItem(player, page, itemslot);
                     return;
                 }
-                if (item != null && !item.getType().equals((Object) Material.AIR) && ps.getItems().contains(item)) {
+                if (item != null && !item.getType().equals(Material.AIR) && ps.getItems().contains(item)) {
                     ps.removeItem(item);
                     this.openTradeEditor(player, page, itemslot);
                 }
-            } else if (item != null && !item.getType().equals((Object) Material.AIR) && ps.getItems().size() < 7) {
+            } else if (item != null && !item.getType().equals(Material.AIR) && ps.getItems().size() < 7) {
                 ps.addItem(item);
                 this.openTradeEditor(player, page, itemslot);
             }
@@ -56,7 +56,7 @@ public class TradeEditor implements Listener {
 
     public void openTradeEditor(final Player player, final Page page, final int slot) {
         final InventoryCreator inv = new InventoryCreator(new StringBuilder().append(ChatColor.BLUE).append(slot).append(ChatColor.DARK_GRAY).append("\u2590 Inventory").toString(), 3);
-        final GUI gui = new GUI((Plugin) Initiate.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_INVENTORY, inv.getInventory(), page);
+        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_INVENTORY, inv.getInventory(), page);
         if (page.getInventory().getItem(slot) == null) {
             page.openEditor(player);
             return;

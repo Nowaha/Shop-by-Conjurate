@@ -18,7 +18,7 @@ public class SmartFile {
     }
 
     public File getFile() {
-        final File f = new File(String.valueOf(this.directory) + "/" + this.name + this.ext);
+        final File f = new File(this.directory + "/" + this.name + this.ext);
         if (!f.exists()) {
             this.create();
         }
@@ -27,11 +27,11 @@ public class SmartFile {
 
     public FileConfiguration getConfig() {
         final File file = this.getFile();
-        return (FileConfiguration) YamlConfiguration.loadConfiguration(file);
+        return YamlConfiguration.loadConfiguration(file);
     }
 
     public File create() {
-        final File f = new File(String.valueOf(this.directory) + "/" + this.name + this.ext);
+        final File f = new File(this.directory + "/" + this.name + this.ext);
         f.getParentFile().mkdirs();
         if (!f.exists()) {
             try {
@@ -44,7 +44,7 @@ public class SmartFile {
     }
 
     public boolean exists() {
-        return new File(String.valueOf(this.directory) + "/" + this.name + this.ext).exists();
+        return new File(this.directory + "/" + this.name + this.ext).exists();
     }
 
     public File reset() {

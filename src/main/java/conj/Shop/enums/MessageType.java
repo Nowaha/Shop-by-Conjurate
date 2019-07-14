@@ -11,7 +11,7 @@ public enum MessageType {
 
     private String def;
 
-    private MessageType(final String s, final int n, final String def) {
+    MessageType(final String s, final int n, final String def) {
         this.def = def;
     }
 

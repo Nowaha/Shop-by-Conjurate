@@ -22,7 +22,7 @@ public class PlaceholderAddon {
     }
 
     public static void register(final Plugin plugin) {
-        final boolean hooked = PlaceholderAPI.registerPlaceholderHook(plugin, (PlaceholderHook) new PlaceholderHook() {
+        final boolean hooked = PlaceholderAPI.registerPlaceholderHook(plugin, new PlaceholderHook() {
             public String onPlaceholderRequest(final Player player, final String identify) {
                 if (identify.equals("previous")) {
                     return String.valueOf(new Manager().getPreviousPage(player));

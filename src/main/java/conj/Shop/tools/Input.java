@@ -32,7 +32,7 @@ public class Input implements Listener {
         this.page = page;
         this.id = id;
         this.slot = slot;
-        this.plugin = (Plugin) Initiate.getPlugin((Class) Initiate.class);
+        this.plugin = Initiate.getPlugin((Class) Initiate.class);
     }
 
     public Player getPlayer() {
@@ -84,7 +84,7 @@ public class Input implements Listener {
             final Page page = this.getPage();
             if (page != null) {
                 final PlayerInputEvent e = new PlayerInputEvent(player, page, this.id, fullmsg, this.slot, this);
-                Bukkit.getServer().getPluginManager().callEvent((Event) e);
+                Bukkit.getServer().getPluginManager().callEvent(e);
                 if (e.isCancelled()) {
                     event.setCancelled(true);
                 }
@@ -96,15 +96,15 @@ public class Input implements Listener {
 
     public void register() {
         final PluginManager manager = this.plugin.getServer().getPluginManager();
-        manager.registerEvents((Listener) this, this.plugin);
+        manager.registerEvents(this, this.plugin);
     }
 
     public void unregister() {
-        AsyncPlayerChatEvent.getHandlerList().unregister((Listener) this);
-        PluginDisableEvent.getHandlerList().unregister((Listener) this);
-        PlayerCommandPreprocessEvent.getHandlerList().unregister((Listener) this);
-        InventoryClickEvent.getHandlerList().unregister((Listener) this);
-        InventoryCloseEvent.getHandlerList().unregister((Listener) this);
+        AsyncPlayerChatEvent.getHandlerList().unregister(this);
+        PluginDisableEvent.getHandlerList().unregister(this);
+        PlayerCommandPreprocessEvent.getHandlerList().unregister(this);
+        InventoryClickEvent.getHandlerList().unregister(this);
+        InventoryCloseEvent.getHandlerList().unregister(this);
     }
 
     public void destroyData() {

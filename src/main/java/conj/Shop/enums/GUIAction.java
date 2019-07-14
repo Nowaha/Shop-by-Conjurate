@@ -10,7 +10,7 @@ public enum GUIAction {
 
     private String description;
 
-    private GUIAction(final String s, final int n, final String description) {
+    GUIAction(final String s, final int n, final String description) {
         this.description = description;
     }
 

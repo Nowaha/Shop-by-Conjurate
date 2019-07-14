@@ -11,7 +11,7 @@ public enum GUIFunction {
 
     private String description;
 
-    private GUIFunction(final String s, final int n, final String description) {
+    GUIFunction(final String s, final int n, final String description) {
         this.description = description;
     }
 

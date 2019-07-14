@@ -22,7 +22,7 @@ public class Autobackup {
         if (Config.AUTOBACKUP.isActive()) {
             cancel();
             final BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-            Autobackup.id = scheduler.scheduleSyncRepeatingTask((Plugin) Initiate.getPlugin((Class) Initiate.class), (Runnable) new Runnable() {
+            Autobackup.id = scheduler.scheduleSyncRepeatingTask(Initiate.getPlugin((Class) Initiate.class), new Runnable() {
                 @Override
                 public void run() {
                     if (!Config.AUTOBACKUP.isActive()) {
@@ -41,8 +41,8 @@ public class Autobackup {
         final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         final Calendar cal = Calendar.getInstance();
         final String date = dateFormat.format(cal.getTime());
-        final File file = new File(String.valueOf(((Initiate) Initiate.getPlugin((Class) Initiate.class)).getDataFolder().getPath()) + "/data");
-        final File backupfile = new File(String.valueOf(((Initiate) Initiate.getPlugin((Class) Initiate.class)).getDataFolder().getPath()) + "/backup/" + date);
+        final File file = new File(Initiate.getPlugin((Class) Initiate.class).getDataFolder().getPath() + "/data");
+        final File backupfile = new File(Initiate.getPlugin((Class) Initiate.class).getDataFolder().getPath() + "/backup/" + date);
         if (!backupfile.exists()) {
             backupfile.mkdir();
         }
@@ -60,7 +60,7 @@ public class Autobackup {
         final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh:mm");
         final Calendar cal = Calendar.getInstance();
         final String date = dateFormat.format(cal.getTime());
-        final File backupfile = new File(String.valueOf(((Initiate) Initiate.getPlugin((Class) Initiate.class)).getDataFolder().getPath()) + "/backup/" + date);
+        final File backupfile = new File(Initiate.getPlugin((Class) Initiate.class).getDataFolder().getPath() + "/backup/" + date);
         if (backupfile.exists()) {
             backupfile.delete();
         }

@@ -30,7 +30,7 @@ public class CitizensManagement {
                     player.sendMessage(Config.PERMISSION_ERROR.toString());
                     return;
                 }
-                final NPC npc = CitizensAPI.getDefaultNPCSelector().getSelected((CommandSender) player);
+                final NPC npc = CitizensAPI.getDefaultNPCSelector().getSelected(player);
                 if (npc != null) {
                     if (args.length > 3) {
                         final String sub = args[2];
@@ -45,7 +45,7 @@ public class CitizensManagement {
                             }
                             final String text = sb.toString().trim();
                             final boolean added = manager.addCitizenPermission(npc.getId(), text);
-                            player.sendMessage(new String(added ? (ChatColor.GREEN + "Added permission " + text + " to " + npc.getFullName()) : (ChatColor.RED + "Failed to add permission " + text + " to " + npc.getFullName())));
+                            player.sendMessage(added ? (ChatColor.GREEN + "Added permission " + text + " to " + npc.getFullName()) : (ChatColor.RED + "Failed to add permission " + text + " to " + npc.getFullName()));
                             return;
                         } else if (sub.equalsIgnoreCase("remove")) {
                             if (!player.hasPermission("shop.citizen.permission.remove")) {
@@ -58,7 +58,7 @@ public class CitizensManagement {
                             }
                             final String text = sb.toString().trim();
                             final boolean removed = manager.removeCitizenPermission(npc.getId(), text);
-                            player.sendMessage(new String(removed ? (ChatColor.GREEN + "Removed permission " + text + " from " + npc.getFullName()) : (ChatColor.RED + "Failed to remove permission " + text + " from " + npc.getFullName())));
+                            player.sendMessage(removed ? (ChatColor.GREEN + "Removed permission " + text + " from " + npc.getFullName()) : (ChatColor.RED + "Failed to remove permission " + text + " from " + npc.getFullName()));
                             return;
                         }
                     } else if (args.length == 3) {
@@ -109,7 +109,7 @@ public class CitizensManagement {
             player.sendMessage(Config.PERMISSION_ERROR.toString());
             return;
         }
-        final NPC npc = CitizensAPI.getDefaultNPCSelector().getSelected((CommandSender) player);
+        final NPC npc = CitizensAPI.getDefaultNPCSelector().getSelected(player);
         if (npc == null) {
             player.sendMessage(ChatColor.RED + "You need to select an NPC");
             return;

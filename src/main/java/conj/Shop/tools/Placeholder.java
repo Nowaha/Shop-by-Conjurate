@@ -44,7 +44,7 @@ public class Placeholder {
                 message = message.replaceAll("%confirm%", ps.getDataString("gui_confirm2"));
             }
             if (message.contains("%quantity%")) {
-                message = message.replaceAll("%quantity%", new String(ps.getDataString("gui_quantity")));
+                message = message.replaceAll("%quantity%", ps.getDataString("gui_quantity"));
             }
         }
         return placehold(player, message, page, slot, amount, status, buy);
@@ -83,7 +83,7 @@ public class Placeholder {
             message = message.replaceAll("%player%", player.getName());
         }
         if (message.contains("%balance%")) {
-            message = message.replaceAll("%balance%", DoubleUtil.toString(Initiate.econ.getBalance((OfflinePlayer) player)));
+            message = message.replaceAll("%balance%", DoubleUtil.toString(Initiate.econ.getBalance(player)));
         }
         return ChatColor.translateAlternateColorCodes('&', message);
     }
@@ -150,7 +150,7 @@ public class Placeholder {
             message = message.replaceAll("%amount%", String.valueOf(amount));
         }
         if (message.contains("%confirm%")) {
-            message = message.replaceAll("%confirm%", ChatColor.DARK_GREEN + new String(status.equalsIgnoreCase("unconfirmed") ? new String(buy ? "Click to buy" : "Click to sell") : "Click to confirm"));
+            message = message.replaceAll("%confirm%", ChatColor.DARK_GREEN + (status.equalsIgnoreCase("unconfirmed") ? buy ? "Click to buy" : "Click to sell" : "Click to confirm"));
         }
         return message;
     }
@@ -187,12 +187,12 @@ public class Placeholder {
                 if (ic.hasLore()) {
                     ic.setLore(placehold(player, ic.getLore(), page, gui, x, slot, amount, status, buy));
                 }
-                Debug.log(String.valueOf(x) + " slot lore took: " + Manager.getDuration(startlore));
+                Debug.log(x + " slot lore took: " + Manager.getDuration(startlore));
                 final long startname = System.currentTimeMillis();
                 if (ic.hasDisplayName()) {
                     ic.setName(placehold(player, ic.getName(), page, gui, x, slot, amount, status, buy));
                 }
-                Debug.log(String.valueOf(x) + " slot name took: " + Manager.getDuration(startname));
+                Debug.log(x + " slot name took: " + Manager.getDuration(startname));
             }
         }
         return inv;
@@ -216,7 +216,7 @@ public class Placeholder {
 
     public static Inventory updateWorth(final Player player, final Inventory inv, final Page page) {
         final InventoryCreator ic = new InventoryCreator(inv);
-        final String worth = DoubleUtil.toString(Shop.getInventoryWorth((OfflinePlayer) player, inv, page));
+        final String worth = DoubleUtil.toString(Shop.getInventoryWorth(player, inv, page));
         ic.replace("%worth%", worth);
         return ic.getInventory();
     }

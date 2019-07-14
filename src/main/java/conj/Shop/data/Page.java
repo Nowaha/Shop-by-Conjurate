@@ -50,8 +50,8 @@ public class Page {
         this.slots = new ArrayList<Integer>();
         this.pagedata = new HashMap<String, Object>();
         this.pageslots = new HashMap<Integer, PageSlot>();
-        this.id = new String(page.getID());
-        this.title = new String(page.getTitle());
+        this.id = page.getID();
+        this.title = page.getTitle();
         this.size = new Integer(page.getSize());
         this.type = new Integer(page.getType());
         this.gui = new Boolean(page.isGUI());
@@ -63,7 +63,7 @@ public class Page {
 
     public boolean createOverride() {
         final PageCreateEvent event = new PageCreateEvent(this);
-        Bukkit.getServer().getPluginManager().callEvent((Event) event);
+        Bukkit.getServer().getPluginManager().callEvent(event);
         final Manager manager = new Manager();
         if (!event.isCancelled()) {
             final Page p = manager.getPage(this.getID());
@@ -77,7 +77,7 @@ public class Page {
 
     public boolean create() {
         final PageCreateEvent event = new PageCreateEvent(this);
-        Bukkit.getServer().getPluginManager().callEvent((Event) event);
+        Bukkit.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled() && new Manager().getPage(this.getID()) == null) {
             Manager.pages.add(this);
             return true;
@@ -87,7 +87,7 @@ public class Page {
 
     public boolean delete() {
         final PageDeleteEvent event = new PageDeleteEvent(this);
-        Bukkit.getServer().getPluginManager().callEvent((Event) event);
+        Bukkit.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             final Manager manager = new Manager();
             final Page p = manager.getPage(this.id);
@@ -260,7 +260,7 @@ public class Page {
     }
 
     public Inventory getInventory() {
-        final Inventory inv = Bukkit.createInventory((InventoryHolder) null, this.getSize(), this.getTitle());
+        final Inventory inv = Bukkit.createInventory(null, this.getSize(), this.getTitle());
         for (int x = 0; this.getItems().size() > x; ++x) {
             final int slot = this.slots.get(x);
             final ItemStack item = this.getItems().get(x);
@@ -297,17 +297,17 @@ public class Page {
                 if (!destroy) {
                     if (ps.getFunction().equals(Function.COMMAND)) {
                         final ItemCreator ic = new ItemCreator(i);
-                        final double balance = Initiate.econ.getBalance((OfflinePlayer) player);
+                        final double balance = Initiate.econ.getBalance(player);
                         if (balance < ps.getCost() && !this.hidesAffordability()) {
                             ic.addLore(Config.COST_CANNOT_AFFORD.toString());
                         }
                     } else if (ps.getFunction().equals(Function.BUY)) {
                         final ItemCreator ic = new ItemCreator(i);
-                        final double balance = Initiate.econ.getBalance((OfflinePlayer) player);
+                        final double balance = Initiate.econ.getBalance(player);
                         ic.addLore(" ");
-                        ic.addLore(String.valueOf(Config.COST_PREFIX.toString()) + DoubleUtil.toString(ps.getCost()));
+                        ic.addLore(Config.COST_PREFIX.toString() + DoubleUtil.toString(ps.getCost()));
                         if (ps.getSell() > 0.0) {
-                            ic.addLore(String.valueOf(Config.SELL_PREFIX.toString()) + DoubleUtil.toString(ps.getSell()));
+                            ic.addLore(Config.SELL_PREFIX.toString() + DoubleUtil.toString(ps.getSell()));
                         }
                         if (balance < ps.getCost() && !this.hidesAffordability()) {
                             ic.addLore(Config.COST_CANNOT_AFFORD.toString());
@@ -315,12 +315,12 @@ public class Page {
                     } else if (ps.getFunction().equals(Function.SELL)) {
                         final ItemCreator ic = new ItemCreator(i);
                         ic.addLore("");
-                        ic.addLore(String.valueOf(Config.SELL_PREFIX.toString()) + DoubleUtil.toString(ps.getSell()));
+                        ic.addLore(Config.SELL_PREFIX.toString() + DoubleUtil.toString(ps.getSell()));
                     }
                 }
             }
             if (destroy) {
-                inv.setItem(x, (ItemStack) null);
+                inv.setItem(x, null);
             }
         }
         return inv;
@@ -335,13 +335,13 @@ public class Page {
             }
             final Inventory open = player.getOpenInventory().getTopInventory();
             final List<Integer> slots = this.getVisibleSlots(player);
-            Debug.log(String.valueOf(player.getName()) + " : " + this.getID() + " : " + DoubleUtil.toString(Shop.getInventoryWorth((OfflinePlayer) player, open, this)));
+            Debug.log(player.getName() + " : " + this.getID() + " : " + DoubleUtil.toString(Shop.getInventoryWorth(player, open, this)));
             for (final int s : slots) {
                 final ItemStack i = this.getInventoryFlat(player).getItem(s);
                 if (i != null) {
                     final ItemCreator ic = new ItemCreator(i);
                     ic.placehold(player, this, s);
-                    ic.replace("%worth%", DoubleUtil.toString(Shop.getInventoryWorth((OfflinePlayer) player, open, this)));
+                    ic.replace("%worth%", DoubleUtil.toString(Shop.getInventoryWorth(player, open, this)));
                     open.setItem(s, ic.getItem());
                 }
             }
@@ -371,7 +371,7 @@ public class Page {
                 }
             }
         }
-        final GUI gui = new GUI((Plugin) Initiate.getPlugin((Class) Initiate.class), PageData.SHOP, inv, this);
+        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.SHOP, inv, this);
         final String title = Placeholder.placehold(player, this.getTitle());
         gui.setTitle(title);
         gui.open(player);
@@ -395,7 +395,7 @@ public class Page {
                 if (!ps.getPageLore().isEmpty()) {
                     inv.addLore(x, " ");
                 }
-                inv.addLore(x, ChatColor.BLUE + "Function" + ChatColor.DARK_GRAY + ": " + new String(this.isGUI() ? (ChatColor.BLUE + ps.getGUIFunction().toString()) : (ChatColor.BLUE + ps.getFunction().toString())));
+                inv.addLore(x, ChatColor.BLUE + "Function" + ChatColor.DARK_GRAY + ": " + (this.isGUI() ? (ChatColor.BLUE + ps.getGUIFunction().toString()) : (ChatColor.BLUE + ps.getFunction().toString())));
                 if (this.isGUI() && ps.getGUIFunction().equals(GUIFunction.QUANTITY)) {
                     inv.addLore(x, ChatColor.DARK_GREEN + "Quantity" + ChatColor.DARK_GRAY + ": " + ChatColor.DARK_GREEN + ps.getDataInt("gui_quantity"));
                 }
@@ -413,7 +413,7 @@ public class Page {
                 }
             }
         }
-        final GUI gui = new GUI((Plugin) Initiate.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_VIEW, inv.getInventory(), this);
+        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_VIEW, inv.getInventory(), this);
         gui.setTitle(ChatColor.YELLOW + this.id);
         gui.open(player);
     }
@@ -424,11 +424,11 @@ public class Page {
         final ItemCreator itemc = new ItemCreator(item);
         item = itemc.placehold(player, this, slot);
         int affordable = new VaultAddon(Initiate.econ).getAffordable(player, ps.getCost(), amount);
-        if (Initiate.econ.getBalance((OfflinePlayer) player) < ps.getCost() * amount) {
+        if (Initiate.econ.getBalance(player) < ps.getCost() * amount) {
             return;
         }
         for (int x = 0; x < amount; ++x) {
-            final Map<Integer, ItemStack> map = (Map<Integer, ItemStack>) player.getInventory().addItem(new ItemStack[]{item});
+            final Map<Integer, ItemStack> map = player.getInventory().addItem(new ItemStack[]{item});
             if (!map.values().isEmpty()) {
                 --affordable;
             }
@@ -439,7 +439,7 @@ public class Page {
             finalprice = 0.0;
         }
         if (finalprice > 0.0) {
-            Initiate.econ.withdrawPlayer((OfflinePlayer) player, finalprice);
+            Initiate.econ.withdrawPlayer(player, finalprice);
         }
         final List<String> purchase = Config.SHOP_PURCHASE.getList();
         for (String s : purchase) {
@@ -460,7 +460,7 @@ public class Page {
         final ItemStack item = this.getInventory().getItem(slot);
         int failed = 0;
         for (int x = 0; x < amount; ++x) {
-            final Map<Integer, ItemStack> map = (Map<Integer, ItemStack>) player.getInventory().removeItem(new ItemStack[]{item});
+            final Map<Integer, ItemStack> map = player.getInventory().removeItem(new ItemStack[]{item});
             if (!map.values().isEmpty()) {
                 ++failed;
             }
@@ -471,7 +471,7 @@ public class Page {
             finalprice = 0.0;
         }
         if (finalprice > 0.0) {
-            Initiate.econ.depositPlayer((OfflinePlayer) player, finalprice);
+            Initiate.econ.depositPlayer(player, finalprice);
         }
         final List<String> sell = Config.SHOP_SELL.getList();
         for (String s : sell) {
@@ -515,9 +515,7 @@ public class Page {
     public ItemStack getFill() {
         if (this.pagedata.get("fill_item") != null && this.pagedata.get("fill_item") instanceof List) {
             final ItemStack item = ItemSerialize.deserializeSingle((List<HashMap<Map<String, Object>, Map<String, Object>>>) this.pagedata.get("fill_item"));
-            if (item != null) {
-                return item;
-            }
+            return item;
         }
         return null;
     }
@@ -527,7 +525,7 @@ public class Page {
             this.clearFill();
             return;
         }
-        if (item.getType().equals((Object) Material.AIR)) {
+        if (item.getType().equals(Material.AIR)) {
             this.clearFill();
             return;
         }

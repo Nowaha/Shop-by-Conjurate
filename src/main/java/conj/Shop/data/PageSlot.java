@@ -313,7 +313,7 @@ public class PageSlot {
         final List<ItemStack> items_only = new ArrayList<ItemStack>();
         for (int i = 0; i < 36; ++i) {
             final ItemStack item = player.getInventory().getItem(i);
-            if (item != null && !item.getType().equals((Object) Material.AIR)) {
+            if (item != null && !item.getType().equals(Material.AIR)) {
                 items_only.add(new ItemStack(item));
             }
         }
@@ -322,7 +322,7 @@ public class PageSlot {
             if (j == null) {
                 continue;
             }
-            if (j.getType().equals((Object) Material.AIR)) {
+            if (j.getType().equals(Material.AIR)) {
                 continue;
             }
             final int amount = ic.getAmount(j);
@@ -334,9 +334,9 @@ public class PageSlot {
         if (!b) {
             if (pic.canAdd(page.getInventory().getItem(this.slot))) {
                 for (final ItemStack j : this.getItems()) {
-                    player.getInventory().removeItem(new ItemStack[]{j});
+                    player.getInventory().removeItem(j);
                 }
-                player.getInventory().addItem(new ItemStack[]{page.getInventory().getItem(this.slot)});
+                player.getInventory().addItem(page.getInventory().getItem(this.slot));
                 if (page.closesOnTransaction()) {
                     player.closeInventory();
                 } else {

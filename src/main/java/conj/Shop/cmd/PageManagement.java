@@ -292,7 +292,7 @@ public class PageManagement {
                                 } else {
                                     page2.setType(0);
                                 }
-                                player.sendMessage(ChatColor.GREEN + "Type of " + page2.getID() + " has been set to " + new String((page2.getType() == 1) ? "sell" : "normal"));
+                                player.sendMessage(ChatColor.GREEN + "Type of " + page2.getID() + " has been set to " + ((page2.getType() == 1) ? "sell" : "normal"));
                                 return;
                             }
                             player.sendMessage(ChatColor.RED + "/shop page type <normal/sell>");
@@ -324,7 +324,7 @@ public class PageManagement {
                     final String header = ChatColor.GRAY + "  === " + ChatColor.DARK_GREEN + "Shop Pages" + ChatColor.GRAY + " === " + ChatColor.DARK_GREEN + "Page " + ChatColor.GREEN + "%index%" + ChatColor.GRAY + "/" + ChatColor.GREEN + "%size%" + ChatColor.GRAY + " ===";
                     final List<String> help = new ArrayList<String>();
                     for (final Page page3 : new Manager().getPages()) {
-                        help.add(ChatColor.GRAY + "- " + ChatColor.YELLOW + page3.getID() + ChatColor.GRAY + "  Title: " + ChatColor.RESET + page3.getTitle() + ChatColor.GRAY + "  Type: " + ChatColor.RESET + new String((page3.getType() == 1) ? "Sell" : "Normal"));
+                        help.add(ChatColor.GRAY + "- " + ChatColor.YELLOW + page3.getID() + ChatColor.GRAY + "  Title: " + ChatColor.RESET + page3.getTitle() + ChatColor.GRAY + "  Type: " + ChatColor.RESET + ((page3.getType() == 1) ? "Sell" : "Normal"));
                     }
                     Control.list(player, help, index, header, 9);
                 } else if (command.equalsIgnoreCase("open")) {
@@ -376,9 +376,7 @@ public class PageManagement {
     }
 
     public void cancelEdit(final Player player) {
-        if (Manager.edit.containsKey(player.getName())) {
-            Manager.edit.remove(player.getName());
-        }
+        Manager.edit.remove(player.getName());
     }
 
     public boolean isEditing(final Player player, final String id) {
@@ -386,6 +384,6 @@ public class PageManagement {
     }
 
     public boolean hasItemInHand(final Player player) {
-        return player.getItemInHand() != null && !player.getItemInHand().getType().equals((Object) Material.AIR);
+        return player.getItemInHand() != null && !player.getItemInHand().getType().equals(Material.AIR);
     }
 }

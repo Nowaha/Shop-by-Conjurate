@@ -29,14 +29,14 @@ public class SmartFileConfig {
     }
 
     public Set<String> getCategories() {
-        return (Set<String>) this.sf.getConfig().getConfigurationSection("").getKeys(false);
+        return this.sf.getConfig().getConfigurationSection("").getKeys(false);
     }
 
     public Object getValue(final String path) {
         final Iterator<String> iterator = this.getCategories().iterator();
         if (iterator.hasNext()) {
             final String s = iterator.next();
-            return this.sf.getConfig().get(String.valueOf(s) + "." + path);
+            return this.sf.getConfig().get(s + "." + path);
         }
         return null;
     }

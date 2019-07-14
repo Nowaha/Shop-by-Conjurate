@@ -11,7 +11,7 @@ public enum Hidemode {
 
     private String description;
 
-    private Hidemode(final String s, final int n, final String description) {
+    Hidemode(final String s, final int n, final String description) {
         this.description = description;
     }
 

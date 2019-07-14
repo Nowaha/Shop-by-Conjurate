@@ -11,7 +11,7 @@ public class StringUtil {
         }
         String string = "";
         for (final String s : list) {
-            string = String.valueOf(string) + s + "/;";
+            string = string + s + "/;";
         }
         return string;
     }
@@ -21,7 +21,7 @@ public class StringUtil {
             return null;
         }
         final List<String> list = new ArrayList<String>();
-        final List<String> split = Arrays.asList(string.split("/;"));
+        final String[] split = string.split("/;");
         for (final String s : split) {
             list.add(s);
             Debug.log("Added lore: " + s);

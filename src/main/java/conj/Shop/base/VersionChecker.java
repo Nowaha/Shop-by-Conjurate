@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class VersionChecker implements Listener {
     public static String check() {
@@ -19,7 +20,7 @@ public class VersionChecker implements Listener {
             final HttpURLConnection con = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php").openConnection();
             con.setDoOutput(true);
             con.setRequestMethod("POST");
-            con.getOutputStream().write("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=8185".getBytes("UTF-8"));
+            con.getOutputStream().write("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=8185".getBytes(StandardCharsets.UTF_8));
             final String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
             if (version.length() <= 7) {
                 return version;
@@ -38,7 +39,7 @@ public class VersionChecker implements Listener {
         if (event.getPlayer().isOp()) {
             final String pluginversion = check();
             if (pluginversion != null) {
-                final String version = ((Initiate) Initiate.getPlugin((Class) Initiate.class)).getDescription().getVersion();
+                final String version = Initiate.getPlugin((Class) Initiate.class).getDescription().getVersion();
                 if (!version.equals(pluginversion)) {
                     event.getPlayer().sendMessage(ChatColor.RED + version + ChatColor.GRAY + " Shop is outdated");
                     event.getPlayer().sendMessage(ChatColor.GREEN + pluginversion + ChatColor.GRAY + " Shop is available for download");

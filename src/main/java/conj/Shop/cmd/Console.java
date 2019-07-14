@@ -75,9 +75,7 @@ public class Console {
                     }
                 }
             } else if (command.equalsIgnoreCase("help")) {
-                if (!(sender instanceof Player)) {
-                    return true;
-                }
+                return !(sender instanceof Player);
             } else {
                 if (command.equalsIgnoreCase("teleport")) {
                     if (args.length < 6) {
@@ -108,7 +106,7 @@ public class Console {
                         if (args.length >= 8) {
                             pitch = Float.parseFloat(args[7]);
                         }
-                        final Location location = new Location(world, x, y, z, yaw - 180.0f, (float) pitch);
+                        final Location location = new Location(world, x, y, z, yaw - 180.0f, pitch);
                         player2.teleport(location);
                         return true;
                     } catch (NumberFormatException ex) {

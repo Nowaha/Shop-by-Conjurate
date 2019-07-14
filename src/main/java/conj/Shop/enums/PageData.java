@@ -23,7 +23,7 @@ public enum PageData {
 
     private String info;
 
-    private PageData(final String s, final int n, final String info) {
+    PageData(final String s, final int n, final String info) {
         this.info = info;
     }
 

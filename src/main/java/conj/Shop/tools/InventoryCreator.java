@@ -17,10 +17,10 @@ public class InventoryCreator {
     Inventory inv;
 
     public InventoryCreator(final List<ItemStack> items, final int size) {
-        this.inv = Bukkit.createInventory((InventoryHolder) null, size * 9);
+        this.inv = Bukkit.createInventory(null, size * 9);
         for (final ItemStack i : items) {
             if (i != null) {
-                this.inv.addItem(new ItemStack[]{i});
+                this.inv.addItem(i);
             }
         }
     }
@@ -42,10 +42,10 @@ public class InventoryCreator {
         if (items.size() > 45) {
             size = 6;
         }
-        this.inv = Bukkit.createInventory((InventoryHolder) null, size * 9);
+        this.inv = Bukkit.createInventory(null, size * 9);
         for (final ItemStack i : items) {
             if (i != null) {
-                this.inv.addItem(new ItemStack[]{i});
+                this.inv.addItem(i);
             }
         }
     }
@@ -67,10 +67,10 @@ public class InventoryCreator {
         if (items.length > 45) {
             size = 6;
         }
-        this.inv = Bukkit.createInventory((InventoryHolder) null, size * 9);
+        this.inv = Bukkit.createInventory(null, size * 9);
         for (final ItemStack i : items) {
             if (i != null) {
-                this.inv.addItem(new ItemStack[]{i});
+                this.inv.addItem(i);
             }
         }
     }
@@ -81,7 +81,7 @@ public class InventoryCreator {
 
     public InventoryCreator(final Inventory inventory, final boolean copy) {
         if (copy) {
-            final Inventory i = Bukkit.createInventory((InventoryHolder) null, 54);
+            final Inventory i = Bukkit.createInventory(null, 54);
             i.setContents(inventory.getContents());
             this.inv = i;
         } else {
@@ -92,7 +92,7 @@ public class InventoryCreator {
     public InventoryCreator(final String title, final int size) {
         this.title = title;
         this.size = size;
-        this.inv = Bukkit.createInventory((InventoryHolder) null, size * 9, title);
+        this.inv = Bukkit.createInventory(null, size * 9, title);
     }
 
     public static boolean hasPlaceholder(final Inventory inventory) {
@@ -210,10 +210,10 @@ public class InventoryCreator {
             final ItemMeta im = item.getItemMeta();
             List<String> l = new ArrayList<String>();
             if (im.hasLore()) {
-                l = (List<String>) im.getLore();
+                l = im.getLore();
             }
             l.add(lore);
-            im.setLore((List) l);
+            im.setLore(l);
             item.setItemMeta(im);
         }
     }
@@ -225,10 +225,10 @@ public class InventoryCreator {
                 final ItemMeta im = item.getItemMeta();
                 List<String> l = new ArrayList<String>();
                 if (im.hasLore()) {
-                    l = (List<String>) im.getLore();
+                    l = im.getLore();
                 }
                 l.add(lore);
-                im.setLore((List) l);
+                im.setLore(l);
                 item.setItemMeta(im);
             }
         }
@@ -257,7 +257,7 @@ public class InventoryCreator {
                 List<String> lore = new ArrayList<String>();
                 String name = Editor.getItemName(item);
                 if (itemmeta.hasLore()) {
-                    lore = (List<String>) itemmeta.getLore();
+                    lore = itemmeta.getLore();
                     final List<String> placehold = new ArrayList<String>();
                     for (final String s : lore) {
                         if (s.contains(replace)) {
@@ -266,7 +266,7 @@ public class InventoryCreator {
                             placehold.add(s);
                         }
                     }
-                    itemmeta.setLore((List) placehold);
+                    itemmeta.setLore(placehold);
                 }
                 if (name.contains(replace)) {
                     name = name.replaceAll(replace, replacement);
@@ -285,7 +285,7 @@ public class InventoryCreator {
             if (i == null) {
                 continue;
             }
-            if (i.getType().equals((Object) Material.AIR)) {
+            if (i.getType().equals(Material.AIR)) {
                 continue;
             }
             if (!i.isSimilar(item)) {

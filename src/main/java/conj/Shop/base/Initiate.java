@@ -66,17 +66,17 @@ public class Initiate extends JavaPlugin {
         }
         if (!this.setupEconomy()) {
             this.getLogger().log(Level.SEVERE, "Disabled due to no Vault dependency found. (Example: Essentials)");
-            this.getServer().getPluginManager().disablePlugin((Plugin) this);
+            this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
         this.setupPermissions();
-        this.getCommand("shop").setExecutor((CommandExecutor) new Control());
-        this.getServer().getPluginManager().registerEvents((Listener) new VersionChecker(), (Plugin) this);
-        this.getServer().getPluginManager().registerEvents((Listener) new Sign(), (Plugin) this);
-        this.getServer().getPluginManager().registerEvents((Listener) new Editor(), (Plugin) this);
-        this.getServer().getPluginManager().registerEvents((Listener) new TradeEditor(), (Plugin) this);
-        this.getServer().getPluginManager().registerEvents((Listener) new Shop(), (Plugin) this);
-        this.getServer().getPluginManager().registerEvents((Listener) new PageProperties(), (Plugin) this);
+        this.getCommand("shop").setExecutor(new Control());
+        this.getServer().getPluginManager().registerEvents(new VersionChecker(), this);
+        this.getServer().getPluginManager().registerEvents(new Sign(), this);
+        this.getServer().getPluginManager().registerEvents(new Editor(), this);
+        this.getServer().getPluginManager().registerEvents(new TradeEditor(), this);
+        this.getServer().getPluginManager().registerEvents(new Shop(), this);
+        this.getServer().getPluginManager().registerEvents(new PageProperties(), this);
         final boolean mainfolder = this.getDataFolder().mkdir();
         if (Debug.debug) {
             this.getLogger().info("Created main folder: " + mainfolder);
@@ -106,20 +106,20 @@ public class Initiate extends JavaPlugin {
         if (Config.UPDATE_CHECK.isActive()) {
             final String pluginversion = VersionChecker.check();
             if (VersionChecker.check() != null && !this.version.equals(pluginversion)) {
-                this.getLogger().info(String.valueOf(this.version) + " Shop is outdated");
-                this.getLogger().info(String.valueOf(pluginversion) + " Shop is available for download");
+                this.getLogger().info(this.version + " Shop is outdated");
+                this.getLogger().info(pluginversion + " Shop is available for download");
                 this.getLogger().info("Go to http://spigotmc.org/resources/shop.8185/ to update");
             }
         }
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            PlaceholderAddon.register((Plugin) this);
+            PlaceholderAddon.register(this);
             Initiate.placeholderapi = true;
         } else {
             this.getLogger().info("PlaceholderAPI not found, alternative placeholders will be used.");
         }
         if (Bukkit.getPluginManager().getPlugin("Citizens") != null) {
             try {
-                CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create((Class) NPCAddon.class).withName("shop"));
+                CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NPCAddon.class).withName("shop"));
                 Initiate.citizens = true;
                 this.getLogger().info("Successfully hooked into Citizens.");
             } catch (NullPointerException npe) {
@@ -146,13 +146,13 @@ public class Initiate extends JavaPlugin {
         if (rsp == null) {
             return false;
         }
-        Initiate.econ = (Economy) rsp.getProvider();
+        Initiate.econ = rsp.getProvider();
         return Initiate.econ != null;
     }
 
     private boolean setupPermissions() {
         final RegisteredServiceProvider<Permission> rsp = (RegisteredServiceProvider<Permission>) this.getServer().getServicesManager().getRegistration((Class) Permission.class);
-        Initiate.perms = (Permission) rsp.getProvider();
+        Initiate.perms = rsp.getProvider();
         return Initiate.perms != null;
     }
 }

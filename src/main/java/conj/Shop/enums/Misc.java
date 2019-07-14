@@ -11,15 +11,15 @@ public enum Misc {
     private List<String> messages;
     private boolean active;
 
-    private Misc(final String s, final int n, final String message) {
+    Misc(final String s, final int n, final String message) {
         this.message = message;
     }
 
-    private Misc(final List<String> messages) {
+    Misc(final List<String> messages) {
         this.messages = messages;
     }
 
-    private Misc(final String s, final int n, final boolean active) {
+    Misc(final String s, final int n, final boolean active) {
         this.active = active;
     }
 
@@ -57,7 +57,7 @@ public enum Misc {
         if (this.messages != null) {
             String build = "";
             for (final String s : this.messages) {
-                build = String.valueOf(build) + s;
+                build = build + s;
             }
             return ChatColor.translateAlternateColorCodes('&', this.message);
         }

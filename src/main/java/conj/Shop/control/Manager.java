@@ -45,13 +45,13 @@ public class Manager {
         final long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1L);
         String time = "";
         if (seconds > 0L) {
-            time = String.valueOf(seconds) + ((seconds > 1L) ? " seconds" : " second");
+            time = seconds + ((seconds > 1L) ? " seconds" : " second");
         }
         if (minutes > 0L) {
-            time = String.valueOf(minutes) + ((minutes > 1L) ? " minutes" : " minute") + ((seconds > 0L) ? " " : "") + time;
+            time = minutes + ((minutes > 1L) ? " minutes" : " minute") + ((seconds > 0L) ? " " : "") + time;
         }
         if (hours > 0L) {
-            time = String.valueOf(hours) + ((hours > 1L) ? " hours" : " hour") + ((minutes > 0L || seconds > 0L) ? " " : "") + time;
+            time = hours + ((hours > 1L) ? " hours" : " hour") + ((minutes > 0L || seconds > 0L) ? " " : "") + time;
         }
         return (time == "") ? "0 seconds" : time;
     }
@@ -217,9 +217,7 @@ public class Manager {
     }
 
     public void blacklistRemove(final String world) {
-        if (Manager.blacklist.contains(world)) {
-            Manager.blacklist.remove(world);
-        }
+        Manager.blacklist.remove(world);
     }
 
     public Page getRecoveryPage(final Player player) {
@@ -247,7 +245,7 @@ public class Manager {
     }
 
     public Page getPage(final NPC npc) {
-        if (npc.hasTrait((Class) NPCAddon.class)) {
+        if (npc.hasTrait(NPCAddon.class)) {
             return this.getPage(Manager.cnpcs.get(npc.getId()));
         }
         return null;
@@ -285,15 +283,11 @@ public class Manager {
     }
 
     public void removePreviousPage(final Player player) {
-        if (Manager.previouspage.containsKey(player.getName())) {
-            Manager.previouspage.remove(player.getName());
-        }
+        Manager.previouspage.remove(player.getName());
     }
 
     public void removeOpenPage(final Player player) {
-        if (Manager.openpage.containsKey(player.getName())) {
-            Manager.openpage.remove(player.getName());
-        }
+        Manager.openpage.remove(player.getName());
     }
 
     public String getOpenPage(final Player player) {
@@ -316,9 +310,7 @@ public class Manager {
 
     public void setCitizenPage(final int id, final String page) {
         if (page == null) {
-            if (Manager.cnpcs.containsKey(id)) {
-                Manager.cnpcs.remove(id);
-            }
+            Manager.cnpcs.remove(id);
             return;
         }
         Manager.cnpcs.put(id, page);
