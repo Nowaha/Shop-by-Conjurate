@@ -3,9 +3,10 @@ version: 2.1.0
 description: Create and manage shops.
 author: Conjurate
 main: conj.Shop.base.Initiate
-softdepend: [PlaceholderAPI, Citizens]
+softdepend: [PlaceholderAPI, Citizens, Vault]
 depend: [Vault]
-api-version: 1.13
+api-version: 1.14
+
 commands:
   shop:
     description: Shop's main command.

@@ -703,7 +703,7 @@ public class Editor implements Listener
                 inv.addLore(10, ChatColor.GRAY + "Left-click to set quantity");
                 inv.addLore(10, ChatColor.GRAY + "Right-click to remove quantity");
             }
-            inv.getInventory().setItem(15, new ItemStack(Material.SIGN));
+            inv.getInventory().setItem(15, new ItemStack(Material.OAK_SIGN));
             inv.setDisplay(15, ChatColor.GOLD + "Placeholders");
             inv.addLore(15, ChatColor.GRAY + "%item% - item being sold/bought");
             inv.addLore(15, ChatColor.GRAY + "%earnings% - sell GUI");

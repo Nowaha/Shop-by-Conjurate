@@ -1,9 +1,12 @@
 package conj.Shop.interaction;
 
 import conj.Shop.control.*;
+import org.bukkit.block.Container;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
+
 import java.util.*;
+
 import conj.Shop.events.*;
 import org.bukkit.inventory.*;
 import org.bukkit.*;
@@ -16,8 +19,7 @@ import conj.Shop.enums.*;
 import org.bukkit.plugin.*;
 import conj.Shop.tools.*;
 
-public class Shop implements Listener
-{
+public class Shop implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void pickupPrevention(final PlayerPickupItemEvent event) {
         final Manager manager = Manager.get();
@@ -27,17 +29,17 @@ public class Shop implements Listener
             event.setCancelled(true);
         }
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void removeEntity(final PlayerInteractEntityEvent event) {
         if (Debug.debug) {
-            if (!event.getHand().equals((Object)EquipmentSlot.HAND)) {
+            if (!event.getHand().equals((Object) EquipmentSlot.HAND)) {
                 return;
             }
             if (!event.getPlayer().isOp()) {
                 return;
             }
-            if (event.getPlayer().getInventory().getItemInMainHand() != null && event.getPlayer().getInventory().getItemInMainHand().getType().equals((Object)Material.STICK)) {
+            if (event.getPlayer().getInventory().getItemInMainHand() != null && event.getPlayer().getInventory().getItemInMainHand().getType().equals((Object) Material.STICK)) {
                 final ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
                 final ItemCreator ic = new ItemCreator(item);
                 if (ic.getLore().contains(ChatColor.RED + "Right-click an entity to remove it") && ic.getName().equals(ChatColor.DARK_RED + "Entity Remover")) {
@@ -48,7 +50,7 @@ public class Shop implements Listener
             }
         }
     }
-    
+
     @EventHandler
     public void ItemviewClose(final PageCloseEvent event) {
         if (event.getPageData().equals(PageData.SHOP)) {
@@ -66,17 +68,17 @@ public class Shop implements Listener
                     }
                 }
                 for (final int slot : slots) {
-                    inv.setItem(slot, (ItemStack)null);
+                    inv.setItem(slot, (ItemStack) null);
                 }
                 ItemStack[] contents;
                 for (int length = (contents = inv.getContents()).length, i = 0; i < length; ++i) {
                     final ItemStack item = contents[i];
                     if (item != null) {
-                        final HashMap<Integer, ItemStack> map = (HashMap<Integer, ItemStack>)event.getPlayer().getInventory().addItem(new ItemStack[] { item });
+                        final HashMap<Integer, ItemStack> map = (HashMap<Integer, ItemStack>) event.getPlayer().getInventory().addItem(new ItemStack[]{item});
                         if (!map.isEmpty()) {
-                            final HashMap<Integer, ItemStack> emap = (HashMap<Integer, ItemStack>)event.getPlayer().getEnderChest().addItem(new ItemStack[] { map.get(0) });
+                            final HashMap<Integer, ItemStack> emap = (HashMap<Integer, ItemStack>) event.getPlayer().getEnderChest().addItem(new ItemStack[]{map.get(0)});
                             if (!emap.isEmpty()) {
-                                event.getPlayer().getWorld().dropItemNaturally(event.getPlayer().getLocation(), (ItemStack)emap.get(0));
+                                event.getPlayer().getWorld().dropItemNaturally(event.getPlayer().getLocation(), (ItemStack) emap.get(0));
                             }
                         }
                     }
@@ -84,7 +86,7 @@ public class Shop implements Listener
             }
         }
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void ItemviewClick(final PageClickEvent event) {
         final Player player = event.getPlayer();
@@ -93,7 +95,7 @@ public class Shop implements Listener
         final PageSlot ps = page.getPageSlot(slot);
         if (event.getPageData().equals(PageData.SHOP)) {
             if (event.isTopInventory()) {
-                if (!event.getItem().getType().equals((Object)Material.AIR)) {
+                if (!event.getItem().getType().equals((Object) Material.AIR)) {
                     if (!ps.canSee(player)) {
                         return;
                     }
@@ -108,16 +110,16 @@ public class Shop implements Listener
                                 final int first = player.getInventory().firstEmpty();
                                 if (first != -1) {
                                     player.getInventory().setItem(first, item);
-                                    event.getInventory().setItem(event.getSlot(), (ItemStack)null);
+                                    event.getInventory().setItem(event.getSlot(), (ItemStack) null);
                                     page.updateView(player, false);
                                 }
                             }
                             return;
                         }
                         if (ps.getFunction().equals(Function.CONFIRM)) {
-                            final Inventory inv = Bukkit.createInventory((InventoryHolder)null, event.getInventory().getSize());
+                            final Inventory inv = Bukkit.createInventory((InventoryHolder) null, event.getInventory().getSize());
                             inv.setContents(event.getInventory().getContents());
-                            final double earning = sellInventory((OfflinePlayer)player, inv, event.getPage());
+                            final double earning = sellInventory((OfflinePlayer) player, inv, event.getPage());
                             if (earning > 0.0) {
                                 String complete = Config.SELL_COMPLETE.toString();
                                 if (complete.length() > 0) {
@@ -147,40 +149,35 @@ public class Shop implements Listener
                         return;
                     }
                     if (ps.getFunction().equals(Function.BUY)) {
-                        if (event.getClick().equals((Object)ClickType.RIGHT)) {
+                        if (event.getClick().equals((Object) ClickType.RIGHT)) {
                             final ItemStack item = page.getInventory().getItem(slot);
                             if (ps.getSell() > 0.0 && player.getInventory().containsAtLeast(item, 1)) {
                                 this.sellItem(player, page, slot, 0, "unconfirmed");
                             }
-                        }
-                        else if (event.getClick().equals((Object)ClickType.LEFT) && ps.getCost() <= Initiate.econ.getBalance((OfflinePlayer)player)) {
+                        } else if (event.getClick().equals((Object) ClickType.LEFT) && ps.getCost() <= Initiate.econ.getBalance((OfflinePlayer) player)) {
                             this.buyItem(player, page, slot, 0, "unconfirmed");
                         }
-                    }
-                    else if (ps.getFunction().equals(Function.SELL)) {
+                    } else if (ps.getFunction().equals(Function.SELL)) {
                         final ItemStack item = page.getInventory().getItem(slot);
                         if (player.getInventory().containsAtLeast(item, 1)) {
                             this.sellItem(player, page, slot, 0, "unconfirmed");
                         }
-                    }
-                    else if (ps.getFunction().equals(Function.TRADE)) {
+                    } else if (ps.getFunction().equals(Function.TRADE)) {
                         this.tradeItem(player, page, slot);
-                    }
-                    else if (ps.getFunction().equals(Function.COMMAND)) {
+                    } else if (ps.getFunction().equals(Function.COMMAND)) {
                         final VaultAddon addon = new VaultAddon(Initiate.econ);
                         if (!addon.canAfford(player, ps.getCost())) {
                             return;
                         }
                         for (final String c : ps.getCommands()) {
-                            Bukkit.getServer().dispatchCommand((CommandSender)Bukkit.getConsoleSender(), Placeholder.placehold(player, c, page, slot));
+                            Bukkit.getServer().dispatchCommand((CommandSender) Bukkit.getConsoleSender(), Placeholder.placehold(player, c, page, slot));
                         }
                         if (ps.hasCooldown() && !ps.inCooldown(player)) {
                             ps.cooldown(player);
                         }
                     }
                 }
-            }
-            else if (page.getType() == 1) {
+            } else if (page.getType() == 1) {
                 final ItemStack item = player.getInventory().getItem(event.getSlot());
                 if (item != null) {
                     final Inventory top = event.getTopInventory();
@@ -188,21 +185,21 @@ public class Shop implements Listener
                     final double worth = Manager.get().getWorth(item);
                     if (first2 != -1 && worth > 0.0) {
                         top.setItem(first2, item);
-                        player.getInventory().setItem(event.getSlot(), (ItemStack)null);
+                        player.getInventory().setItem(event.getSlot(), (ItemStack) null);
                         page.updateView(player, false);
                     }
                 }
             }
         }
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void tradeItemClick(final PageClickEvent event) {
         final Player player = event.getPlayer();
         final int slot = event.getSlot();
         final Page page = event.getPage();
         if (event.getPageData().equals(PageData.TRADE_ITEM)) {
-            if (event.getItem().getType().equals((Object)Material.AIR)) {
+            if (event.getItem().getType().equals((Object) Material.AIR)) {
                 return;
             }
             if (event.isTopInventory()) {
@@ -217,12 +214,10 @@ public class Shop implements Listener
                     }
                     if (slot == 21) {
                         page.openPage(player);
-                    }
-                    else if (slot == 23) {
+                    } else if (slot == 23) {
                         ips.attemptTrade(player);
                     }
-                }
-                else {
+                } else {
                     final PageSlot ps = guipage.getPageSlot(slot);
                     if (ps == null) {
                         return;
@@ -237,14 +232,14 @@ public class Shop implements Listener
             }
         }
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void PurchaseitemClick(final PageClickEvent event) {
         final Player player = event.getPlayer();
         final int slot = event.getSlot();
         final Page page = event.getPage();
         if (event.getPageData().equals(PageData.PURCHASE_ITEM) || event.getPageData().equals(PageData.SELL_ITEM)) {
-            if (event.getItem().getType().equals((Object)Material.AIR)) {
+            if (event.getItem().getType().equals((Object) Material.AIR)) {
                 return;
             }
             if (event.isTopInventory()) {
@@ -274,19 +269,17 @@ public class Shop implements Listener
                                         this.sellItem(player, page, itemslot, amount, "confirmed");
                                     }
                                 }
-                            }
-                            else {
+                            } else {
                                 this.completeTransaction(event.getPageData(), page, player, itemslot, amount);
                             }
-                        }
-                        else if (function.equals(GUIFunction.QUANTITY)) {
+                        } else if (function.equals(GUIFunction.QUANTITY)) {
                             Debug.log(String.valueOf(player.getName()) + " clicked on quantity GUI page " + guipagename);
                             int add = 0;
                             add = ps.getDataInt("gui_quantity");
-                            if (event.getClick().equals((Object)ClickType.LEFT)) {
+                            if (event.getClick().equals((Object) ClickType.LEFT)) {
                                 amount += add;
                             }
-                            if (event.getClick().equals((Object)ClickType.RIGHT)) {
+                            if (event.getClick().equals((Object) ClickType.RIGHT)) {
                                 amount -= add;
                             }
                             if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
@@ -295,8 +288,7 @@ public class Shop implements Listener
                             if (event.getPageData().equals(PageData.SELL_ITEM)) {
                                 this.sellItem(player, page, itemslot, amount, "unconfirmed");
                             }
-                        }
-                        else if (function.equals(GUIFunction.BACK)) {
+                        } else if (function.equals(GUIFunction.BACK)) {
                             Debug.log(String.valueOf(player.getName()) + " clicked on back GUI page " + guipagename);
                             page.openPage(player);
                         }
@@ -320,17 +312,16 @@ public class Shop implements Listener
                                 this.sellItem(player, page, itemslot, amount, "confirmed");
                             }
                         }
-                    }
-                    else {
+                    } else {
                         this.completeTransaction(event.getPageData(), page, player, itemslot, amount);
                     }
                 }
                 if (slot == 20) {
                     int add2 = 0;
-                    if (event.getClick().equals((Object)ClickType.LEFT)) {
+                    if (event.getClick().equals((Object) ClickType.LEFT)) {
                         ++add2;
                     }
-                    if (event.getClick().equals((Object)ClickType.RIGHT)) {
+                    if (event.getClick().equals((Object) ClickType.RIGHT)) {
                         --add2;
                     }
                     if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
@@ -342,10 +333,10 @@ public class Shop implements Listener
                 }
                 if (slot == 21) {
                     int add2 = 0;
-                    if (event.getClick().equals((Object)ClickType.LEFT)) {
+                    if (event.getClick().equals((Object) ClickType.LEFT)) {
                         add2 += 8;
                     }
-                    if (event.getClick().equals((Object)ClickType.RIGHT)) {
+                    if (event.getClick().equals((Object) ClickType.RIGHT)) {
                         add2 -= 8;
                     }
                     if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
@@ -357,10 +348,10 @@ public class Shop implements Listener
                 }
                 if (slot == 22) {
                     int add2 = 0;
-                    if (event.getClick().equals((Object)ClickType.LEFT)) {
+                    if (event.getClick().equals((Object) ClickType.LEFT)) {
                         add2 += 16;
                     }
-                    if (event.getClick().equals((Object)ClickType.RIGHT)) {
+                    if (event.getClick().equals((Object) ClickType.RIGHT)) {
                         add2 -= 16;
                     }
                     if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
@@ -372,10 +363,10 @@ public class Shop implements Listener
                 }
                 if (slot == 23) {
                     int add2 = 0;
-                    if (event.getClick().equals((Object)ClickType.LEFT)) {
+                    if (event.getClick().equals((Object) ClickType.LEFT)) {
                         add2 += 32;
                     }
-                    if (event.getClick().equals((Object)ClickType.RIGHT)) {
+                    if (event.getClick().equals((Object) ClickType.RIGHT)) {
                         add2 -= 32;
                     }
                     if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
@@ -387,10 +378,10 @@ public class Shop implements Listener
                 }
                 if (slot == 24) {
                     int add2 = 0;
-                    if (event.getClick().equals((Object)ClickType.LEFT)) {
+                    if (event.getClick().equals((Object) ClickType.LEFT)) {
                         add2 += 64;
                     }
-                    if (event.getClick().equals((Object)ClickType.RIGHT)) {
+                    if (event.getClick().equals((Object) ClickType.RIGHT)) {
                         add2 -= 64;
                     }
                     if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
@@ -402,10 +393,10 @@ public class Shop implements Listener
                 }
                 if (slot == 31) {
                     int add2 = 0;
-                    if (event.getClick().equals((Object)ClickType.LEFT)) {
+                    if (event.getClick().equals((Object) ClickType.LEFT)) {
                         add2 += 128;
                     }
-                    if (event.getClick().equals((Object)ClickType.RIGHT)) {
+                    if (event.getClick().equals((Object) ClickType.RIGHT)) {
                         add2 -= 128;
                     }
                     if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
@@ -418,7 +409,7 @@ public class Shop implements Listener
             }
         }
     }
-    
+
     public void completeTransaction(final PageData pd, final Page page, final Player player, final int itemslot, final int amount) {
         if (pd.equals(PageData.PURCHASE_ITEM)) {
             page.buyItem(player, itemslot, amount);
@@ -428,12 +419,11 @@ public class Shop implements Listener
         }
         if (page.closesOnTransaction()) {
             player.closeInventory();
-        }
-        else {
+        } else {
             page.openPage(player);
         }
     }
-    
+
     public void buyItem(final Player player, final Page page, final int slot, int amount, final String status) {
         final PageSlot ps = page.getPageSlot(slot);
         final long start = System.currentTimeMillis();
@@ -447,11 +437,13 @@ public class Shop implements Listener
         Debug.log("Setup BUY GUI affordable took: " + Manager.getDuration(start));
         final Page buypage = Manager.get().getPage(Config.PURCHASE_GUI.toString());
         final Inventory mainInv = this.getBuyInventory().getInventory();
-        final String title = Placeholder.placehold(player, Placeholder.placehold(player, mainInv.getTitle(), page, slot, amount, status, true));
+        final Container inventContainer = (Container) mainInv.getHolder();
+        final String title = Placeholder.placehold(player, Placeholder.placehold(player, inventContainer.getCustomName()), page, slot, amount, status, true);
+        ;
         Debug.log("Get BUY GUI inventory took: " + Manager.getDuration(start));
         final Inventory viewInv = Placeholder.placehold(player, mainInv, page, buypage, slot, amount, status, true);
         Debug.log("Placehold BUY GUI inventory took: " + Manager.getDuration(start));
-        final GUI gui = new GUI((Plugin)Initiate.getPlugin((Class)Initiate.class), PageData.PURCHASE_ITEM, viewInv, page);
+        final GUI gui = new GUI((Plugin) Initiate.getPlugin((Class) Initiate.class), PageData.PURCHASE_ITEM, viewInv, page);
         gui.setTitle(title);
         gui.addPass("guipage", Config.PURCHASE_GUI.toString());
         gui.addPass("status", status);
@@ -461,13 +453,14 @@ public class Shop implements Listener
         gui.open(player);
         Debug.log("Open BUY GUI took: " + Manager.getDuration(start));
     }
-    
+
     public void tradeItem(final Player player, final Page page, final int slot) {
         final long start = System.currentTimeMillis();
         Debug.log("Setup TRADE GUI affordable took: " + Manager.getDuration(start));
         final Page tradepage = Manager.get().getPage(Config.TRADE_GUI.toString());
         final Inventory mainInv = this.getTradeInventory().getInventory();
-        final String title = Placeholder.placehold(player, Placeholder.placehold(player, mainInv.getTitle(), page, slot));
+        final Container inventContainer = (Container) mainInv.getHolder();
+        final String title = Placeholder.placehold(player, Placeholder.placehold(player, inventContainer.getCustomName(), page, slot));
         final PageSlot ps = page.getPageSlot(slot);
         if (ps != null) {
             for (final ItemStack i : ps.getItems()) {
@@ -480,7 +473,7 @@ public class Shop implements Listener
         Debug.log("Get TRADE GUI inventory took: " + Manager.getDuration(start));
         final Inventory viewInv = Placeholder.placehold(player, mainInv, page, tradepage, slot, 0, "confirmed", true);
         Debug.log("Placehold TRADE GUI inventory took: " + Manager.getDuration(start));
-        final GUI gui = new GUI((Plugin)Initiate.getPlugin((Class)Initiate.class), PageData.TRADE_ITEM, viewInv, page);
+        final GUI gui = new GUI((Plugin) Initiate.getPlugin((Class) Initiate.class), PageData.TRADE_ITEM, viewInv, page);
         gui.setTitle(title);
         gui.addPass("guipage", Config.TRADE_GUI.toString());
         gui.addPass("slot", slot);
@@ -488,9 +481,9 @@ public class Shop implements Listener
         gui.open(player);
         Debug.log("Open TRADE GUI took: " + Manager.getDuration(start));
     }
-    
+
     public void sellItem(final Player player, final Page page, final int slot, int amount, final String status) {
-        final InventoryCreator pi = new InventoryCreator((Inventory)player.getInventory());
+        final InventoryCreator pi = new InventoryCreator((Inventory) player.getInventory());
         if (amount < page.getDefaultQuantity()) {
             amount = page.getDefaultQuantity();
         }
@@ -499,9 +492,10 @@ public class Shop implements Listener
         }
         final Page sellpage = Manager.get().getPage(Config.SELL_GUI.toString());
         final Inventory mainInv = this.getSellInventory().getInventory();
-        final String title = Placeholder.placehold(player, Placeholder.placehold(player, mainInv.getTitle(), page, slot, amount, status, false));
+        final Container inventContainer = (Container) mainInv.getHolder();
+        final String title = Placeholder.placehold(player, Placeholder.placehold(player, inventContainer.getCustomName(), page, slot, amount, status, false));
         final Inventory viewInv = Placeholder.placehold(player, mainInv, page, sellpage, slot, amount, status, false);
-        final GUI gui = new GUI((Plugin)Initiate.getPlugin((Class)Initiate.class), PageData.SELL_ITEM, viewInv, page);
+        final GUI gui = new GUI((Plugin) Initiate.getPlugin((Class) Initiate.class), PageData.SELL_ITEM, viewInv, page);
         gui.setTitle(title);
         gui.addPass("guipage", Config.SELL_GUI.toString());
         gui.addPass("status", status);
@@ -509,21 +503,21 @@ public class Shop implements Listener
         gui.addPass("amount", amount);
         gui.open(player);
     }
-    
+
     public InventoryCreator getTradeInventory() {
         final Page pgui = Manager.get().getPage(Config.TRADE_GUI.toString());
         if (pgui != null && pgui.isGUI()) {
             return new InventoryCreator(pgui.getInventory());
         }
         final InventoryCreator inv = new InventoryCreator(ChatColor.DARK_GREEN + "Trade Item", 3);
-        final int[] blank = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 22, 24, 25, 26 };
+        final int[] blank = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 22, 24, 25, 26};
         inv.setBlank(blank, Material.BLACK_STAINED_GLASS_PANE, 15);
         inv.setItem(23, Material.LIME_STAINED_GLASS_PANE, 5, "&aTrade");
         inv.setItem(21, Material.RED_STAINED_GLASS_PANE, 14, "&4Cancel");
         inv.setItem(22, Material.BEDROCK, "%item_display%");
         return inv;
     }
-    
+
     public InventoryCreator getSellInventory() {
         final Page pgui = Manager.get().getPage(Config.SELL_GUI.toString());
         if (pgui != null && pgui.isGUI()) {
@@ -531,7 +525,7 @@ public class Shop implements Listener
         }
         final InventoryCreator inv = new InventoryCreator(ChatColor.DARK_GREEN + "Sell Item", 6);
         inv.setItem(4, Material.RED_STAINED_GLASS_PANE, 14, "&4Cancel");
-        final int[] blank = { 3, 5, 11, 12, 13, 14, 15, 18, 19, 25, 26, 29, 30, 32, 33, 39, 40, 41, 48, 50 };
+        final int[] blank = {3, 5, 11, 12, 13, 14, 15, 18, 19, 25, 26, 29, 30, 32, 33, 39, 40, 41, 48, 50};
         inv.setBlank(blank, Material.BLACK_STAINED_GLASS_PANE, 15);
         inv.setItem(20, Material.LIME_STAINED_GLASS_PANE, 5, "&eLeft-click&7: &a+1");
         inv.addLore(20, "&eRight-click&7: &c-1");
@@ -545,7 +539,7 @@ public class Shop implements Listener
         inv.addLore(24, "&eRight-click&7: &c-64");
         inv.setItem(31, Material.LIME_STAINED_GLASS_PANE, 5, "&eLeft-click&7: &a+128");
         inv.addLore(31, "&eRight-click&7: &c-128");
-        final int[] quantity = { 20, 21, 22, 23, 24, 31 };
+        final int[] quantity = {20, 21, 22, 23, 24, 31};
         inv.addLore(quantity, " ");
         inv.addLore(quantity, "&9Amount&7: &9%amount%");
         inv.addLore(quantity, "&aEarnings&7: &a%earnings%");
@@ -557,7 +551,7 @@ public class Shop implements Listener
         inv.addLore(49, "&2%confirm%");
         return inv;
     }
-    
+
     public InventoryCreator getBuyInventory() {
         final Page pgui = Manager.get().getPage(Config.PURCHASE_GUI.toString());
         if (pgui != null && pgui.isGUI()) {
@@ -565,7 +559,7 @@ public class Shop implements Listener
         }
         final InventoryCreator inv = new InventoryCreator(ChatColor.DARK_GREEN + "Buy Item", 6);
         inv.setItem(4, Material.RED_STAINED_GLASS, 14, "&4Cancel");
-        final int[] blank = { 3, 5, 11, 12, 13, 14, 15, 18, 19, 25, 26, 29, 30, 32, 33, 39, 40, 41, 48, 50 };
+        final int[] blank = {3, 5, 11, 12, 13, 14, 15, 18, 19, 25, 26, 29, 30, 32, 33, 39, 40, 41, 48, 50};
         inv.setBlank(blank, Material.BLACK_STAINED_GLASS_PANE, 15);
         inv.setItem(20, Material.LIME_STAINED_GLASS_PANE, 5, "&eLeft-click&7: &a+1");
         inv.addLore(20, "&eRight-click&7: &c-1");
@@ -579,7 +573,7 @@ public class Shop implements Listener
         inv.addLore(24, "&eRight-click&7: &c-64");
         inv.setItem(31, Material.LIME_STAINED_GLASS_PANE, 5, "&eLeft-click&7: &a+128");
         inv.addLore(31, "&eRight-click&7: &c-128");
-        final int[] quantity = { 20, 21, 22, 23, 24, 31 };
+        final int[] quantity = {20, 21, 22, 23, 24, 31};
         inv.addLore(quantity, " ");
         inv.addLore(quantity, "&9Amount&7: &9%amount%");
         inv.addLore(quantity, "&6Balance&7: &6%balance%");
@@ -593,13 +587,13 @@ public class Shop implements Listener
         inv.addLore(49, "&2%confirm%");
         return inv;
     }
-    
+
     public static List<ItemStack> getAddedItems(final OfflinePlayer player, final Inventory inventory, final Page page) {
         final List<ItemStack> added = new ArrayList<ItemStack>();
-        final Inventory copy = Bukkit.createInventory((InventoryHolder)null, inventory.getSize());
+        final Inventory copy = Bukkit.createInventory((InventoryHolder) null, inventory.getSize());
         copy.setContents(inventory.getContents());
         for (final int slot : page.getVisibleSlots(player.getPlayer())) {
-            copy.setItem(slot, (ItemStack)null);
+            copy.setItem(slot, (ItemStack) null);
         }
         ItemStack[] contents;
         for (int length = (contents = copy.getContents()).length, j = 0; j < length; ++j) {
@@ -610,7 +604,7 @@ public class Shop implements Listener
         }
         return added;
     }
-    
+
     public static double sellInventory(final OfflinePlayer player, final Inventory inventory, final Page page) {
         if (inventory == null) {
             return 0.0;
@@ -621,7 +615,7 @@ public class Shop implements Listener
         }
         return earnings;
     }
-    
+
     public static double getInventoryWorth(final OfflinePlayer player, final Inventory inventory, final Page page) {
         if (inventory == null) {
             return 0.0;
@@ -634,7 +628,7 @@ public class Shop implements Listener
         }
         return worth;
     }
-    
+
     public static double getInventoryWorth(final Inventory inventory) {
         if (inventory == null) {
             return 0.0;

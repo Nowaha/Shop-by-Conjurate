@@ -11,13 +11,12 @@ import org.bukkit.event.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.block.*;
 
-public class Sign implements Listener
-{
+public class Sign implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void interactSign(final PlayerInteractEvent event) {
         final Block block = event.getClickedBlock();
-        if (event.getAction().equals((Object)Action.RIGHT_CLICK_BLOCK) && block != null && (block.getType().equals((Object)Material.WALL_SIGN) || block.getType().equals((Object)Material.SIGN))) {
-            final org.bukkit.block.Sign sign = (org.bukkit.block.Sign)block.getState();
+        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block != null && (block.getType().toString().contains("SIGN"))) {
+            final org.bukkit.block.Sign sign = (org.bukkit.block.Sign) block.getState();
             final String line = sign.getLine(0);
             final String pagename = sign.getLine(1);
             if (line != null && pagename != null && ChatColor.stripColor(line).equalsIgnoreCase(ChatColor.stripColor(Config.SIGN_TAG.toString()))) {
@@ -29,19 +28,19 @@ public class Sign implements Listener
             }
         }
     }
-    
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void interactSign(final BlockBreakEvent event) {
         final Player player = event.getPlayer();
         final Block block = event.getBlock();
-        if (block.getType().equals((Object)Material.WALL_SIGN) || block.getType().equals((Object)Material.SIGN)) {
-            final org.bukkit.block.Sign sign = (org.bukkit.block.Sign)block.getState();
+        if (block.getType().toString().contains("SIGN")) {
+            final org.bukkit.block.Sign sign = (org.bukkit.block.Sign) block.getState();
             if (sign.getLine(0) != null && sign.getLine(0).equalsIgnoreCase(Config.SIGN_TAG.toString()) && !player.hasPermission("shop.sign.break")) {
                 event.setCancelled(true);
             }
         }
     }
-    
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void interactSign(final SignChangeEvent event) {
         if (event.getLine(0) != null) {
