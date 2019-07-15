@@ -8,7 +8,6 @@ import conj.Shop.interaction.Editor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,6 +18,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class Input implements Listener {
     private String page;
@@ -32,7 +32,7 @@ public class Input implements Listener {
         this.page = page;
         this.id = id;
         this.slot = slot;
-        this.plugin = Initiate.getPlugin((Class) Initiate.class);
+        this.plugin = JavaPlugin.getPlugin((Class) Initiate.class);
     }
 
     public Player getPlayer() {
@@ -84,7 +84,7 @@ public class Input implements Listener {
             final Page page = this.getPage();
             if (page != null) {
                 final PlayerInputEvent e = new PlayerInputEvent(player, page, this.id, fullmsg, this.slot, this);
-                Bukkit.getServer().getPluginManager().callEvent(e);
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> Bukkit.getServer().getPluginManager().callEvent(e), (0 * 20));
                 if (e.isCancelled()) {
                     event.setCancelled(true);
                 }

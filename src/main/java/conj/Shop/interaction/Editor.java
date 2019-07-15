@@ -17,6 +17,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,7 +161,7 @@ public class Editor implements Listener {
             }
         }
         inv.setBlank(Material.BLUE_STAINED_GLASS_PANE, 11);
-        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_MANAGE, inv.getInventory(), page);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_MANAGE, inv.getInventory(), page);
         gui.addPass("slot", slot);
         gui.open(player);
     }
@@ -719,7 +720,7 @@ public class Editor implements Listener {
             inv.setDisplay(8, ChatColor.RED + "Back");
             inv.addLore(8, ChatColor.GRAY + "Return to item properties");
         }
-        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_FUNCTION, inv.getInventory(), page);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_FUNCTION, inv.getInventory(), page);
         gui.addPass("slot", slot);
         gui.open(player);
     }
@@ -741,7 +742,7 @@ public class Editor implements Listener {
         inv.getInventory().setItem(4, new ItemStack(Material.COMPASS));
         inv.setDisplay(4, ChatColor.RED + "Back");
         inv.addLore(4, ChatColor.GRAY + "Return to item properties");
-        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_HIDEMODE, inv.getInventory(), page);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_HIDEMODE, inv.getInventory(), page);
         gui.addPass("slot", slot);
         gui.open(player);
     }
@@ -749,7 +750,7 @@ public class Editor implements Listener {
     public void editMessages(final Player player, final Page page, final int slot) {
         final PageSlot ps = page.getPageSlot(slot);
         final InventoryCreator inv = new InventoryCreator(new StringBuilder().append(ChatColor.BLUE).append(slot).append(ChatColor.DARK_GRAY).append("\u2590 Messages").toString(), 3);
-        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_MESSAGES, inv.getInventory(), page);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_MESSAGES, inv.getInventory(), page);
         inv.getInventory().setItem(22, new ItemStack(Material.COMPASS));
         inv.setDisplay(22, ChatColor.RED + "Back");
         inv.addLore(22, ChatColor.GRAY + "Return to item properties");
@@ -780,7 +781,7 @@ public class Editor implements Listener {
             return;
         }
         final InventoryCreator inv = new InventoryCreator(new StringBuilder().append(ChatColor.BLUE).append(slot).append(ChatColor.DARK_GRAY).append("\u2590 Item Display").toString(), 3);
-        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM, inv.getInventory(), page);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM, inv.getInventory(), page);
         inv.getInventory().setItem(4, page.getInventory().getItem(slot));
         inv.getInventory().setItem(22, new ItemStack(Material.COMPASS));
         inv.setDisplay(22, ChatColor.RED + "Back");
@@ -827,7 +828,7 @@ public class Editor implements Listener {
     }
 
     public void moveItems(final Player player, final Page page) {
-        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.MOVE_ITEM, page.getInventory(), page);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.MOVE_ITEM, page.getInventory(), page);
         gui.setTitle(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Manual" + ChatColor.DARK_GRAY + "] Move items");
         gui.open(player);
     }

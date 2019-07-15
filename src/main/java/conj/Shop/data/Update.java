@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.FileUtil;
 
 import java.io.File;
@@ -18,7 +19,7 @@ import java.util.Map;
 public class Update {
     public static void runUpdate(final int id) {
         if (id == 1) {
-            final File file = new File(Initiate.getPlugin((Class) Initiate.class).getDataFolder() + "/data/page_storage.yml");
+            final File file = new File(JavaPlugin.getPlugin((Class) Initiate.class).getDataFolder() + "/data/page_storage.yml");
             if (file.exists()) {
                 final FileConfiguration data = YamlConfiguration.loadConfiguration(file);
                 for (final String page : data.getConfigurationSection("").getKeys(false)) {
@@ -141,7 +142,7 @@ public class Update {
                     p.saveData();
                     Bukkit.getLogger().info("Page " + page + " conversion complete");
                 }
-                final File backup = new File(Initiate.getPlugin((Class) Initiate.class).getDataFolder() + "/backup/page_storage-2.0.8.yml");
+                final File backup = new File(JavaPlugin.getPlugin((Class) Initiate.class).getDataFolder() + "/backup/page_storage-2.0.8.yml");
                 if (!backup.exists()) {
                     try {
                         backup.createNewFile();
@@ -152,7 +153,7 @@ public class Update {
                 file.delete();
             }
         } else if (id == 2) {
-            final Plugin plugin = Initiate.getPlugin((Class) Initiate.class);
+            final Plugin plugin = JavaPlugin.getPlugin((Class) Initiate.class);
             boolean changes = false;
             for (final String v3 : plugin.getConfig().getConfigurationSection("").getKeys(false)) {
                 boolean b = false;

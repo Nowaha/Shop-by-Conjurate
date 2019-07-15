@@ -250,10 +250,10 @@ public class ShopFile {
         sf.reset();
         final FileConfiguration data = sf.getConfig();
         for (final Map.Entry<Integer, String> v : Manager.cnpcs.entrySet()) {
-            data.set(String.valueOf(v.getKey()) + ".page", v.getValue());
+            data.set(v.getKey() + ".page", v.getValue());
         }
         for (final Map.Entry<Integer, List<String>> v2 : Manager.cnpcpermissions.entrySet()) {
-            data.set(String.valueOf(v2.getKey()) + ".permission", v2.getValue());
+            data.set(v2.getKey() + ".permission", v2.getValue());
         }
         sf.save(data);
         Debug.log("Citizens write took: " + Manager.getDuration(start));

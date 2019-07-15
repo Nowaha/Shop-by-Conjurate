@@ -126,7 +126,7 @@ public class GUI implements Listener {
         if (this.viewer.equals(player.getUniqueId().toString()) && event.getClickedInventory() != null) {
             final boolean top = event.getRawSlot() < event.getView().getTopInventory().getSize();
             Debug.log((event.getWhoClicked().getName() + " clicked " + (top ? "top" : "bottom") + " of " + this.data + " on page " + this.page != null) ? this.page.getID() : "null");
-            final PageClickEvent e = new PageClickEvent(player, this.data, this, this.page, event.getSlot(), event.getRawSlot(), event.getCurrentItem(), event.getInventory(), event.getClickedInventory(), event.getClick(), top);
+            final PageClickEvent e = new PageClickEvent(player, this.data, this, this.page, event.getSlot(), event.getRawSlot(), event.getCurrentItem(), event.getInventory(), event.getClickedInventory(), event.getClick(), top, event.getView());
             Bukkit.getServer().getPluginManager().callEvent(e);
             if (!e.isCancelled()) {
                 event.setCancelled(true);

@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class PageProperties implements Listener {
     public static void open(final Player player, final Page page, final int id) {
@@ -23,7 +24,7 @@ public class PageProperties implements Listener {
         }
         if (id == 1) {
             final InventoryCreator inv = new InventoryCreator(ChatColor.BLUE + page.getID() + ChatColor.DARK_GRAY + "\u2590 Page Properties", 1);
-            final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.PAGE_PROPERTIES, inv.getInventory(), page);
+            final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.PAGE_PROPERTIES, inv.getInventory(), page);
             if (!page.isGUI()) {
                 inv.setItem(1, new ItemStack(Material.BEACON));
                 inv.setDisplay(1, ChatColor.BLUE + "Close on transaction");
@@ -69,7 +70,7 @@ public class PageProperties implements Listener {
             gui.open(player);
         } else if (id == 2) {
             final InventoryCreator inv = new InventoryCreator(ChatColor.BLUE + page.getID() + ChatColor.DARK_GRAY + "\u2590 Fill Slots", 3);
-            final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.PAGE_PROPERTIES_FILL_SLOTS, inv.getInventory(), page);
+            final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.PAGE_PROPERTIES_FILL_SLOTS, inv.getInventory(), page);
             inv.setItem(4, new ItemStack(Material.COMPASS));
             inv.setDisplay(4, ChatColor.RED + "Back");
             inv.addLore(4, ChatColor.GRAY + "Return to properties");

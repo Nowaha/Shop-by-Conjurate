@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -39,7 +40,7 @@ public class VersionChecker implements Listener {
         if (event.getPlayer().isOp()) {
             final String pluginversion = check();
             if (pluginversion != null) {
-                final String version = Initiate.getPlugin((Class) Initiate.class).getDescription().getVersion();
+                final String version = JavaPlugin.getPlugin((Class) Initiate.class).getDescription().getVersion();
                 if (!version.equals(pluginversion)) {
                     event.getPlayer().sendMessage(ChatColor.RED + version + ChatColor.GRAY + " Shop is outdated");
                     event.getPlayer().sendMessage(ChatColor.GREEN + pluginversion + ChatColor.GRAY + " Shop is available for download");

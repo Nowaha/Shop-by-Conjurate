@@ -16,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class TradeEditor implements Listener {
     @EventHandler
@@ -56,7 +57,7 @@ public class TradeEditor implements Listener {
 
     public void openTradeEditor(final Player player, final Page page, final int slot) {
         final InventoryCreator inv = new InventoryCreator(new StringBuilder().append(ChatColor.BLUE).append(slot).append(ChatColor.DARK_GRAY).append("\u2590 Inventory").toString(), 3);
-        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_INVENTORY, inv.getInventory(), page);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_INVENTORY, inv.getInventory(), page);
         if (page.getInventory().getItem(slot) == null) {
             page.openEditor(player);
             return;

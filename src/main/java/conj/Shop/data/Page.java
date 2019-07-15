@@ -20,6 +20,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,9 +53,9 @@ public class Page {
         this.pageslots = new HashMap<Integer, PageSlot>();
         this.id = page.getID();
         this.title = page.getTitle();
-        this.size = new Integer(page.getSize());
-        this.type = new Integer(page.getType());
-        this.gui = new Boolean(page.isGUI());
+        this.size = Integer.valueOf(page.getSize());
+        this.type = Integer.valueOf(page.getType());
+        this.gui = Boolean.valueOf(page.isGUI());
         this.items = new ArrayList<HashMap<Map<String, Object>, Map<String, Object>>>(page.getItemsMap());
         this.slots = new ArrayList<Integer>(page.getSlots());
         this.pagedata = new HashMap<String, Object>(page.getData());
@@ -371,7 +372,7 @@ public class Page {
                 }
             }
         }
-        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.SHOP, inv, this);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.SHOP, inv, this);
         final String title = Placeholder.placehold(player, this.getTitle());
         gui.setTitle(title);
         gui.open(player);
@@ -413,7 +414,7 @@ public class Page {
                 }
             }
         }
-        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_VIEW, inv.getInventory(), this);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_VIEW, inv.getInventory(), this);
         gui.setTitle(ChatColor.YELLOW + this.id);
         gui.open(player);
     }
@@ -428,7 +429,7 @@ public class Page {
             return;
         }
         for (int x = 0; x < amount; ++x) {
-            final Map<Integer, ItemStack> map = player.getInventory().addItem(new ItemStack[]{item});
+            final Map<Integer, ItemStack> map = player.getInventory().addItem(item);
             if (!map.values().isEmpty()) {
                 --affordable;
             }
@@ -460,7 +461,7 @@ public class Page {
         final ItemStack item = this.getInventory().getItem(slot);
         int failed = 0;
         for (int x = 0; x < amount; ++x) {
-            final Map<Integer, ItemStack> map = player.getInventory().removeItem(new ItemStack[]{item});
+            final Map<Integer, ItemStack> map = player.getInventory().removeItem(item);
             if (!map.values().isEmpty()) {
                 ++failed;
             }

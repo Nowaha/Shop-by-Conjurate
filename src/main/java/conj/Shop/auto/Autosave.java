@@ -7,6 +7,7 @@ import conj.Shop.enums.Config;
 import conj.Shop.tools.Debug;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 public class Autosave {
@@ -20,7 +21,7 @@ public class Autosave {
         if (Config.AUTOSAVE.isActive()) {
             cancel();
             final BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-            Autosave.id = scheduler.scheduleSyncRepeatingTask(Initiate.getPlugin((Class) Initiate.class), new Runnable() {
+            Autosave.id = scheduler.scheduleSyncRepeatingTask(JavaPlugin.getPlugin((Class) Initiate.class), new Runnable() {
                 @Override
                 public void run() {
                     if (!Config.AUTOSAVE.isActive()) {

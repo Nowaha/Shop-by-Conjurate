@@ -9,6 +9,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 public class PageClickEvent extends Event implements Cancellable {
@@ -30,8 +31,9 @@ public class PageClickEvent extends Event implements Cancellable {
     private Inventory topinv;
     private boolean cancelled;
     private boolean top;
+    private InventoryView inventoryView;
 
-    public PageClickEvent(final Player player, final PageData action, final GUI gui, final Page page, final int slot, final int rawslot, final ItemStack item, final Inventory topinv, final Inventory inv, final ClickType click, final boolean top) {
+    public PageClickEvent(final Player player, final PageData action, final GUI gui, final Page page, final int slot, final int rawslot, final ItemStack item, final Inventory topinv, final Inventory inv, final ClickType click, final boolean top, InventoryView inventoryView) {
         this.item = item;
         this.page = page;
         this.slot = slot;
@@ -43,6 +45,7 @@ public class PageClickEvent extends Event implements Cancellable {
         this.gui = gui;
         this.click = click;
         this.top = top;
+        this.inventoryView = inventoryView;
     }
 
     public static HandlerList getHandlerList() {
@@ -103,5 +106,9 @@ public class PageClickEvent extends Event implements Cancellable {
 
     public void setCancelled(final boolean cancelled) {
         this.cancelled = cancelled;
+    }
+
+    public InventoryView getInventoryView() {
+        return inventoryView;
     }
 }

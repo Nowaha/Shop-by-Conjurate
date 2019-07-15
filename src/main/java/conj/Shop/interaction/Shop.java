@@ -13,21 +13,20 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Container;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,12 +90,15 @@ public class Shop implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void pickupPrevention(final PlayerPickupItemEvent event) {
-        final Manager manager = Manager.get();
-        final String pagename = manager.getOpenPage(event.getPlayer());
-        final Page page = manager.getPage(pagename);
-        if (page != null && page.getType() == 1) {
-            event.setCancelled(true);
+    public void pickupPrevention(final EntityPickupItemEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            final Manager manager = Manager.get();
+            final String pagename = manager.getOpenPage(player);
+            final Page page = manager.getPage(pagename);
+            if (page != null && page.getType() == 1) {
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -144,9 +146,9 @@ public class Shop implements Listener {
                 for (int length = (contents = inv.getContents()).length, i = 0; i < length; ++i) {
                     final ItemStack item = contents[i];
                     if (item != null) {
-                        final HashMap<Integer, ItemStack> map = event.getPlayer().getInventory().addItem(new ItemStack[]{item});
+                        final HashMap<Integer, ItemStack> map = event.getPlayer().getInventory().addItem(item);
                         if (!map.isEmpty()) {
-                            final HashMap<Integer, ItemStack> emap = event.getPlayer().getEnderChest().addItem(new ItemStack[]{map.get(0)});
+                            final HashMap<Integer, ItemStack> emap = event.getPlayer().getEnderChest().addItem(map.get(0));
                             if (!emap.isEmpty()) {
                                 event.getPlayer().getWorld().dropItemNaturally(event.getPlayer().getLocation(), emap.get(0));
                             }
@@ -222,15 +224,15 @@ public class Shop implements Listener {
                         if (event.getClick().equals(ClickType.RIGHT)) {
                             final ItemStack item = page.getInventory().getItem(slot);
                             if (ps.getSell() > 0.0 && player.getInventory().containsAtLeast(item, 1)) {
-                                this.sellItem(player, page, slot, 0, "unconfirmed");
+                                this.sellItem(player, page, slot, 0, "unconfirmed", event.getInventoryView());
                             }
                         } else if (event.getClick().equals(ClickType.LEFT) && ps.getCost() <= Initiate.econ.getBalance(player)) {
-                            this.buyItem(player, page, slot, 0, "unconfirmed");
+                            this.buyItem(player, page, slot, 0, "unconfirmed", event.getInventoryView());
                         }
                     } else if (ps.getFunction().equals(Function.SELL)) {
                         final ItemStack item = page.getInventory().getItem(slot);
                         if (player.getInventory().containsAtLeast(item, 1)) {
-                            this.sellItem(player, page, slot, 0, "unconfirmed");
+                            this.sellItem(player, page, slot, 0, "unconfirmed", event.getInventoryView());
                         }
                     } else if (ps.getFunction().equals(Function.TRADE)) {
                         this.tradeItem(player, page, slot);
@@ -333,10 +335,10 @@ public class Shop implements Listener {
                                         return;
                                     }
                                     if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
-                                        this.buyItem(player, page, itemslot, amount, "confirmed");
+                                        this.buyItem(player, page, itemslot, amount, "confirmed", event.getInventoryView());
                                     }
                                     if (event.getPageData().equals(PageData.SELL_ITEM)) {
-                                        this.sellItem(player, page, itemslot, amount, "confirmed");
+                                        this.sellItem(player, page, itemslot, amount, "confirmed", event.getInventoryView());
                                     }
                                 }
                             } else {
@@ -353,10 +355,10 @@ public class Shop implements Listener {
                                 amount -= add;
                             }
                             if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
-                                this.buyItem(player, page, itemslot, amount, "unconfirmed");
+                                this.buyItem(player, page, itemslot, amount, "unconfirmed", event.getInventoryView());
                             }
                             if (event.getPageData().equals(PageData.SELL_ITEM)) {
-                                this.sellItem(player, page, itemslot, amount, "unconfirmed");
+                                this.sellItem(player, page, itemslot, amount, "unconfirmed", event.getInventoryView());
                             }
                         } else if (function.equals(GUIFunction.BACK)) {
                             Debug.log(player.getName() + " clicked on back GUI page " + guipagename);
@@ -376,10 +378,10 @@ public class Shop implements Listener {
                                 return;
                             }
                             if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
-                                this.buyItem(player, page, itemslot, amount, "confirmed");
+                                this.buyItem(player, page, itemslot, amount, "confirmed", event.getInventoryView());
                             }
                             if (event.getPageData().equals(PageData.SELL_ITEM)) {
-                                this.sellItem(player, page, itemslot, amount, "confirmed");
+                                this.sellItem(player, page, itemslot, amount, "confirmed", event.getInventoryView());
                             }
                         }
                     } else {
@@ -395,10 +397,10 @@ public class Shop implements Listener {
                         --add2;
                     }
                     if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
-                        this.buyItem(player, page, itemslot, amount + add2, "unconfirmed");
+                        this.buyItem(player, page, itemslot, amount + add2, "unconfirmed", event.getInventoryView());
                     }
                     if (event.getPageData().equals(PageData.SELL_ITEM)) {
-                        this.sellItem(player, page, itemslot, amount + add2, "unconfirmed");
+                        this.sellItem(player, page, itemslot, amount + add2, "unconfirmed", event.getInventoryView());
                     }
                 }
                 if (slot == 21) {
@@ -410,10 +412,10 @@ public class Shop implements Listener {
                         add2 -= 8;
                     }
                     if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
-                        this.buyItem(player, page, itemslot, amount + add2, "unconfirmed");
+                        this.buyItem(player, page, itemslot, amount + add2, "unconfirmed", event.getInventoryView());
                     }
                     if (event.getPageData().equals(PageData.SELL_ITEM)) {
-                        this.sellItem(player, page, itemslot, amount + add2, "unconfirmed");
+                        this.sellItem(player, page, itemslot, amount + add2, "unconfirmed", event.getInventoryView());
                     }
                 }
                 if (slot == 22) {
@@ -425,10 +427,10 @@ public class Shop implements Listener {
                         add2 -= 16;
                     }
                     if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
-                        this.buyItem(player, page, itemslot, amount + add2, "unconfirmed");
+                        this.buyItem(player, page, itemslot, amount + add2, "unconfirmed", event.getInventoryView());
                     }
                     if (event.getPageData().equals(PageData.SELL_ITEM)) {
-                        this.sellItem(player, page, itemslot, amount + add2, "unconfirmed");
+                        this.sellItem(player, page, itemslot, amount + add2, "unconfirmed", event.getInventoryView());
                     }
                 }
                 if (slot == 23) {
@@ -440,10 +442,10 @@ public class Shop implements Listener {
                         add2 -= 32;
                     }
                     if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
-                        this.buyItem(player, page, itemslot, amount + add2, "unconfirmed");
+                        this.buyItem(player, page, itemslot, amount + add2, "unconfirmed", event.getInventoryView());
                     }
                     if (event.getPageData().equals(PageData.SELL_ITEM)) {
-                        this.sellItem(player, page, itemslot, amount + add2, "unconfirmed");
+                        this.sellItem(player, page, itemslot, amount + add2, "unconfirmed", event.getInventoryView());
                     }
                 }
                 if (slot == 24) {
@@ -455,10 +457,10 @@ public class Shop implements Listener {
                         add2 -= 64;
                     }
                     if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
-                        this.buyItem(player, page, itemslot, amount + add2, "unconfirmed");
+                        this.buyItem(player, page, itemslot, amount + add2, "unconfirmed", event.getInventoryView());
                     }
                     if (event.getPageData().equals(PageData.SELL_ITEM)) {
-                        this.sellItem(player, page, itemslot, amount + add2, "unconfirmed");
+                        this.sellItem(player, page, itemslot, amount + add2, "unconfirmed", event.getInventoryView());
                     }
                 }
                 if (slot == 31) {
@@ -470,10 +472,10 @@ public class Shop implements Listener {
                         add2 -= 128;
                     }
                     if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
-                        this.buyItem(player, page, itemslot, amount + add2, "unconfirmed");
+                        this.buyItem(player, page, itemslot, amount + add2, "unconfirmed", event.getInventoryView());
                     }
                     if (event.getPageData().equals(PageData.SELL_ITEM)) {
-                        this.sellItem(player, page, itemslot, amount + add2, "unconfirmed");
+                        this.sellItem(player, page, itemslot, amount + add2, "unconfirmed", event.getInventoryView());
                     }
                 }
             }
@@ -494,7 +496,7 @@ public class Shop implements Listener {
         }
     }
 
-    public void buyItem(final Player player, final Page page, final int slot, int amount, final String status) {
+    public void buyItem(final Player player, final Page page, final int slot, int amount, final String status, InventoryView inventoryView) {
         final PageSlot ps = page.getPageSlot(slot);
         final long start = System.currentTimeMillis();
         if (amount < page.getDefaultQuantity()) {
@@ -507,12 +509,11 @@ public class Shop implements Listener {
         Debug.log("Setup BUY GUI affordable took: " + Manager.getDuration(start));
         final Page buypage = Manager.get().getPage(Config.PURCHASE_GUI.toString());
         final Inventory mainInv = this.getBuyInventory().getInventory();
-        final Container inventContainer = (Container) mainInv.getHolder();
-        final String title = Placeholder.placehold(player, Placeholder.placehold(player, inventContainer.getCustomName()), page, slot, amount, status, true);
+        final String title = Placeholder.placehold(player, Placeholder.placehold(player, inventoryView.getTitle()), page, slot, amount, status, true);
         Debug.log("Get BUY GUI inventory took: " + Manager.getDuration(start));
         final Inventory viewInv = Placeholder.placehold(player, mainInv, page, buypage, slot, amount, status, true);
         Debug.log("Placehold BUY GUI inventory took: " + Manager.getDuration(start));
-        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.PURCHASE_ITEM, viewInv, page);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.PURCHASE_ITEM, viewInv, page);
         gui.setTitle(title);
         gui.addPass("guipage", Config.PURCHASE_GUI.toString());
         gui.addPass("status", status);
@@ -542,7 +543,7 @@ public class Shop implements Listener {
         Debug.log("Get TRADE GUI inventory took: " + Manager.getDuration(start));
         final Inventory viewInv = Placeholder.placehold(player, mainInv, page, tradepage, slot, 0, "confirmed", true);
         Debug.log("Placehold TRADE GUI inventory took: " + Manager.getDuration(start));
-        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.TRADE_ITEM, viewInv, page);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.TRADE_ITEM, viewInv, page);
         gui.setTitle(title);
         gui.addPass("guipage", Config.TRADE_GUI.toString());
         gui.addPass("slot", slot);
@@ -551,7 +552,7 @@ public class Shop implements Listener {
         Debug.log("Open TRADE GUI took: " + Manager.getDuration(start));
     }
 
-    public void sellItem(final Player player, final Page page, final int slot, int amount, final String status) {
+    public void sellItem(final Player player, final Page page, final int slot, int amount, final String status, InventoryView inventoryView) {
         final InventoryCreator pi = new InventoryCreator(player.getInventory());
         if (amount < page.getDefaultQuantity()) {
             amount = page.getDefaultQuantity();
@@ -561,10 +562,9 @@ public class Shop implements Listener {
         }
         final Page sellpage = Manager.get().getPage(Config.SELL_GUI.toString());
         final Inventory mainInv = this.getSellInventory().getInventory();
-        final Container inventContainer = (Container) mainInv.getHolder();
-        final String title = Placeholder.placehold(player, Placeholder.placehold(player, inventContainer.getCustomName(), page, slot, amount, status, false));
+        final String title = Placeholder.placehold(player, Placeholder.placehold(player, inventoryView.getTitle(), page, slot, amount, status, false));
         final Inventory viewInv = Placeholder.placehold(player, mainInv, page, sellpage, slot, amount, status, false);
-        final GUI gui = new GUI(Initiate.getPlugin((Class) Initiate.class), PageData.SELL_ITEM, viewInv, page);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.SELL_ITEM, viewInv, page);
         gui.setTitle(title);
         gui.addPass("guipage", Config.SELL_GUI.toString());
         gui.addPass("status", status);

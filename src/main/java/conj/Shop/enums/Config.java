@@ -5,6 +5,7 @@ import conj.Shop.auto.Autosave;
 import conj.Shop.base.Initiate;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public enum Config {
     }
 
     public static void save() {
-        final Plugin plugin = Initiate.getPlugin((Class) Initiate.class);
+        final Plugin plugin = JavaPlugin.getPlugin((Class) Initiate.class);
         Config[] values;
         for (int length = (values = values()).length, i = 0; i < length; ++i) {
             final Config c = values[i];
@@ -67,7 +68,7 @@ public enum Config {
     }
 
     public static void load() {
-        final Plugin plugin = Initiate.getPlugin((Class) Initiate.class);
+        final Plugin plugin = JavaPlugin.getPlugin((Class) Initiate.class);
         plugin.reloadConfig();
         Config[] values;
         for (int length = (values = values()).length, i = 0; i < length; ++i) {
