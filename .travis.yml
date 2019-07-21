@@ -1,7 +1,8 @@
 language: java
-jdk: oraclejdk8
+jdk: openjdk11
+dist: trusty
 install: true
-script: mvn package
+script: mvn clean install
 cache:
   directories:
     - $HOME/.m2
