@@ -1,5 +1,5 @@
 name: Shop
-version: 2.1.1
+version: 2.1.2
 description: Create and manage shops.
 author: Conjurate
 main: conj.Shop.base.Initiate
