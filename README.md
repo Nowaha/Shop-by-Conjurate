@@ -1,9 +1,16 @@
 # Shop-by-Conjurate
-1.14.3 update for the Shop plugin by Conjurate. Original: https://www.spigotmc.org/resources/shop.8185/
+1.14 update for the Shop plugin by Conjurate. Original: https://www.spigotmc.org/resources/shop.8185/
 
 [![Build Status](https://travis-ci.com/Huskehhh/Shop-by-Conjurate.svg?branch=master)](https://travis-ci.com/Huskehhh/Shop-by-Conjurate)
 
-### Latest dev build
-Latest developer build is available at
+### Latest build
+Latest build is available at
 
-https://ci.husk.pro/
+https://ci.husk.pro/job/Shop-By-Conjurate/
+
+### Compiling
+You must have Apache Maven installed to compile. (http://maven.apache.org)
+
+to compile use the following command:
+
+```mvn clean install```
