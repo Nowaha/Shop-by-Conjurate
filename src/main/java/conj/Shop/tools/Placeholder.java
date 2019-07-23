@@ -1,17 +1,22 @@
 package conj.Shop.tools;
 
-import org.bukkit.entity.*;
-import java.util.*;
-import conj.Shop.data.*;
-import conj.Shop.base.*;
-import conj.Shop.control.*;
-import conj.Shop.enums.*;
-import org.bukkit.*;
-import org.bukkit.inventory.*;
-import conj.Shop.interaction.*;
+import conj.Shop.base.Initiate;
+import conj.Shop.control.Manager;
+import conj.Shop.data.Page;
+import conj.Shop.data.PageSlot;
+import conj.Shop.enums.Config;
+import conj.Shop.interaction.Editor;
+import conj.Shop.interaction.Shop;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-public class Placeholder
-{
+import java.util.ArrayList;
+import java.util.List;
+
+public class Placeholder {
     public static List<String> placehold(final Player player, final List<String> messages, final Page page, final int slot) {
         final List<String> messageList = new ArrayList<String>();
         for (final String s : messages) {
@@ -19,7 +24,7 @@ public class Placeholder
         }
         return messageList;
     }
-    
+
     public static List<String> placehold(final Player player, final List<String> messages, final Page page, final Page gui, final int x, final int slot, final int amount, final String status, final boolean buy) {
         final List<String> messageList = new ArrayList<String>();
         for (final String s : messages) {
@@ -27,7 +32,7 @@ public class Placeholder
         }
         return messageList;
     }
-    
+
     public static String placehold(final Player player, String message, final Page page, final Page gui, final int x, final int slot, final int amount, final String status, final boolean buy) {
         if (gui != null) {
             final PageSlot ps = page.getPageSlot(slot);
@@ -35,17 +40,16 @@ public class Placeholder
                 if (ps.getDataString("gui_confirm1") != null && message.contains("%confirm%")) {
                     message = message.replaceAll("%confirm%", ps.getDataString("gui_confirm1"));
                 }
-            }
-            else if (ps.getDataString("gui_confirm1") != null && message.contains("%confirm%")) {
+            } else if (ps.getDataString("gui_confirm1") != null && message.contains("%confirm%")) {
                 message = message.replaceAll("%confirm%", ps.getDataString("gui_confirm2"));
             }
             if (message.contains("%quantity%")) {
-                message = message.replaceAll("%quantity%", new String(ps.getDataString("gui_quantity")));
+                message = message.replaceAll("%quantity%", ps.getDataString("gui_quantity"));
             }
         }
         return placehold(player, message, page, slot, amount, status, buy);
     }
-    
+
     public static List<String> placehold(final Player player, final List<String> messages, final Page page) {
         final List<String> messageList = new ArrayList<String>();
         for (final String s : messages) {
@@ -53,7 +57,7 @@ public class Placeholder
         }
         return messageList;
     }
-    
+
     public static List<String> placehold(final Player player, final List<String> messages) {
         final List<String> messageList = new ArrayList<String>();
         for (final String s : messages) {
@@ -61,7 +65,7 @@ public class Placeholder
         }
         return messageList;
     }
-    
+
     public static String placehold(final Player player, String message) {
         if (Initiate.placeholderapi) {
             message = PlaceholderAddon.placehold(player, message);
@@ -79,11 +83,11 @@ public class Placeholder
             message = message.replaceAll("%player%", player.getName());
         }
         if (message.contains("%balance%")) {
-            message = message.replaceAll("%balance%", DoubleUtil.toString(Initiate.econ.getBalance((OfflinePlayer)player)));
+            message = message.replaceAll("%balance%", DoubleUtil.toString(Initiate.econ.getBalance(player)));
         }
         return ChatColor.translateAlternateColorCodes('&', message);
     }
-    
+
     public static String placehold(final Player player, String message, final Page page) {
         message = placehold(player, message);
         if (message.contains("%page%")) {
@@ -94,7 +98,7 @@ public class Placeholder
         }
         return message;
     }
-    
+
     public static String placehold(final Player player, String message, final Page page, final int slot) {
         message = placehold(player, message, page);
         if (message.contains("%cooldown%")) {
@@ -129,7 +133,7 @@ public class Placeholder
         }
         return message;
     }
-    
+
     public static String placehold(final Player player, String message, final Page page, final int slot, final int amount, final String status, final boolean buy) {
         final PageSlot ps = page.getPageSlot(slot);
         message = placehold(player, message, page, slot);
@@ -146,11 +150,11 @@ public class Placeholder
             message = message.replaceAll("%amount%", String.valueOf(amount));
         }
         if (message.contains("%confirm%")) {
-            message = message.replaceAll("%confirm%", ChatColor.DARK_GREEN + new String(status.equalsIgnoreCase("unconfirmed") ? new String(buy ? "Click to buy" : "Click to sell") : "Click to confirm"));
+            message = message.replaceAll("%confirm%", ChatColor.DARK_GREEN + (status.equalsIgnoreCase("unconfirmed") ? buy ? "Click to buy" : "Click to sell" : "Click to confirm"));
         }
         return message;
     }
-    
+
     public static List<String> placehold(final Player player, final List<String> messages, final Page page, final int slot, final int amount, final String status, final boolean buy) {
         final List<String> messageList = new ArrayList<String>();
         for (final String s : messages) {
@@ -158,7 +162,7 @@ public class Placeholder
         }
         return messageList;
     }
-    
+
     public static Inventory placehold(final Player player, final Inventory inv, final Page page, final Page gui, final int slot, final int amount, final String status, final boolean buy) {
         for (int x = 0; inv.getSize() > x; ++x) {
             final ItemStack i = inv.getItem(x);
@@ -183,17 +187,17 @@ public class Placeholder
                 if (ic.hasLore()) {
                     ic.setLore(placehold(player, ic.getLore(), page, gui, x, slot, amount, status, buy));
                 }
-                Debug.log(String.valueOf(x) + " slot lore took: " + Manager.getDuration(startlore));
+                Debug.log(x + " slot lore took: " + Manager.getDuration(startlore));
                 final long startname = System.currentTimeMillis();
                 if (ic.hasDisplayName()) {
                     ic.setName(placehold(player, ic.getName(), page, gui, x, slot, amount, status, buy));
                 }
-                Debug.log(String.valueOf(x) + " slot name took: " + Manager.getDuration(startname));
+                Debug.log(x + " slot name took: " + Manager.getDuration(startname));
             }
         }
         return inv;
     }
-    
+
     public static Inventory placehold(final Player player, final Inventory inv, final Page page) {
         for (int x = 0; inv.getSize() > x; ++x) {
             final ItemStack i = inv.getItem(x);
@@ -209,24 +213,24 @@ public class Placeholder
         }
         return updateWorth(player, inv, page);
     }
-    
+
     public static Inventory updateWorth(final Player player, final Inventory inv, final Page page) {
         final InventoryCreator ic = new InventoryCreator(inv);
-        final String worth = DoubleUtil.toString(Shop.getInventoryWorth((OfflinePlayer)player, inv, page));
+        final String worth = DoubleUtil.toString(Shop.getInventoryWorth(player, inv, page));
         ic.replace("%worth%", worth);
         return ic.getInventory();
     }
-    
+
     public static void sendMessage(final Player player, final String message) {
         player.sendMessage(placehold(player, message));
     }
-    
+
     public static void sendMessage(final Player player, final List<String> messages) {
         for (final String s : messages) {
             player.sendMessage(placehold(player, s));
         }
     }
-    
+
     public static String[] placehold(final Player player, final String[] args) {
         for (int x = 0; x < args.length; ++x) {
             args[x] = placehold(player, args[x]);

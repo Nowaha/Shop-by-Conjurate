@@ -1,9 +1,8 @@
 package conj.Shop.tools;
 
-import java.text.*;
+import java.text.NumberFormat;
 
-public class DoubleUtil
-{
+public class DoubleUtil {
     public static String toString(final Double value) {
         return NumberFormat.getInstance().format(value);
     }

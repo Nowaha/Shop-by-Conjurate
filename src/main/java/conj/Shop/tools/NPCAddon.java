@@ -1,22 +1,31 @@
 package conj.Shop.tools;
 
-import net.citizensnpcs.api.trait.*;
-import conj.Shop.control.*;
-import org.bukkit.entity.*;
-import conj.Shop.data.*;
-import java.util.*;
-import org.bukkit.event.*;
-import net.citizensnpcs.api.event.*;
+import conj.Shop.control.Manager;
+import conj.Shop.data.Page;
+import net.citizensnpcs.api.event.NPCRemoveEvent;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.citizensnpcs.api.trait.Trait;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 
-public class NPCAddon extends Trait
-{
+import java.util.List;
+
+public class NPCAddon extends Trait {
     public NPCAddon() {
         super("shop");
     }
-    
+
+    public static void setCitizenPage(final int id, final String page) {
+        if (page == null) {
+            Manager.cnpcs.remove(id);
+            return;
+        }
+        Manager.cnpcs.put(id, page);
+    }
+
     @EventHandler
     public void click(final NPCRightClickEvent event) {
-        if (event.getNPC().hasTrait((Class)NPCAddon.class)) {
+        if (event.getNPC().hasTrait(NPCAddon.class)) {
             final Player player = event.getClicker();
             final Manager manager = new Manager();
             final Page page = manager.getPage(event.getNPC());
@@ -33,31 +42,21 @@ public class NPCAddon extends Trait
             }
         }
     }
-    
+
     @EventHandler
     public void click(final NPCRemoveEvent event) {
         Manager.get().setCitizenPage(event.getNPC().getId(), null);
     }
-    
-    public static void setCitizenPage(final int id, final String page) {
-        if (page == null) {
-            if (Manager.cnpcs.containsKey(id)) {
-                Manager.cnpcs.remove(id);
-            }
-            return;
-        }
-        Manager.cnpcs.put(id, page);
-    }
-    
+
     public void onAttach() {
     }
-    
+
     public void onDespawn() {
     }
-    
+
     public void onSpawn() {
     }
-    
+
     public void onRemove() {
     }
 }

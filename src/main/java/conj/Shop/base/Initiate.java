@@ -1,28 +1,38 @@
 package conj.Shop.base;
 
-import org.bukkit.plugin.java.*;
-import conj.UA.api.files.*;
-import net.milkbowl.vault.economy.*;
-import net.milkbowl.vault.permission.*;
-import net.milkbowl.vault.chat.*;
-import java.util.logging.*;
-import conj.Shop.control.*;
-import org.bukkit.command.*;
-import org.bukkit.event.*;
-import conj.Shop.interaction.*;
-import java.io.*;
-import conj.Shop.enums.*;
-import conj.Shop.data.*;
-import org.bukkit.*;
-import net.citizensnpcs.api.*;
-import conj.Shop.tools.*;
-import net.citizensnpcs.api.trait.*;
-import conj.Shop.auto.*;
-import java.util.*;
-import org.bukkit.plugin.*;
+import conj.Shop.auto.Autobackup;
+import conj.Shop.auto.Autosave;
+import conj.Shop.control.Control;
+import conj.Shop.data.Page;
+import conj.Shop.data.Sign;
+import conj.Shop.data.Update;
+import conj.Shop.enums.Config;
+import conj.Shop.interaction.Editor;
+import conj.Shop.interaction.PageProperties;
+import conj.Shop.interaction.Shop;
+import conj.Shop.interaction.TradeEditor;
+import conj.Shop.tools.Debug;
+import conj.Shop.tools.NPCAddon;
+import conj.Shop.tools.PlaceholderAddon;
+import conj.UA.api.files.ShopFile;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.trait.TraitInfo;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public class Initiate extends JavaPlugin
-{
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+
+public class Initiate extends JavaPlugin {
     public static ShopFile sf;
     public static List<String> shop_purchase;
     public static List<String> shop_sell;
@@ -33,22 +43,22 @@ public class Initiate extends JavaPlugin
     public static Chat chat;
     public String version;
     public String pluginname;
-    
+
     public Initiate() {
         this.version = this.getDescription().getVersion();
         this.pluginname = this.getDescription().getName();
     }
-    
+
     public void onEnable() {
         Initiate.shop_purchase = new ArrayList<String>();
-        final String[] add = { "&aYou have purchased &b%quantity% &r%item% &afor &2%cost%", "&cA total of &4%failed% &cfailed to purchase.", "&eYour new balance is &2%balance%" };
+        final String[] add = {"&aYou have purchased &b%quantity% &r%item% &afor &2%cost%", "&cA total of &4%failed% &cfailed to purchase.", "&eYour new balance is &2%balance%"};
         String[] array;
         for (int length = (array = add).length, i = 0; i < length; ++i) {
             final String s = array[i];
             Initiate.shop_purchase.add(s);
         }
         Initiate.shop_sell = new ArrayList<String>();
-        final String[] adds = { "&aYou have sold &b%quantity% &r%item% &afor &2%cost%", "&eYour new balance is &2%balance%" };
+        final String[] adds = {"&aYou have sold &b%quantity% &r%item% &afor &2%cost%", "&eYour new balance is &2%balance%"};
         String[] array2;
         for (int length2 = (array2 = adds).length, j = 0; j < length2; ++j) {
             final String s2 = array2[j];
@@ -56,17 +66,17 @@ public class Initiate extends JavaPlugin
         }
         if (!this.setupEconomy()) {
             this.getLogger().log(Level.SEVERE, "Disabled due to no Vault dependency found. (Example: Essentials)");
-            this.getServer().getPluginManager().disablePlugin((Plugin)this);
+            this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
         this.setupPermissions();
-        this.getCommand("shop").setExecutor((CommandExecutor)new Control());
-        this.getServer().getPluginManager().registerEvents((Listener)new VersionChecker(), (Plugin)this);
-        this.getServer().getPluginManager().registerEvents((Listener)new Sign(), (Plugin)this);
-        this.getServer().getPluginManager().registerEvents((Listener)new Editor(), (Plugin)this);
-        this.getServer().getPluginManager().registerEvents((Listener)new TradeEditor(), (Plugin)this);
-        this.getServer().getPluginManager().registerEvents((Listener)new Shop(), (Plugin)this);
-        this.getServer().getPluginManager().registerEvents((Listener)new PageProperties(), (Plugin)this);
+        this.getCommand("shop").setExecutor(new Control());
+        this.getServer().getPluginManager().registerEvents(new VersionChecker(), this);
+        this.getServer().getPluginManager().registerEvents(new Sign(), this);
+        this.getServer().getPluginManager().registerEvents(new Editor(), this);
+        this.getServer().getPluginManager().registerEvents(new TradeEditor(), this);
+        this.getServer().getPluginManager().registerEvents(new Shop(), this);
+        this.getServer().getPluginManager().registerEvents(new PageProperties(), this);
         final boolean mainfolder = this.getDataFolder().mkdir();
         if (Debug.debug) {
             this.getLogger().info("Created main folder: " + mainfolder);
@@ -96,57 +106,53 @@ public class Initiate extends JavaPlugin
         if (Config.UPDATE_CHECK.isActive()) {
             final String pluginversion = VersionChecker.check();
             if (VersionChecker.check() != null && !this.version.equals(pluginversion)) {
-                this.getLogger().info(String.valueOf(this.version) + " Shop is outdated");
-                this.getLogger().info(String.valueOf(pluginversion) + " Shop is available for download");
+                this.getLogger().info(this.version + " Shop is outdated");
+                this.getLogger().info(pluginversion + " Shop is available for download");
                 this.getLogger().info("Go to http://spigotmc.org/resources/shop.8185/ to update");
             }
         }
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            PlaceholderAddon.register((Plugin)this);
+            PlaceholderAddon.register(this);
             Initiate.placeholderapi = true;
-        }
-        else {
+        } else {
             this.getLogger().info("PlaceholderAPI not found, alternative placeholders will be used.");
         }
         if (Bukkit.getPluginManager().getPlugin("Citizens") != null) {
             try {
-                CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create((Class)NPCAddon.class).withName("shop"));
+                CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NPCAddon.class).withName("shop"));
                 Initiate.citizens = true;
                 this.getLogger().info("Successfully hooked into Citizens.");
-            }
-            catch (NullPointerException npe) {
+            } catch (NullPointerException npe) {
+                this.getLogger().info("An error occured when trying to register a trait. Your Citizens version might not be supported.");
+            } catch (NoClassDefFoundError ncd) {
                 this.getLogger().info("An error occured when trying to register a trait. Your Citizens version might not be supported.");
             }
-            catch (NoClassDefFoundError ncd) {
-                this.getLogger().info("An error occured when trying to register a trait. Your Citizens version might not be supported.");
-            }
-        }
-        else {
+        } else {
             this.getLogger().info("Citizens not found. NPCs will not be available.");
         }
         Autosave.start();
         Autobackup.start();
     }
-    
+
     public void onDisable() {
         Autosave.save();
     }
-    
+
     private boolean setupEconomy() {
         if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
-        final RegisteredServiceProvider<Economy> rsp = (RegisteredServiceProvider<Economy>)this.getServer().getServicesManager().getRegistration((Class)Economy.class);
+        final RegisteredServiceProvider<Economy> rsp = (RegisteredServiceProvider<Economy>) this.getServer().getServicesManager().getRegistration((Class) Economy.class);
         if (rsp == null) {
             return false;
         }
-        Initiate.econ = (Economy)rsp.getProvider();
+        Initiate.econ = rsp.getProvider();
         return Initiate.econ != null;
     }
-    
+
     private boolean setupPermissions() {
-        final RegisteredServiceProvider<Permission> rsp = (RegisteredServiceProvider<Permission>)this.getServer().getServicesManager().getRegistration((Class)Permission.class);
-        Initiate.perms = (Permission)rsp.getProvider();
+        final RegisteredServiceProvider<Permission> rsp = (RegisteredServiceProvider<Permission>) this.getServer().getServicesManager().getRegistration((Class) Permission.class);
+        Initiate.perms = rsp.getProvider();
         return Initiate.perms != null;
     }
 }

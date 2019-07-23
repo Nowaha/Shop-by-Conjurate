@@ -1,17 +1,47 @@
 package conj.Shop.cmd;
 
-import org.bukkit.entity.*;
-import org.bukkit.command.*;
-import conj.Shop.enums.*;
-import conj.Shop.tools.*;
-import conj.Shop.interaction.*;
-import conj.Shop.control.*;
-import conj.Shop.data.*;
-import java.util.*;
-import org.bukkit.*;
+import conj.Shop.control.Control;
+import conj.Shop.control.Manager;
+import conj.Shop.data.Page;
+import conj.Shop.data.PageSlot;
+import conj.Shop.enums.Config;
+import conj.Shop.enums.Function;
+import conj.Shop.interaction.Editor;
+import conj.Shop.interaction.PageProperties;
+import conj.Shop.tools.DoubleUtil;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.entity.Player;
 
-public class PageManagement
-{
+import java.util.ArrayList;
+import java.util.List;
+
+public class PageManagement {
+    public static boolean isManaging(final Player player, final boolean silent) {
+        if (Manager.edit.containsKey(player.getName())) {
+            final Manager manager = new Manager();
+            final String id = Manager.edit.get(player.getName());
+            if (manager.getPage(id) != null) {
+                return true;
+            }
+            player.sendMessage(ChatColor.RED + "You need to select a page to manage. /shop page manage <page>");
+            Manager.edit.remove(player.getName());
+        } else {
+            player.sendMessage(ChatColor.RED + "You need to select a page to manage. /shop page manage <page>");
+        }
+        return false;
+    }
+
+    public static Page getPage(final Player player) {
+        if (Manager.edit.containsKey(player.getName())) {
+            final Manager manager = new Manager();
+            final String id = Manager.edit.get(player.getName());
+            return manager.getPage(id);
+        }
+        return null;
+    }
+
     public void run(final Player player, final Command cmd, final String label, final String[] args) {
         final Manager manager = new Manager();
         if (args.length == 1) {
@@ -22,8 +52,7 @@ public class PageManagement
             if (isManaging(player, false)) {
                 player.sendMessage(ChatColor.GREEN + "You are managing " + manager.getEditorPage(player));
             }
-        }
-        else {
+        } else {
             if (args.length >= 2) {
                 final String command = args[1];
                 if (command.equalsIgnoreCase("edit")) {
@@ -48,8 +77,7 @@ public class PageManagement
                             page.openEditor(player);
                         }
                     }
-                }
-                else if (command.equalsIgnoreCase("add")) {
+                } else if (command.equalsIgnoreCase("add")) {
                     if (!player.hasPermission("shop.page.add")) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
                         return;
@@ -73,13 +101,13 @@ public class PageManagement
                         double sell = 0.0;
                         try {
                             amount = Double.parseDouble(amountstring);
+                        } catch (NumberFormatException ex) {
                         }
-                        catch (NumberFormatException ex) {}
                         if (args.length >= 4) {
                             try {
                                 sell = Double.parseDouble(args[3]);
+                            } catch (NumberFormatException ex2) {
                             }
-                            catch (NumberFormatException ex2) {}
                         }
                         if (page2 != null) {
                             page2.setItem(freeslot, player.getInventory().getItemInMainHand());
@@ -101,12 +129,10 @@ public class PageManagement
                             }
                             player.sendMessage(ChatColor.GREEN + Editor.getItemName(player.getInventory().getItemInMainHand()) + " has been added to " + page2.getID() + " with the cost as " + DoubleUtil.toString(amount) + ", sell as " + DoubleUtil.toString(sell) + ", and function as " + ps.getFunction().toString());
                         }
-                    }
-                    else {
+                    } else {
                         player.sendMessage(ChatColor.GRAY + "/shop page add <cost> <sell>");
                     }
-                }
-                else if (command.equalsIgnoreCase("title")) {
+                } else if (command.equalsIgnoreCase("title")) {
                     if (!player.hasPermission("shop.page.title")) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
                         return;
@@ -125,8 +151,7 @@ public class PageManagement
                         }
                         player.sendMessage(ChatColor.GRAY + "/shop page title <title>");
                     }
-                }
-                else if (command.equalsIgnoreCase("copy")) {
+                } else if (command.equalsIgnoreCase("copy")) {
                     if (!player.hasPermission("shop.page.copy")) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
                         return;
@@ -138,16 +163,14 @@ public class PageManagement
                             if (manager.getPage(pagename2) != null) {
                                 page2.copy(manager.getPage(pagename2));
                                 player.sendMessage(ChatColor.GREEN + pagename2 + " has been copied to " + page2.getID());
-                            }
-                            else {
+                            } else {
                                 player.sendMessage(ChatColor.RED + pagename2 + " does not exist");
                             }
                             return;
                         }
                         player.sendMessage(ChatColor.GRAY + "/shop page copy <page>");
                     }
-                }
-                else if (command.equalsIgnoreCase("recover")) {
+                } else if (command.equalsIgnoreCase("recover")) {
                     if (!player.hasPermission("shop.page.recover")) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
                         return;
@@ -160,12 +183,10 @@ public class PageManagement
                             return;
                         }
                         player.sendMessage(ChatColor.RED + "Failed to recover because the page already exists");
-                    }
-                    else {
+                    } else {
                         player.sendMessage(ChatColor.RED + "No page found to recover");
                     }
-                }
-                else if (command.equalsIgnoreCase("size")) {
+                } else if (command.equalsIgnoreCase("size")) {
                     if (!player.hasPermission("shop.page.size")) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
                         return;
@@ -176,8 +197,7 @@ public class PageManagement
                             int size;
                             try {
                                 size = Integer.parseInt(args[2]);
-                            }
-                            catch (NumberFormatException nfe) {
+                            } catch (NumberFormatException nfe) {
                                 player.sendMessage(ChatColor.RED + "Invalid size");
                                 return;
                             }
@@ -193,8 +213,7 @@ public class PageManagement
                         return;
                     }
                     player.sendMessage(ChatColor.GRAY + "/shop page size <1-6>");
-                }
-                else if (command.equalsIgnoreCase("manage")) {
+                } else if (command.equalsIgnoreCase("manage")) {
                     if (!player.hasPermission("shop.page.manage")) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
                         return;
@@ -204,15 +223,13 @@ public class PageManagement
                         if (manager.getPage(pagename3) != null) {
                             Manager.edit.put(player.getName(), pagename3);
                             player.sendMessage(ChatColor.GREEN + "You are now managing " + pagename3 + ChatColor.GREEN);
-                        }
-                        else {
+                        } else {
                             player.sendMessage(ChatColor.RED + pagename3 + " does not exist");
                         }
                         return;
                     }
                     player.sendMessage(ChatColor.GRAY + "/shop page manage <page>");
-                }
-                else if (command.equalsIgnoreCase("delete")) {
+                } else if (command.equalsIgnoreCase("delete")) {
                     if (!player.hasPermission("shop.page.delete")) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
                         return;
@@ -224,15 +241,13 @@ public class PageManagement
                             Manager.pagerecovery.put(player.getUniqueId().toString(), new Page(page));
                             page.delete();
                             player.sendMessage(ChatColor.GREEN + pagename3 + " has been deleted");
-                        }
-                        else {
+                        } else {
                             player.sendMessage(ChatColor.RED + pagename3 + " does not exist");
                         }
                         return;
                     }
                     player.sendMessage(ChatColor.RED + "/shop page delete <page>");
-                }
-                else if (command.equalsIgnoreCase("create")) {
+                } else if (command.equalsIgnoreCase("create")) {
                     if (!player.hasPermission("shop.page.create")) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
                         return;
@@ -244,15 +259,13 @@ public class PageManagement
                             page.create();
                             player.sendMessage(ChatColor.GREEN + pagename3 + " has been created");
                             Manager.edit.put(player.getName(), pagename3);
-                        }
-                        else {
+                        } else {
                             player.sendMessage(ChatColor.RED + pagename3 + " already exists");
                         }
                         return;
                     }
                     player.sendMessage(ChatColor.RED + "/shop page create <entry>");
-                }
-                else if (command.equalsIgnoreCase("clear")) {
+                } else if (command.equalsIgnoreCase("clear")) {
                     if (!player.hasPermission("shop.page.clear")) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
                         return;
@@ -264,8 +277,7 @@ public class PageManagement
                             player.sendMessage(ChatColor.GREEN + "All items have been cleared from " + page2.getID());
                         }
                     }
-                }
-                else if (command.equalsIgnoreCase("type")) {
+                } else if (command.equalsIgnoreCase("type")) {
                     if (!player.hasPermission("shop.page.type")) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
                         return;
@@ -277,18 +289,16 @@ public class PageManagement
                                 final String type = args[2];
                                 if (type.equalsIgnoreCase("sell")) {
                                     page2.setType(1);
-                                }
-                                else {
+                                } else {
                                     page2.setType(0);
                                 }
-                                player.sendMessage(ChatColor.GREEN + "Type of " + page2.getID() + " has been set to " + new String((page2.getType() == 1) ? "sell" : "normal"));
+                                player.sendMessage(ChatColor.GREEN + "Type of " + page2.getID() + " has been set to " + ((page2.getType() == 1) ? "sell" : "normal"));
                                 return;
                             }
                             player.sendMessage(ChatColor.RED + "/shop page type <normal/sell>");
                         }
                     }
-                }
-                else if (command.equalsIgnoreCase("properties")) {
+                } else if (command.equalsIgnoreCase("properties")) {
                     if (!player.hasPermission("shop.page.properties")) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
                         return;
@@ -299,8 +309,7 @@ public class PageManagement
                             PageProperties.open(player, page2, 1);
                         }
                     }
-                }
-                else if (command.equalsIgnoreCase("list")) {
+                } else if (command.equalsIgnoreCase("list")) {
                     if (!player.hasPermission("shop.page.list")) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
                         return;
@@ -309,17 +318,16 @@ public class PageManagement
                     if (args.length == 3) {
                         try {
                             index = Integer.parseInt(args[2]);
+                        } catch (NumberFormatException ex3) {
                         }
-                        catch (NumberFormatException ex3) {}
                     }
                     final String header = ChatColor.GRAY + "  === " + ChatColor.DARK_GREEN + "Shop Pages" + ChatColor.GRAY + " === " + ChatColor.DARK_GREEN + "Page " + ChatColor.GREEN + "%index%" + ChatColor.GRAY + "/" + ChatColor.GREEN + "%size%" + ChatColor.GRAY + " ===";
                     final List<String> help = new ArrayList<String>();
                     for (final Page page3 : new Manager().getPages()) {
-                        help.add(ChatColor.GRAY + "- " + ChatColor.YELLOW + page3.getID() + ChatColor.GRAY + "  Title: " + ChatColor.RESET + page3.getTitle() + ChatColor.GRAY + "  Type: " + ChatColor.RESET + new String((page3.getType() == 1) ? "Sell" : "Normal"));
+                        help.add(ChatColor.GRAY + "- " + ChatColor.YELLOW + page3.getID() + ChatColor.GRAY + "  Title: " + ChatColor.RESET + page3.getTitle() + ChatColor.GRAY + "  Type: " + ChatColor.RESET + ((page3.getType() == 1) ? "Sell" : "Normal"));
                     }
                     Control.list(player, help, index, header, 9);
-                }
-                else if (command.equalsIgnoreCase("open")) {
+                } else if (command.equalsIgnoreCase("open")) {
                     if (args.length == 3) {
                         final String pagename3 = args[2].toUpperCase();
                         if (!player.hasPermission("shop.page.open." + pagename3) && !player.hasPermission("shop.page.open")) {
@@ -329,16 +337,13 @@ public class PageManagement
                         if (manager.getPage(pagename3) != null) {
                             final Page page = manager.getPage(pagename3);
                             page.openPage(player);
-                        }
-                        else {
+                        } else {
                             player.sendMessage(ChatColor.RED + pagename3 + " does not exist");
                         }
-                    }
-                    else {
+                    } else {
                         this.help(player);
                     }
-                }
-                else if (command.equalsIgnoreCase("help")) {
+                } else if (command.equalsIgnoreCase("help")) {
                     final List<String> help2 = Manager.getAvailableCommands(player, "page");
                     if (help2.isEmpty()) {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
@@ -348,13 +353,12 @@ public class PageManagement
                     if (args.length == 3) {
                         try {
                             index2 = Integer.parseInt(args[2]);
+                        } catch (NumberFormatException ex4) {
                         }
-                        catch (NumberFormatException ex4) {}
                     }
                     final String header2 = ChatColor.GRAY + "  === " + ChatColor.DARK_GREEN + "Shop Page Help" + ChatColor.GRAY + " === " + ChatColor.DARK_GREEN + "Page " + ChatColor.GREEN + "%index%" + ChatColor.GRAY + "/" + ChatColor.GREEN + "%size%" + ChatColor.GRAY + " ===";
                     Control.list(player, help2, index2, header2, 7);
-                }
-                else {
+                } else {
                     this.help(player);
                 }
                 return;
@@ -362,52 +366,24 @@ public class PageManagement
             this.help(player);
         }
     }
-    
+
     public void help(final Player player) {
         if (!Manager.getAvailableCommands(player, "page").isEmpty()) {
             player.sendMessage(ChatColor.GRAY + "/shop page help");
-        }
-        else {
+        } else {
             player.sendMessage(Config.PERMISSION_ERROR.toString());
         }
     }
-    
+
     public void cancelEdit(final Player player) {
-        if (Manager.edit.containsKey(player.getName())) {
-            Manager.edit.remove(player.getName());
-        }
+        Manager.edit.remove(player.getName());
     }
-    
+
     public boolean isEditing(final Player player, final String id) {
         return Manager.edit.containsKey(player.getName()) && Manager.edit.get(player.getName()).equals(id);
     }
-    
-    public static boolean isManaging(final Player player, final boolean silent) {
-        if (Manager.edit.containsKey(player.getName())) {
-            final Manager manager = new Manager();
-            final String id = Manager.edit.get(player.getName());
-            if (manager.getPage(id) != null) {
-                return true;
-            }
-            player.sendMessage(ChatColor.RED + "You need to select a page to manage. /shop page manage <page>");
-            Manager.edit.remove(player.getName());
-        }
-        else {
-            player.sendMessage(ChatColor.RED + "You need to select a page to manage. /shop page manage <page>");
-        }
-        return false;
-    }
-    
-    public static Page getPage(final Player player) {
-        if (Manager.edit.containsKey(player.getName())) {
-            final Manager manager = new Manager();
-            final String id = Manager.edit.get(player.getName());
-            return manager.getPage(id);
-        }
-        return null;
-    }
-    
+
     public boolean hasItemInHand(final Player player) {
-        return player.getItemInHand() != null && !player.getItemInHand().getType().equals((Object)Material.AIR);
+        return player.getItemInHand() != null && !player.getItemInHand().getType().equals(Material.AIR);
     }
 }

@@ -1,22 +1,33 @@
 package conj.Shop.data;
 
-import org.bukkit.event.*;
-import conj.Shop.control.*;
-import conj.Shop.events.*;
-import conj.Shop.base.*;
-import org.apache.commons.lang.*;
-import org.bukkit.entity.*;
-import java.util.*;
-import org.bukkit.inventory.*;
-import org.bukkit.plugin.*;
+import conj.Shop.base.Initiate;
+import conj.Shop.base.ItemSerialize;
+import conj.Shop.control.Manager;
 import conj.Shop.enums.*;
+import conj.Shop.events.PageCreateEvent;
+import conj.Shop.events.PageDeleteEvent;
+import conj.Shop.interaction.Editor;
+import conj.Shop.interaction.Shop;
 import conj.Shop.tools.*;
-import conj.Shop.interaction.*;
-import org.bukkit.*;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public class Page
-{
-    private String id;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class Page {
     public String title;
     public int size;
     public int type;
@@ -25,7 +36,8 @@ public class Page
     public List<Integer> slots;
     public HashMap<String, Object> pagedata;
     public HashMap<Integer, PageSlot> pageslots;
-    
+    private String id;
+
     public Page(final String id) {
         this.items = new ArrayList<HashMap<Map<String, Object>, Map<String, Object>>>();
         this.slots = new ArrayList<Integer>();
@@ -33,26 +45,26 @@ public class Page
         this.pageslots = new HashMap<Integer, PageSlot>();
         this.id = id;
     }
-    
+
     public Page(final Page page) {
         this.items = new ArrayList<HashMap<Map<String, Object>, Map<String, Object>>>();
         this.slots = new ArrayList<Integer>();
         this.pagedata = new HashMap<String, Object>();
         this.pageslots = new HashMap<Integer, PageSlot>();
-        this.id = new String(page.getID());
-        this.title = new String(page.getTitle());
-        this.size = new Integer(page.getSize());
-        this.type = new Integer(page.getType());
-        this.gui = new Boolean(page.isGUI());
+        this.id = page.getID();
+        this.title = page.getTitle();
+        this.size = Integer.valueOf(page.getSize());
+        this.type = Integer.valueOf(page.getType());
+        this.gui = Boolean.valueOf(page.isGUI());
         this.items = new ArrayList<HashMap<Map<String, Object>, Map<String, Object>>>(page.getItemsMap());
         this.slots = new ArrayList<Integer>(page.getSlots());
         this.pagedata = new HashMap<String, Object>(page.getData());
         this.pageslots = new HashMap<Integer, PageSlot>(page.pageslots);
     }
-    
+
     public boolean createOverride() {
         final PageCreateEvent event = new PageCreateEvent(this);
-        Bukkit.getServer().getPluginManager().callEvent((Event)event);
+        Bukkit.getServer().getPluginManager().callEvent(event);
         final Manager manager = new Manager();
         if (!event.isCancelled()) {
             final Page p = manager.getPage(this.getID());
@@ -63,20 +75,20 @@ public class Page
         }
         return false;
     }
-    
+
     public boolean create() {
         final PageCreateEvent event = new PageCreateEvent(this);
-        Bukkit.getServer().getPluginManager().callEvent((Event)event);
+        Bukkit.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled() && new Manager().getPage(this.getID()) == null) {
             Manager.pages.add(this);
             return true;
         }
         return false;
     }
-    
+
     public boolean delete() {
         final PageDeleteEvent event = new PageDeleteEvent(this);
-        Bukkit.getServer().getPluginManager().callEvent((Event)event);
+        Bukkit.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             final Manager manager = new Manager();
             final Page p = manager.getPage(this.id);
@@ -88,55 +100,29 @@ public class Page
         }
         return false;
     }
-    
+
     public void copy(final Page page) {
         Manager.pages.remove(this);
         final Page copypage = new Page(page);
         copypage.setID(this.id);
         Manager.pages.add(copypage);
     }
-    
+
     public void clearItems() {
         this.setItems(new ArrayList<ItemStack>(), new ArrayList<Integer>());
     }
-    
-    public void setID(final String id) {
-        this.id = id;
-    }
-    
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-    
-    public void setSize(final int size) {
-        this.size = size;
-    }
-    
+
     public void setItems(final List<ItemStack> items, final List<Integer> slots) {
         this.items = ItemSerialize.serialize(items);
         this.slots = slots;
     }
-    
-    public void setItems(final Inventory inventory) {
-        final List<ItemStack> items = new ArrayList<ItemStack>();
-        final List<Integer> slots = new ArrayList<Integer>();
-        for (int x = 0; inventory.getSize() > x; ++x) {
-            final ItemStack item = inventory.getItem(x);
-            if (item != null) {
-                items.add(item);
-                slots.add(x);
-            }
-        }
-        this.items = ItemSerialize.serialize(items);
-        this.slots = slots;
-    }
-    
+
     public void setItem(final int slot, final ItemStack item) {
         final Inventory i = this.getInventory();
         i.setItem(slot, item);
         this.setItems(i);
     }
-    
+
     public boolean moveItemSoft(final int from, final int to) {
         final ItemStack fromItem = this.getInventory().getItem(from);
         final ItemStack toItem = this.getInventory().getItem(to);
@@ -144,7 +130,7 @@ public class Page
         this.setItem(from, toItem);
         return true;
     }
-    
+
     public boolean moveItem(final int from, final int to) {
         final ItemStack fromItem = this.getInventory().getItem(from);
         final ItemStack toItem = this.getInventory().getItem(to);
@@ -153,7 +139,7 @@ public class Page
         this.swapProperties(from, to);
         return true;
     }
-    
+
     public boolean swapProperties(final int from, final int to) {
         if (this.getInventory().getSize() > from && this.getInventory().getSize() > to) {
             final PageSlot fromslot = this.getPageSlot(from);
@@ -168,39 +154,51 @@ public class Page
         }
         return false;
     }
-    
-    public void setType(final int type) {
-        this.type = type;
-    }
-    
+
     public PageSlot addPageSlot(final PageSlot ps) {
         return this.pageslots.put(ps.getSlot(), ps);
     }
-    
+
     public PageSlot removePageSlot(final int slot) {
         return this.pageslots.remove(slot);
     }
-    
+
     public PageSlot removePageSlot(final PageSlot ps) {
         return this.pageslots.remove(ps.getSlot());
     }
-    
+
     public int getType() {
         return this.type;
     }
-    
+
+    public void setType(final int type) {
+        this.type = type;
+    }
+
     public String getID() {
         return this.id;
     }
-    
+
+    public void setID(final String id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return (this.title != null) ? StringUtils.left(this.title, 32) : "Shop";
     }
-    
+
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+
     public int getSize() {
         return (this.size > 0 && this.size < 7) ? (this.size * 9) : 54;
     }
-    
+
+    public void setSize(final int size) {
+        this.size = size;
+    }
+
     public PageSlot getPageSlot(final int slot) {
         if (this.pageslots.get(slot) == null) {
             final PageSlot newdata = new PageSlot(this.getID(), slot);
@@ -208,11 +206,11 @@ public class Page
         }
         return this.pageslots.get(slot);
     }
-    
+
     public HashMap<Integer, PageSlot> getPageSlots() {
         return this.pageslots;
     }
-    
+
     public List<Integer> getVisibleSlots(final Player player) {
         final ArrayList<Integer> slots = new ArrayList<Integer>();
         for (final int slot : this.getSlots()) {
@@ -223,33 +221,47 @@ public class Page
         }
         return slots;
     }
-    
+
     public List<Integer> getSlots() {
         return this.slots;
     }
-    
+
     public List<ItemStack> getItems() {
         return ItemSerialize.deserialize(this.items);
     }
-    
+
+    public void setItems(final Inventory inventory) {
+        final List<ItemStack> items = new ArrayList<ItemStack>();
+        final List<Integer> slots = new ArrayList<Integer>();
+        for (int x = 0; inventory.getSize() > x; ++x) {
+            final ItemStack item = inventory.getItem(x);
+            if (item != null) {
+                items.add(item);
+                slots.add(x);
+            }
+        }
+        this.items = ItemSerialize.serialize(items);
+        this.slots = slots;
+    }
+
     public List<HashMap<Map<String, Object>, Map<String, Object>>> getItemsMap() {
         return this.items;
     }
-    
+
     public HashMap<String, Object> getData() {
         return this.pagedata;
     }
-    
+
     public Object getData(final Object o) {
         return this.pagedata.get(o);
     }
-    
+
     public boolean hasData(final Object o) {
         return this.pagedata.get(o) != null;
     }
-    
+
     public Inventory getInventory() {
-        final Inventory inv = Bukkit.createInventory((InventoryHolder)null, this.getSize(), this.getTitle());
+        final Inventory inv = Bukkit.createInventory(null, this.getSize(), this.getTitle());
         for (int x = 0; this.getItems().size() > x; ++x) {
             final int slot = this.slots.get(x);
             final ItemStack item = this.getItems().get(x);
@@ -259,22 +271,22 @@ public class Page
         }
         return inv;
     }
-    
+
     public Inventory getInventory(final Player player) {
         final Inventory inv = this.getInventoryFlat(player);
         return InventoryCreator.hasPlaceholder(inv) ? Placeholder.placehold(player, inv, this) : inv;
     }
-    
+
     public boolean isGUI() {
         return this.gui;
     }
-    
+
     public void uncooldown(final Player player) {
         for (final PageSlot ps : this.pageslots.values()) {
             ps.uncooldown(player);
         }
     }
-    
+
     public Inventory getInventoryFlat(final Player player) {
         final Inventory inv = this.getInventory();
         for (int x = 0; x < inv.getSize(); ++x) {
@@ -286,37 +298,35 @@ public class Page
                 if (!destroy) {
                     if (ps.getFunction().equals(Function.COMMAND)) {
                         final ItemCreator ic = new ItemCreator(i);
-                        final double balance = Initiate.econ.getBalance((OfflinePlayer)player);
+                        final double balance = Initiate.econ.getBalance(player);
                         if (balance < ps.getCost() && !this.hidesAffordability()) {
                             ic.addLore(Config.COST_CANNOT_AFFORD.toString());
                         }
-                    }
-                    else if (ps.getFunction().equals(Function.BUY)) {
+                    } else if (ps.getFunction().equals(Function.BUY)) {
                         final ItemCreator ic = new ItemCreator(i);
-                        final double balance = Initiate.econ.getBalance((OfflinePlayer)player);
+                        final double balance = Initiate.econ.getBalance(player);
                         ic.addLore(" ");
-                        ic.addLore(String.valueOf(Config.COST_PREFIX.toString()) + DoubleUtil.toString(ps.getCost()));
+                        ic.addLore(Config.COST_PREFIX.toString() + DoubleUtil.toString(ps.getCost()));
                         if (ps.getSell() > 0.0) {
-                            ic.addLore(String.valueOf(Config.SELL_PREFIX.toString()) + DoubleUtil.toString(ps.getSell()));
+                            ic.addLore(Config.SELL_PREFIX.toString() + DoubleUtil.toString(ps.getSell()));
                         }
                         if (balance < ps.getCost() && !this.hidesAffordability()) {
                             ic.addLore(Config.COST_CANNOT_AFFORD.toString());
                         }
-                    }
-                    else if (ps.getFunction().equals(Function.SELL)) {
+                    } else if (ps.getFunction().equals(Function.SELL)) {
                         final ItemCreator ic = new ItemCreator(i);
                         ic.addLore("");
-                        ic.addLore(String.valueOf(Config.SELL_PREFIX.toString()) + DoubleUtil.toString(ps.getSell()));
+                        ic.addLore(Config.SELL_PREFIX.toString() + DoubleUtil.toString(ps.getSell()));
                     }
                 }
             }
             if (destroy) {
-                inv.setItem(x, (ItemStack)null);
+                inv.setItem(x, null);
             }
         }
         return inv;
     }
-    
+
     public void updateView(final Player player, final boolean hard) {
         final String pagename = Manager.get().getOpenPage(player);
         if (pagename.equals(this.getID())) {
@@ -326,19 +336,19 @@ public class Page
             }
             final Inventory open = player.getOpenInventory().getTopInventory();
             final List<Integer> slots = this.getVisibleSlots(player);
-            Debug.log(String.valueOf(player.getName()) + " : " + this.getID() + " : " + DoubleUtil.toString(Shop.getInventoryWorth((OfflinePlayer)player, open, this)));
+            Debug.log(player.getName() + " : " + this.getID() + " : " + DoubleUtil.toString(Shop.getInventoryWorth(player, open, this)));
             for (final int s : slots) {
                 final ItemStack i = this.getInventoryFlat(player).getItem(s);
                 if (i != null) {
                     final ItemCreator ic = new ItemCreator(i);
                     ic.placehold(player, this, s);
-                    ic.replace("%worth%", DoubleUtil.toString(Shop.getInventoryWorth((OfflinePlayer)player, open, this)));
+                    ic.replace("%worth%", DoubleUtil.toString(Shop.getInventoryWorth(player, open, this)));
                     open.setItem(s, ic.getItem());
                 }
             }
         }
     }
-    
+
     public Inventory openPage(final Player player) {
         final Manager manage = new Manager();
         if (!manage.getOpenPage(player).equalsIgnoreCase("")) {
@@ -362,14 +372,14 @@ public class Page
                 }
             }
         }
-        final GUI gui = new GUI((Plugin)Initiate.getPlugin((Class)Initiate.class), PageData.SHOP, inv, this);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.SHOP, inv, this);
         final String title = Placeholder.placehold(player, this.getTitle());
         gui.setTitle(title);
         gui.open(player);
         manage.setOpenPage(player, this.id);
         return inv;
     }
-    
+
     public void openEditor(final Player player) {
         final InventoryCreator inv = new InventoryCreator(this.getInventory());
         for (int x = 0; x < inv.getInventory().getSize(); ++x) {
@@ -386,7 +396,7 @@ public class Page
                 if (!ps.getPageLore().isEmpty()) {
                     inv.addLore(x, " ");
                 }
-                inv.addLore(x, ChatColor.BLUE + "Function" + ChatColor.DARK_GRAY + ": " + new String(this.isGUI() ? (ChatColor.BLUE + ps.getGUIFunction().toString()) : (ChatColor.BLUE + ps.getFunction().toString())));
+                inv.addLore(x, ChatColor.BLUE + "Function" + ChatColor.DARK_GRAY + ": " + (this.isGUI() ? (ChatColor.BLUE + ps.getGUIFunction().toString()) : (ChatColor.BLUE + ps.getFunction().toString())));
                 if (this.isGUI() && ps.getGUIFunction().equals(GUIFunction.QUANTITY)) {
                     inv.addLore(x, ChatColor.DARK_GREEN + "Quantity" + ChatColor.DARK_GRAY + ": " + ChatColor.DARK_GREEN + ps.getDataInt("gui_quantity"));
                 }
@@ -404,22 +414,22 @@ public class Page
                 }
             }
         }
-        final GUI gui = new GUI((Plugin)Initiate.getPlugin((Class)Initiate.class), PageData.EDIT_ITEM_VIEW, inv.getInventory(), this);
+        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_VIEW, inv.getInventory(), this);
         gui.setTitle(ChatColor.YELLOW + this.id);
         gui.open(player);
     }
-    
+
     public void buyItem(final Player player, final int slot, final int amount) {
         final PageSlot ps = this.getPageSlot(slot);
         ItemStack item = this.getInventory().getItem(slot);
         final ItemCreator itemc = new ItemCreator(item);
         item = itemc.placehold(player, this, slot);
         int affordable = new VaultAddon(Initiate.econ).getAffordable(player, ps.getCost(), amount);
-        if (Initiate.econ.getBalance((OfflinePlayer)player) < ps.getCost() * amount) {
+        if (Initiate.econ.getBalance(player) < ps.getCost() * amount) {
             return;
         }
         for (int x = 0; x < amount; ++x) {
-            final Map<Integer, ItemStack> map = (Map<Integer, ItemStack>)player.getInventory().addItem(new ItemStack[] { item });
+            final Map<Integer, ItemStack> map = player.getInventory().addItem(item);
             if (!map.values().isEmpty()) {
                 --affordable;
             }
@@ -430,7 +440,7 @@ public class Page
             finalprice = 0.0;
         }
         if (finalprice > 0.0) {
-            Initiate.econ.withdrawPlayer((OfflinePlayer)player, finalprice);
+            Initiate.econ.withdrawPlayer(player, finalprice);
         }
         final List<String> purchase = Config.SHOP_PURCHASE.getList();
         for (String s : purchase) {
@@ -445,13 +455,13 @@ public class Page
             ps.cooldown(player);
         }
     }
-    
+
     public void sellItem(final Player player, final int slot, final int amount) {
         final PageSlot ps = this.getPageSlot(slot);
         final ItemStack item = this.getInventory().getItem(slot);
         int failed = 0;
         for (int x = 0; x < amount; ++x) {
-            final Map<Integer, ItemStack> map = (Map<Integer, ItemStack>)player.getInventory().removeItem(new ItemStack[] { item });
+            final Map<Integer, ItemStack> map = player.getInventory().removeItem(item);
             if (!map.values().isEmpty()) {
                 ++failed;
             }
@@ -462,7 +472,7 @@ public class Page
             finalprice = 0.0;
         }
         if (finalprice > 0.0) {
-            Initiate.econ.depositPlayer((OfflinePlayer)player, finalprice);
+            Initiate.econ.depositPlayer(player, finalprice);
         }
         final List<String> sell = Config.SHOP_SELL.getList();
         for (String s : sell) {
@@ -476,7 +486,7 @@ public class Page
             ps.cooldown(player);
         }
     }
-    
+
     public void updateViewers(final boolean hard) {
         for (final String p : Manager.get().getViewers(this)) {
             final Player player = Bukkit.getPlayer(p);
@@ -485,7 +495,7 @@ public class Page
             }
         }
     }
-    
+
     public void closeViewers() {
         for (final String p : Manager.get().getViewers(this)) {
             final Player player = Bukkit.getPlayer(p);
@@ -494,36 +504,29 @@ public class Page
             }
         }
     }
-    
+
     public void saveData() {
         if (Initiate.sf != null) {
             Initiate.sf.savePageData(this.getID());
-        }
-        else {
+        } else {
             Debug.log("Failed to save page: " + this.getID());
         }
     }
-    
+
     public ItemStack getFill() {
         if (this.pagedata.get("fill_item") != null && this.pagedata.get("fill_item") instanceof List) {
             final ItemStack item = ItemSerialize.deserializeSingle((List<HashMap<Map<String, Object>, Map<String, Object>>>) this.pagedata.get("fill_item"));
-            if (item != null) {
-                return item;
-            }
+            return item;
         }
         return null;
     }
-    
-    public void clearFill() {
-        this.pagedata.remove("fill_item");
-    }
-    
+
     public void setFill(final ItemStack item) {
         if (item == null) {
             this.clearFill();
             return;
         }
-        if (item.getType().equals((Object)Material.AIR)) {
+        if (item.getType().equals(Material.AIR)) {
             this.clearFill();
             return;
         }
@@ -531,7 +534,11 @@ public class Page
         final List<HashMap<Map<String, Object>, Map<String, Object>>> serialize = ItemSerialize.serializeSingle(serializeItem);
         this.pagedata.put("fill_item", serialize);
     }
-    
+
+    public void clearFill() {
+        this.pagedata.remove("fill_item");
+    }
+
     public boolean instantConfirms() {
         if (this.pagedata.get("instant_confirm") != null) {
             Debug.log("instantConfirms(): " + Boolean.parseBoolean((String) this.pagedata.get("instant_confirm")));
@@ -539,7 +546,7 @@ public class Page
         }
         return false;
     }
-    
+
     public boolean closesOnTransaction() {
         if (this.pagedata.get("close_on_transaction") != null) {
             Debug.log("closesOnTransaction(): " + Boolean.parseBoolean((String) this.pagedata.get("close_on_transaction")));
@@ -547,7 +554,7 @@ public class Page
         }
         return true;
     }
-    
+
     public boolean hidesAffordability() {
         if (this.pagedata.get("hide_affordability") != null) {
             Debug.log("hidesAffordability(): " + Boolean.parseBoolean((String) this.pagedata.get("hide_affordability")));
@@ -555,37 +562,37 @@ public class Page
         }
         return false;
     }
-    
+
     public void setHideAffordability(final boolean hide) {
         Debug.log("setHideAffordability(" + hide + "): " + this.pagedata.get("hide_affordability"));
         this.pagedata.put("hide_affordability", String.valueOf(hide));
     }
-    
+
     public void setInstantConfirm(final boolean confirm) {
         Debug.log("setInstantConfirm(" + confirm + "): " + this.pagedata.get("instant_confirm"));
         this.pagedata.put("instant_confirm", String.valueOf(confirm));
     }
-    
+
     public void setCloses(final boolean closes) {
         Debug.log("setCloses(" + closes + "): " + this.pagedata.get("close_on_transaction"));
         this.pagedata.put("close_on_transaction", String.valueOf(closes));
     }
-    
-    public void setDefaultQuantity(final int quantity) {
-        this.pagedata.put("default_quantity", quantity);
-        Debug.log("setDefaultQuantity(" + quantity + "): " + this.pagedata.get("default_quantity"));
-    }
-    
+
     public int getDefaultQuantity() {
         if (this.pagedata.get("default_quantity") != null) {
             int quantity = 0;
             try {
                 quantity = (int) this.pagedata.get("default_quantity");
+            } catch (NumberFormatException ex) {
             }
-            catch (NumberFormatException ex) {}
             Debug.log("getDefaultQuantity(): " + quantity);
             return quantity;
         }
         return 0;
+    }
+
+    public void setDefaultQuantity(final int quantity) {
+        this.pagedata.put("default_quantity", quantity);
+        Debug.log("setDefaultQuantity(" + quantity + "): " + this.pagedata.get("default_quantity"));
     }
 }

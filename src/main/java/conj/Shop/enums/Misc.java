@@ -1,32 +1,32 @@
 package conj.Shop.enums;
 
-import org.bukkit.*;
-import java.util.*;
+import org.bukkit.ChatColor;
 
-public enum Misc
-{
+import java.util.List;
+
+public enum Misc {
     UPDATE_2_X("UPDATE_2_X", 0, false);
-    
+
     private String message;
     private List<String> messages;
     private boolean active;
-    
-    private Misc(final String s, final int n, final String message) {
+
+    Misc(final String s, final int n, final String message) {
         this.message = message;
     }
-    
-    private Misc(final List<String> messages) {
+
+    Misc(final List<String> messages) {
         this.messages = messages;
     }
-    
-    private Misc(final String s, final int n, final boolean active) {
+
+    Misc(final String s, final int n, final boolean active) {
         this.active = active;
     }
-    
+
     public List<String> getList() {
         return this.messages;
     }
-    
+
     public Object getValue() {
         if (this.message != null) {
             return this.message;
@@ -36,19 +36,19 @@ public enum Misc
         }
         return this.active;
     }
-    
+
     public boolean isActive() {
         return this.active;
     }
-    
+
     public void setMessage(final String message) {
         this.message = message;
     }
-    
+
     public void setBoolean(final Boolean active) {
         this.active = active;
     }
-    
+
     @Override
     public String toString() {
         if (this.message != null) {
@@ -57,7 +57,7 @@ public enum Misc
         if (this.messages != null) {
             String build = "";
             for (final String s : this.messages) {
-                build = String.valueOf(build) + s;
+                build = build + s;
             }
             return ChatColor.translateAlternateColorCodes('&', this.message);
         }
