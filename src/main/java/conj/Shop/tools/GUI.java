@@ -123,7 +123,7 @@ public class GUI implements Listener {
             return;
         }
         final Player player = (Player) event.getWhoClicked();
-        if (this.viewer.equals(player.getUniqueId().toString()) && event.getClickedInventory() != null) {
+        if (this.viewer.equals(player.getUniqueId().toString()) && event.getClickedInventory() != null && event.getCurrentItem() != null) {
             final boolean top = event.getRawSlot() < event.getView().getTopInventory().getSize();
             Debug.log((event.getWhoClicked().getName() + " clicked " + (top ? "top" : "bottom") + " of " + this.data + " on page " + this.page != null) ? this.page.getID() : "null");
             final PageClickEvent e = new PageClickEvent(player, this.data, this, this.page, event.getSlot(), event.getRawSlot(), event.getCurrentItem(), event.getInventory(), event.getClickedInventory(), event.getClick(), top, event.getView());
