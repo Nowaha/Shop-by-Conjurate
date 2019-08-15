@@ -5,7 +5,7 @@ author: Conjurate
 main: conj.Shop.base.Initiate
 softdepend: [PlaceholderAPI, Citizens]
 depend: [Vault]
-
+api-version: 1.13
 commands:
   shop:
     description: Shop's main command.
