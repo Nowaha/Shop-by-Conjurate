@@ -84,10 +84,8 @@ public class Input implements Listener {
             final Page page = this.getPage();
             if (page != null) {
                 final PlayerInputEvent e = new PlayerInputEvent(player, page, this.id, fullmsg, this.slot, this);
-                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> Bukkit.getServer().getPluginManager().callEvent(e), (0 * 20));
-                if (e.isCancelled()) {
-                    event.setCancelled(true);
-                }
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> Bukkit.getServer().getPluginManager().callEvent(e), 0);
+                event.setCancelled(true);
             } else {
                 this.destroy();
             }

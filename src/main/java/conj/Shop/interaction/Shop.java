@@ -167,7 +167,7 @@ public class Shop implements Listener {
         final PageSlot ps = page.getPageSlot(slot);
         if (event.getPageData().equals(PageData.SHOP)) {
             if (event.isTopInventory()) {
-                if (!event.getItem().getType().equals(Material.AIR)) {
+                if (!event.getItem().getType().toString().equals("AIR")) {
                     if (!ps.canSee(player)) {
                         return;
                     }
