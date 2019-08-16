@@ -8,13 +8,13 @@ public class Debug {
 
     public static void log(final String message) {
         if (Debug.debug) {
-            JavaPlugin.getPlugin((Class) Initiate.class).getLogger().info(message);
+            Initiate.getPlugin().getLogger().info(message);
         }
     }
 
     public static void log(final Object o) {
         if (Debug.debug) {
-            JavaPlugin.getPlugin((Class) Initiate.class).getLogger().info(o.toString());
+            Initiate.getPlugin().getLogger().info(o.toString());
         }
     }
 }

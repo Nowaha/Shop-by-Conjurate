@@ -40,7 +40,7 @@ public class VersionChecker implements Listener {
         if (event.getPlayer().isOp()) {
             final String pluginversion = check();
             if (pluginversion != null) {
-                final String version = JavaPlugin.getPlugin((Class) Initiate.class).getDescription().getVersion();
+                final String version = Initiate.getPlugin().getDescription().getVersion();
                 if (!version.equals(pluginversion)) {
                     event.getPlayer().sendMessage(ChatColor.RED + version + ChatColor.GRAY + " Shop is outdated");
                     event.getPlayer().sendMessage(ChatColor.GREEN + pluginversion + ChatColor.GRAY + " Shop is available for download");

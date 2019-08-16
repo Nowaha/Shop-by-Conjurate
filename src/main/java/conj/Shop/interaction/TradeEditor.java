@@ -57,7 +57,7 @@ public class TradeEditor implements Listener {
 
     public void openTradeEditor(final Player player, final Page page, final int slot) {
         final InventoryCreator inv = new InventoryCreator(new StringBuilder().append(ChatColor.BLUE).append(slot).append(ChatColor.DARK_GRAY).append("\u2590 Inventory").toString(), 3);
-        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_INVENTORY, inv.getInventory(), page);
+        final GUI gui = new GUI(Initiate.getPlugin(), PageData.EDIT_ITEM_INVENTORY, inv.getInventory(), page);
         if (page.getInventory().getItem(slot) == null) {
             page.openEditor(player);
             return;

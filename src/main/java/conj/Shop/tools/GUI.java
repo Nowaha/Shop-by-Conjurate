@@ -7,8 +7,8 @@ import conj.Shop.events.PageCloseEvent;
 import conj.Shop.events.PageOpenEvent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,7 +17,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
@@ -122,11 +122,18 @@ public class GUI implements Listener {
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
         }
+
+        ItemStack item = event.getCurrentItem();
+
+        if (item == null) {
+            item = new ItemStack(Material.AIR);
+        }
+
         final Player player = (Player) event.getWhoClicked();
-        if (this.viewer.equals(player.getUniqueId().toString()) && event.getClickedInventory() != null && event.getCurrentItem() != null) {
+        if (this.viewer.equals(player.getUniqueId().toString()) && event.getClickedInventory() != null) {
             final boolean top = event.getRawSlot() < event.getView().getTopInventory().getSize();
             Debug.log((event.getWhoClicked().getName() + " clicked " + (top ? "top" : "bottom") + " of " + this.data + " on page " + this.page != null) ? this.page.getID() : "null");
-            final PageClickEvent e = new PageClickEvent(player, this.data, this, this.page, event.getSlot(), event.getRawSlot(), event.getCurrentItem(), event.getInventory(), event.getClickedInventory(), event.getClick(), top, event.getView());
+            final PageClickEvent e = new PageClickEvent(player, this.data, this, this.page, event.getSlot(), event.getRawSlot(), item, event.getInventory(), event.getClickedInventory(), event.getClick(), top, event.getView());
             Bukkit.getServer().getPluginManager().callEvent(e);
             if (!e.isCancelled()) {
                 event.setCancelled(true);

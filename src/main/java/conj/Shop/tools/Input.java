@@ -32,7 +32,7 @@ public class Input implements Listener {
         this.page = page;
         this.id = id;
         this.slot = slot;
-        this.plugin = JavaPlugin.getPlugin((Class) Initiate.class);
+        this.plugin = Initiate.getPlugin();
     }
 
     public Player getPlayer() {

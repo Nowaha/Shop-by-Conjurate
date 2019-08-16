@@ -372,7 +372,7 @@ public class Page {
                 }
             }
         }
-        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.SHOP, inv, this);
+        final GUI gui = new GUI(Initiate.getPlugin(), PageData.SHOP, inv, this);
         final String title = Placeholder.placehold(player, this.getTitle());
         gui.setTitle(title);
         gui.open(player);
@@ -414,7 +414,7 @@ public class Page {
                 }
             }
         }
-        final GUI gui = new GUI(JavaPlugin.getPlugin((Class) Initiate.class), PageData.EDIT_ITEM_VIEW, inv.getInventory(), this);
+        final GUI gui = new GUI(Initiate.getPlugin(), PageData.EDIT_ITEM_VIEW, inv.getInventory(), this);
         gui.setTitle(ChatColor.YELLOW + this.id);
         gui.open(player);
     }

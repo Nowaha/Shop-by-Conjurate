@@ -21,9 +21,6 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -43,6 +40,7 @@ public class Initiate extends JavaPlugin {
     public static Chat chat;
     public String version;
     public String pluginname;
+    private static Initiate plugin;
 
     public Initiate() {
         this.version = this.getDescription().getVersion();
@@ -50,6 +48,7 @@ public class Initiate extends JavaPlugin {
     }
 
     public void onEnable() {
+        plugin = this;
         Initiate.shop_purchase = new ArrayList<String>();
         final String[] add = {"&aYou have purchased &b%quantity% &r%item% &afor &2%cost%", "&cA total of &4%failed% &cfailed to purchase.", "&eYour new balance is &2%balance%"};
         String[] array;
@@ -154,5 +153,9 @@ public class Initiate extends JavaPlugin {
         final RegisteredServiceProvider<Permission> rsp = (RegisteredServiceProvider<Permission>) this.getServer().getServicesManager().getRegistration((Class) Permission.class);
         Initiate.perms = rsp.getProvider();
         return Initiate.perms != null;
+    }
+
+    public static Initiate getPlugin() {
+        return plugin;
     }
 }

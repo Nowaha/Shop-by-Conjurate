@@ -58,7 +58,7 @@ public enum Config {
     }
 
     public static void save() {
-        final Plugin plugin = JavaPlugin.getPlugin((Class) Initiate.class);
+        final Plugin plugin = Initiate.getPlugin();
         Config[] values;
         for (int length = (values = values()).length, i = 0; i < length; ++i) {
             final Config c = values[i];
@@ -68,7 +68,7 @@ public enum Config {
     }
 
     public static void load() {
-        final Plugin plugin = JavaPlugin.getPlugin((Class) Initiate.class);
+        final Plugin plugin = Initiate.getPlugin();
         plugin.reloadConfig();
         Config[] values;
         for (int length = (values = values()).length, i = 0; i < length; ++i) {

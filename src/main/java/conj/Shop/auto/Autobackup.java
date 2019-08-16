@@ -6,8 +6,6 @@ import conj.Shop.enums.Config;
 import conj.Shop.tools.Debug;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
@@ -23,7 +21,7 @@ public class Autobackup {
         if (Config.AUTOBACKUP.isActive()) {
             cancel();
             final BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-            Autobackup.id = scheduler.scheduleSyncRepeatingTask(JavaPlugin.getPlugin((Class) Initiate.class), new Runnable() {
+            Autobackup.id = scheduler.scheduleSyncRepeatingTask(Initiate.getPlugin(), new Runnable() {
                 @Override
                 public void run() {
                     if (!Config.AUTOBACKUP.isActive()) {
@@ -42,8 +40,8 @@ public class Autobackup {
         final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         final Calendar cal = Calendar.getInstance();
         final String date = dateFormat.format(cal.getTime());
-        final File file = new File(JavaPlugin.getPlugin((Class) Initiate.class).getDataFolder().getPath() + "/data");
-        final File backupfile = new File(JavaPlugin.getPlugin((Class) Initiate.class).getDataFolder().getPath() + "/backup/" + date);
+        final File file = new File(Initiate.getPlugin().getDataFolder().getPath() + "/data");
+        final File backupfile = new File(Initiate.getPlugin().getDataFolder().getPath() + "/backup/" + date);
         if (!backupfile.exists()) {
             backupfile.mkdir();
         }
@@ -61,7 +59,7 @@ public class Autobackup {
         final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh:mm");
         final Calendar cal = Calendar.getInstance();
         final String date = dateFormat.format(cal.getTime());
-        final File backupfile = new File(JavaPlugin.getPlugin((Class) Initiate.class).getDataFolder().getPath() + "/backup/" + date);
+        final File backupfile = new File(Initiate.getPlugin().getDataFolder().getPath() + "/backup/" + date);
         if (backupfile.exists()) {
             backupfile.delete();
         }

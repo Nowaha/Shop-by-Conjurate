@@ -21,7 +21,7 @@ public class Autosave {
         if (Config.AUTOSAVE.isActive()) {
             cancel();
             final BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-            Autosave.id = scheduler.scheduleSyncRepeatingTask(JavaPlugin.getPlugin((Class) Initiate.class), new Runnable() {
+            Autosave.id = scheduler.scheduleSyncRepeatingTask(Initiate.getPlugin(), new Runnable() {
                 @Override
                 public void run() {
                     if (!Config.AUTOSAVE.isActive()) {
@@ -31,7 +31,7 @@ public class Autosave {
                     }
                     Autosave.save();
                 }
-            }, 0L, (long) (delay * 1200));
+            }, 0L, delay * 1200);
         }
     }
 
