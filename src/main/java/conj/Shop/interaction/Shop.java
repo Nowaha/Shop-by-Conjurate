@@ -184,6 +184,7 @@ public class Shop implements Listener {
                             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), Placeholder.placehold(player, c, page, slot));
                         }
                         Initiate.econ.withdrawPlayer(player, ps.getCost());
+                        player.sendMessage(ChatColor.YELLOW + "Your new balance is " + ChatColor.GREEN + Initiate.econ.getBalance(player));
                         if (ps.hasCooldown() && !ps.inCooldown(player)) {
                             ps.cooldown(player);
                         }
