@@ -5,7 +5,6 @@ import conj.Shop.auto.Autosave;
 import conj.Shop.base.Initiate;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 

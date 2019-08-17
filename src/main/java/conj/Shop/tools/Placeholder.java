@@ -8,7 +8,6 @@ import conj.Shop.enums.Config;
 import conj.Shop.interaction.Editor;
 import conj.Shop.interaction.Shop;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;

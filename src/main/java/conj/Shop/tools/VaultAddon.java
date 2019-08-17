@@ -1,7 +1,6 @@
 package conj.Shop.tools;
 
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class VaultAddon {

@@ -6,8 +6,6 @@ import conj.Shop.data.Page;
 import conj.Shop.enums.Config;
 import conj.Shop.tools.Debug;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 public class Autosave {
