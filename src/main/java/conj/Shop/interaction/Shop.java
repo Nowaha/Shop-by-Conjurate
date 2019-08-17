@@ -21,7 +21,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,6 +183,7 @@ public class Shop implements Listener {
                         for (final String c : ps.getCommands()) {
                             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), Placeholder.placehold(player, c, page, slot));
                         }
+                        Initiate.econ.withdrawPlayer(player, ps.getCost());
                         if (ps.hasCooldown() && !ps.inCooldown(player)) {
                             ps.cooldown(player);
                         }
