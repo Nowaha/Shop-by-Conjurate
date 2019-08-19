@@ -1,6 +1,6 @@
 package conj.shop.tools;
 
-import conj.shop.base.Initiate;
+import conj.shop.Initiate;
 import conj.shop.data.enums.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

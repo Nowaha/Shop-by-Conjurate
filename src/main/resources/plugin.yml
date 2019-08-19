@@ -2,7 +2,7 @@ name: Shop
 version: 2.1.3-SNAPSHOT
 description: Create and manage shops.
 author: Conjurate
-main: conj.shop.base.Initiate
+main: conj.shop.Initiate
 softdepend: [PlaceholderAPI, Citizens]
 depend: [Vault]
 api-version: 1.13

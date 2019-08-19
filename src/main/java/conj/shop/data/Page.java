@@ -2,7 +2,7 @@ package conj.shop.data;
 
 import conj.shop.addons.Placeholder;
 import conj.shop.addons.VaultAddon;
-import conj.shop.base.Initiate;
+import conj.shop.Initiate;
 import conj.shop.tools.ItemSerialize;
 import conj.shop.commands.control.Manager;
 import conj.shop.data.enums.*;

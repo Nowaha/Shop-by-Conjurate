@@ -1,7 +1,7 @@
 package conj.shop.commands.control;
 
 import conj.shop.addons.NPCAddon;
-import conj.shop.base.Initiate;
+import conj.shop.Initiate;
 import conj.shop.tools.ItemSerialize;
 import conj.shop.data.Page;
 import conj.shop.data.PageSlot;

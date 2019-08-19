@@ -1,4 +1,4 @@
-package conj.shop.base;
+package conj.shop;
 
 import conj.shop.addons.NPCAddon;
 import conj.shop.addons.PlaceholderAddon;

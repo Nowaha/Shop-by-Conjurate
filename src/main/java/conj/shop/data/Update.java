@@ -1,6 +1,6 @@
 package conj.shop.data;
 
-import conj.shop.base.Initiate;
+import conj.shop.Initiate;
 import conj.shop.data.enums.*;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;

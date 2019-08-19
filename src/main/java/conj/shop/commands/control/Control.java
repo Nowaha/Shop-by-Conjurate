@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import conj.shop.addons.Placeholder;
 import conj.shop.tools.auto.Autobackup;
 import conj.shop.tools.auto.Autosave;
-import conj.shop.base.Initiate;
+import conj.shop.Initiate;
 import conj.shop.commands.*;
 import conj.shop.data.Page;
 import conj.shop.data.enums.Config;

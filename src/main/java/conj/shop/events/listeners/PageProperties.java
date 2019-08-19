@@ -1,6 +1,6 @@
 package conj.shop.events.listeners;
 
-import conj.shop.base.Initiate;
+import conj.shop.Initiate;
 import conj.shop.data.Page;
 import conj.shop.data.enums.PageData;
 import conj.shop.events.custom.PageClickEvent;

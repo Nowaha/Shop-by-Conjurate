@@ -2,7 +2,7 @@ package conj.shop.events.listeners;
 
 import conj.shop.addons.Placeholder;
 import conj.shop.addons.VaultAddon;
-import conj.shop.base.Initiate;
+import conj.shop.Initiate;
 import conj.shop.commands.control.Manager;
 import conj.shop.data.Page;
 import conj.shop.data.PageSlot;

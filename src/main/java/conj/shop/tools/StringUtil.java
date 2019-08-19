@@ -1,6 +1,6 @@
 package conj.shop.tools;
 
-import conj.shop.base.Initiate;
+import conj.shop.Initiate;
 
 import java.util.ArrayList;
 import java.util.List;
