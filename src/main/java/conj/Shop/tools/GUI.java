@@ -109,7 +109,7 @@ public class GUI implements Listener {
             this.inventory = i;
         }
         final PageOpenEvent e = new PageOpenEvent(player, this.data, this, this.page, 0, this.getInventory());
-        Bukkit.getServer().getPluginManager().callEvent(e);
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> Bukkit.getServer().getPluginManager().callEvent(e), 0);
         if (!e.isCancelled()) {
             player.openInventory(this.inventory);
             this.register();
