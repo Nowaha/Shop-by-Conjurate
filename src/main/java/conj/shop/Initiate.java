@@ -3,7 +3,6 @@ package conj.shop;
 import conj.shop.addons.NPCAddon;
 import conj.shop.addons.PlaceholderAddon;
 import conj.shop.addons.ShopFile;
-import conj.shop.tools.VersionChecker;
 import conj.shop.tools.auto.Autobackup;
 import conj.shop.tools.auto.Autosave;
 import conj.shop.commands.control.Control;
@@ -99,7 +98,6 @@ public class Initiate extends JavaPlugin {
         this.getCommand("shop").setExecutor(new Control());
 
         // Register events
-        this.getServer().getPluginManager().registerEvents(new VersionChecker(), this);
         this.getServer().getPluginManager().registerEvents(new Sign(), this);
         this.getServer().getPluginManager().registerEvents(new Editor(), this);
         this.getServer().getPluginManager().registerEvents(new TradeEditor(), this);
@@ -145,16 +143,6 @@ public class Initiate extends JavaPlugin {
             }
         }
 
-        // Auto update check - likely broken
-        if (Config.UPDATE_CHECK.isActive()) {
-            final String pluginversion = VersionChecker.check();
-            if (VersionChecker.check() != null && !this.version.equals(pluginversion)) {
-                this.getLogger().info(this.version + " shop is outdated");
-                this.getLogger().info(pluginversion + " shop is available for download");
-                this.getLogger().info("Go to http://spigotmc.org/resources/shop.8185/ to update");
-            }
-        }
-
         // PlaceHolderAPI
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             PlaceholderAddon.register(this);
@@ -169,10 +157,8 @@ public class Initiate extends JavaPlugin {
                 CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NPCAddon.class).withName("shop"));
                 Initiate.citizens = true;
                 this.getLogger().info("Successfully hooked into Citizens.");
-            } catch (NullPointerException npe) {
-                this.getLogger().info("An error occured when trying to register a trait. Your Citizens version might not be supported.");
-            } catch (NoClassDefFoundError ncd) {
-                this.getLogger().info("An error occured when trying to register a trait. Your Citizens version might not be supported.");
+            } catch (NullPointerException | NoClassDefFoundError npe) {
+                this.getLogger().info("An error occurred when trying to register a trait. Your Citizens version might not be supported.");
             }
         } else {
             this.getLogger().info("Citizens not found. NPCs will not be available.");
@@ -204,6 +190,9 @@ public class Initiate extends JavaPlugin {
         return true;
     }
 
+    /**
+     * Vault setup
+     */
     private void setupPermissions() {
         final RegisteredServiceProvider<Permission> rsp = (RegisteredServiceProvider<Permission>) this.getServer().getServicesManager().getRegistration((Class) Permission.class);
         Initiate.perms = rsp.getProvider();
