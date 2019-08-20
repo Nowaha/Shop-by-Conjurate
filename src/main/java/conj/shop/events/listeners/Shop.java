@@ -248,6 +248,10 @@ public class Shop implements Listener {
                         if (ps.hasCooldown() && !ps.inCooldown(player)) {
                             ps.cooldown(player);
                         }
+                        // Do we close inventory after purchase success?
+                        if (page.closesOnTransaction()) {
+                            player.closeInventory();
+                        }
                     }
                 }
             } else if (page.getType() == 1) {
