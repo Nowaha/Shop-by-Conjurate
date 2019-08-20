@@ -1,8 +1,8 @@
 package conj.shop.events.listeners;
 
+import conj.shop.Initiate;
 import conj.shop.addons.Placeholder;
 import conj.shop.addons.VaultAddon;
-import conj.shop.Initiate;
 import conj.shop.commands.control.Manager;
 import conj.shop.data.Page;
 import conj.shop.data.PageSlot;
@@ -230,7 +230,7 @@ public class Shop implements Listener {
                         }
                     } else if (ps.getFunction().equals(Function.SELL)) {
                         final ItemStack item = page.getInventory().getItem(slot);
-                        if (player.getInventory().containsAtLeast(item, 1)) {
+                        if (player.getInventory().containsAtLeast(new ItemStack(item.getType()), 1)) {
                             this.sellItem(player, page, slot, 0, "unconfirmed", event.getInventoryView());
                         }
                     } else if (ps.getFunction().equals(Function.TRADE)) {
@@ -556,9 +556,6 @@ public class Shop implements Listener {
         final InventoryCreator pi = new InventoryCreator(player.getInventory());
         if (amount < page.getDefaultQuantity()) {
             amount = page.getDefaultQuantity();
-        }
-        if (amount > pi.getAmount(page.getInventory().getItem(slot))) {
-            amount = pi.getAmount(page.getInventory().getItem(slot));
         }
         final Page sellpage = Manager.get().getPage(Config.SELL_GUI.toString());
         final Inventory mainInv = this.getSellInventory().getInventory();

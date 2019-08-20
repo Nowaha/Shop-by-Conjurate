@@ -1,9 +1,8 @@
 package conj.shop.data;
 
+import conj.shop.Initiate;
 import conj.shop.addons.Placeholder;
 import conj.shop.addons.VaultAddon;
-import conj.shop.Initiate;
-import conj.shop.tools.ItemSerialize;
 import conj.shop.commands.control.Manager;
 import conj.shop.data.enums.*;
 import conj.shop.events.custom.PageCreateEvent;
@@ -14,6 +13,7 @@ import conj.shop.events.listeners.Shop;
 import conj.shop.tools.DoubleUtil;
 import conj.shop.tools.InventoryCreator;
 import conj.shop.tools.ItemCreator;
+import conj.shop.tools.ItemSerialize;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -459,13 +459,18 @@ public class Page {
     public void sellItem(final Player player, final int slot, final int amount) {
         final PageSlot ps = this.getPageSlot(slot);
         final ItemStack item = this.getInventory().getItem(slot);
+
+        // Item doesn't get removed unless the ItemStack equals exactly the matching shop item. eg, a name will break this. This ensures otherwise
+        ItemStack sellItem = new ItemStack(item.getType(), item.getAmount());
+
         int failed = 0;
         for (int x = 0; x < amount; ++x) {
-            final Map<Integer, ItemStack> map = player.getInventory().removeItem(item);
+            final Map<Integer, ItemStack> map = player.getInventory().removeItem(sellItem);
             if (!map.values().isEmpty()) {
                 ++failed;
             }
         }
+        
         final int affordable = amount - failed;
         double finalprice = ps.getSell() * affordable;
         if (finalprice <= 0.0) {
