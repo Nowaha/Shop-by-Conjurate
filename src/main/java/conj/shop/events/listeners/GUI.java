@@ -135,7 +135,7 @@ public class GUI implements Listener {
             final boolean top = event.getRawSlot() < event.getView().getTopInventory().getSize();
             Initiate.log((event.getWhoClicked().getName() + " clicked " + (top ? "top" : "bottom") + " of " + this.data + " on page " + this.page != null) ? this.page.getID() : "null");
             final PageClickEvent e = new PageClickEvent(player, this.data, this, this.page, event.getSlot(), event.getRawSlot(), item, event.getInventory(), event.getClickedInventory(), event.getClick(), top, event.getView());
-            Bukkit.getServer().getPluginManager().callEvent(e);
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> Bukkit.getServer().getPluginManager().callEvent(e), 0);
             if (!e.isCancelled()) {
                 event.setCancelled(true);
             }
@@ -161,7 +161,7 @@ public class GUI implements Listener {
         final Player player = (Player) event.getPlayer();
         if (this.viewer.equals(player.getUniqueId().toString())) {
             final PageCloseEvent e = new PageCloseEvent(player, this.data, this, this.page, 0, event.getInventory());
-            Bukkit.getServer().getPluginManager().callEvent(e);
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> Bukkit.getServer().getPluginManager().callEvent(e), 0);
             if (!e.isCancelled()) {
                 this.destroy();
             } else {
