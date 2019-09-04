@@ -144,9 +144,6 @@ public class GUI implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void InteractEditor(final PlayerQuitEvent event) {
-        if (!(event.getPlayer() instanceof Player)) {
-            return;
-        }
         final Player player = event.getPlayer();
         if (this.viewer.equals(player.getUniqueId().toString())) {
             this.destroy();

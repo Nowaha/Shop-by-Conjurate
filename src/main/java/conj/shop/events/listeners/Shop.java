@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Shop implements Listener {
-    public static List<ItemStack> getAddedItems(final OfflinePlayer player, final Inventory inventory, final Page page) {
+    private static List<ItemStack> getAddedItems(final OfflinePlayer player, final Inventory inventory, final Page page) {
         final List<ItemStack> added = new ArrayList<ItemStack>();
         final Inventory copy = Bukkit.createInventory(null, inventory.getSize());
         copy.setContents(inventory.getContents());
@@ -52,7 +52,7 @@ public class Shop implements Listener {
         return added;
     }
 
-    public static double sellInventory(final OfflinePlayer player, final Inventory inventory, final Page page) {
+    private static double sellInventory(final OfflinePlayer player, final Inventory inventory, final Page page) {
         if (inventory == null) {
             return 0.0;
         }
@@ -110,7 +110,8 @@ public class Shop implements Listener {
             if (!event.getPlayer().isOp()) {
                 return;
             }
-            if (event.getPlayer().getInventory().getItemInMainHand() != null && event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.STICK)) {
+            event.getPlayer().getInventory().getItemInMainHand();
+            if (event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.STICK)) {
                 final ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
                 final ItemCreator ic = new ItemCreator(item);
                 if (ic.getLore().contains(ChatColor.RED + "Right-click an entity to remove it") && ic.getName().equals(ChatColor.DARK_RED + "Entity Remover")) {
@@ -173,7 +174,9 @@ public class Shop implements Listener {
                     if (!page.getSlots().contains(slot)) {
                         return;
                     }
-                    Initiate.log((player.getName() + " clicked slot " + event.getRawSlot() + " (" + ps.getFunction().toString() + " ) " + "on page " + page != null) ? page.getID() : "null");
+                    player.getName();
+                    ps.getFunction().toString();
+                    Initiate.log(page.getID());
                     if (page.getType() == 1) {
                         if (!event.getPage().getVisibleSlots(player).contains(event.getSlot())) {
                             final ItemStack item = event.getInventory().getItem(event.getSlot());
@@ -311,7 +314,7 @@ public class Shop implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void PurchaseitemClick(final PageClickEvent event) {
+    public void purchaseItemClick(final PageClickEvent event) {
         final Player player = event.getPlayer();
         final int slot = event.getSlot();
         final Page page = event.getPage();
