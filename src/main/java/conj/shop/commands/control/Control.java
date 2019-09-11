@@ -1,14 +1,14 @@
 package conj.shop.commands.control;
 
 import com.google.common.collect.Lists;
-import conj.shop.addons.Placeholder;
-import conj.shop.tools.auto.Autobackup;
-import conj.shop.tools.auto.Autosave;
 import conj.shop.Initiate;
+import conj.shop.addons.Placeholder;
 import conj.shop.commands.*;
 import conj.shop.data.Page;
 import conj.shop.data.enums.Config;
 import conj.shop.tools.InventoryCreator;
+import conj.shop.tools.auto.Autobackup;
+import conj.shop.tools.auto.Autosave;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;

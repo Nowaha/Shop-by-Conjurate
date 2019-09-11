@@ -470,7 +470,7 @@ public class Page {
                 ++failed;
             }
         }
-        
+
         final int affordable = amount - failed;
         double finalprice = ps.getSell() * affordable;
         if (finalprice <= 0.0) {

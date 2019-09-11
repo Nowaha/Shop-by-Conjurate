@@ -1,7 +1,7 @@
 package conj.shop.commands;
 
-import conj.shop.addons.Placeholder;
 import conj.shop.Initiate;
+import conj.shop.addons.Placeholder;
 import conj.shop.commands.control.Manager;
 import conj.shop.data.Page;
 import conj.shop.data.enums.Config;

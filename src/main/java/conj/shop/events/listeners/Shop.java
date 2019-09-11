@@ -252,7 +252,7 @@ public class Shop implements Listener {
                         for (final String c : ps.getCommands()) {
                             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), Placeholder.placehold(player, c, page, slot));
                         }
-                        
+
                         Initiate.econ.withdrawPlayer(player, ps.getCost());
 
                         if (ps.getCost() != 0) {
