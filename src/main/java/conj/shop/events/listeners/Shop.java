@@ -243,17 +243,24 @@ public class Shop implements Listener {
                         if (!addon.canAfford(player, ps.getCost())) {
                             return;
                         }
-                        for (final String c : ps.getCommands()) {
-                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), Placeholder.placehold(player, c, page, slot));
-                        }
-                        Initiate.econ.withdrawPlayer(player, ps.getCost());
-                        player.sendMessage(ChatColor.YELLOW + "Your new balance is " + ChatColor.GREEN + Initiate.econ.getBalance(player));
-                        if (ps.hasCooldown() && !ps.inCooldown(player)) {
-                            ps.cooldown(player);
-                        }
+
                         // Do we close inventory after purchase success?
                         if (page.closesOnTransaction()) {
                             player.closeInventory();
+                        }
+
+                        for (final String c : ps.getCommands()) {
+                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), Placeholder.placehold(player, c, page, slot));
+                        }
+                        
+                        Initiate.econ.withdrawPlayer(player, ps.getCost());
+
+                        if (ps.getCost() != 0) {
+                            player.sendMessage(ChatColor.YELLOW + "Your new balance is " + ChatColor.GREEN + Initiate.econ.getBalance(player));
+                        }
+
+                        if (ps.hasCooldown() && !ps.inCooldown(player)) {
+                            ps.cooldown(player);
                         }
                     }
                 }
