@@ -174,8 +174,6 @@ public class Shop implements Listener {
                     if (!page.getSlots().contains(slot)) {
                         return;
                     }
-                    player.getName();
-                    ps.getFunction().toString();
                     Initiate.log(page.getID());
                     if (page.getType() == 1) {
                         if (!event.getPage().getVisibleSlots(player).contains(event.getSlot())) {
@@ -233,7 +231,8 @@ public class Shop implements Listener {
                         }
                     } else if (ps.getFunction().equals(Function.SELL)) {
                         final ItemStack item = page.getInventory().getItem(slot);
-                        if (player.getInventory().containsAtLeast(new ItemStack(item.getType()), 1)) {
+                        
+                        if (containsItem(new ItemStack(item.getType()), 1, player.getInventory().getContents())) {
                             this.sellItem(player, page, slot, 0, "unconfirmed", event.getInventoryView());
                         }
                     } else if (ps.getFunction().equals(Function.TRADE)) {
@@ -243,17 +242,21 @@ public class Shop implements Listener {
                         if (!addon.canAfford(player, ps.getCost())) {
                             return;
                         }
+
+                        // Do we close inventory after purchase success?
+                        if (page.closesOnTransaction()) {
+                            player.closeInventory();
+                        }
+
                         for (final String c : ps.getCommands()) {
                             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), Placeholder.placehold(player, c, page, slot));
                         }
+
+                        // Leave for now
                         Initiate.econ.withdrawPlayer(player, ps.getCost());
                         player.sendMessage(ChatColor.YELLOW + "Your new balance is " + ChatColor.GREEN + Initiate.econ.getBalance(player));
                         if (ps.hasCooldown() && !ps.inCooldown(player)) {
                             ps.cooldown(player);
-                        }
-                        // Do we close inventory after purchase success?
-                        if (page.closesOnTransaction()) {
-                            player.closeInventory();
                         }
                     }
                 }
@@ -336,22 +339,7 @@ public class Shop implements Listener {
                         Initiate.log("GUIFunction: " + function);
                         if (function.equals(GUIFunction.CONFIRM)) {
                             Initiate.log(player.getName() + " clicked on confirm GUI page " + guipagename);
-                            if (status.equalsIgnoreCase("unconfirmed")) {
-                                if (amount >= 1) {
-                                    if (page.instantConfirms()) {
-                                        this.completeTransaction(event.getPageData(), page, player, itemslot, amount);
-                                        return;
-                                    }
-                                    if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
-                                        this.buyItem(player, page, itemslot, amount, "confirmed", event.getInventoryView());
-                                    }
-                                    if (event.getPageData().equals(PageData.SELL_ITEM)) {
-                                        this.sellItem(player, page, itemslot, amount, "confirmed", event.getInventoryView());
-                                    }
-                                }
-                            } else {
-                                this.completeTransaction(event.getPageData(), page, player, itemslot, amount);
-                            }
+                            if (processTransaction(event, player, page, itemslot, amount, status)) return;
                         } else if (function.equals(GUIFunction.QUANTITY)) {
                             Initiate.log(player.getName() + " clicked on quantity GUI page " + guipagename);
                             int add = 0;
@@ -379,22 +367,7 @@ public class Shop implements Listener {
                     page.openPage(player);
                 }
                 if (slot == 49) {
-                    if (status.equalsIgnoreCase("unconfirmed")) {
-                        if (amount >= 1) {
-                            if (page.instantConfirms()) {
-                                this.completeTransaction(event.getPageData(), page, player, itemslot, amount);
-                                return;
-                            }
-                            if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
-                                this.buyItem(player, page, itemslot, amount, "confirmed", event.getInventoryView());
-                            }
-                            if (event.getPageData().equals(PageData.SELL_ITEM)) {
-                                this.sellItem(player, page, itemslot, amount, "confirmed", event.getInventoryView());
-                            }
-                        }
-                    } else {
-                        this.completeTransaction(event.getPageData(), page, player, itemslot, amount);
-                    }
+                    if (processTransaction(event, player, page, itemslot, amount, status)) return;
                 }
                 if (slot == 20) {
                     int add2 = 0;
@@ -488,6 +461,26 @@ public class Shop implements Listener {
                 }
             }
         }
+    }
+
+    private boolean processTransaction(PageClickEvent event, Player player, Page page, int itemslot, int amount, String status) {
+        if (status.equalsIgnoreCase("unconfirmed")) {
+            if (amount >= 1) {
+                if (page.instantConfirms()) {
+                    this.completeTransaction(event.getPageData(), page, player, itemslot, amount);
+                    return true;
+                }
+                if (event.getPageData().equals(PageData.PURCHASE_ITEM)) {
+                    this.buyItem(player, page, itemslot, amount, "confirmed", event.getInventoryView());
+                }
+                if (event.getPageData().equals(PageData.SELL_ITEM)) {
+                    this.sellItem(player, page, itemslot, amount, "confirmed", event.getInventoryView());
+                }
+            }
+        } else {
+            this.completeTransaction(event.getPageData(), page, player, itemslot, amount);
+        }
+        return false;
     }
 
     public void completeTransaction(final PageData pd, final Page page, final Player player, final int itemslot, final int amount) {
@@ -659,5 +652,14 @@ public class Shop implements Listener {
         inv.addLore(49, " ");
         inv.addLore(49, "&2%confirm%");
         return inv;
+    }
+
+    private boolean containsItem(ItemStack item, int amount, ItemStack[] inventory) {
+        for (ItemStack items : inventory) {
+            if (item.getType() == items.getType()) {
+                if (items.getAmount() >= item.getAmount()) return true;
+            }
+        }
+        return false;
     }
 }
