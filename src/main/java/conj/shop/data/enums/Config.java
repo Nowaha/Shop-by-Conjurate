@@ -1,8 +1,8 @@
 package conj.shop.data.enums;
 
+import conj.shop.Initiate;
 import conj.shop.tools.auto.Autobackup;
 import conj.shop.tools.auto.Autosave;
-import conj.shop.Initiate;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 

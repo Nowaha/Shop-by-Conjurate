@@ -1,10 +1,10 @@
 package conj.shop.commands.control;
 
-import conj.shop.addons.NPCAddon;
 import conj.shop.Initiate;
-import conj.shop.tools.ItemSerialize;
+import conj.shop.addons.NPCAddon;
 import conj.shop.data.Page;
 import conj.shop.data.PageSlot;
+import conj.shop.tools.ItemSerialize;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

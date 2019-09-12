@@ -254,7 +254,11 @@ public class Shop implements Listener {
 
                         // Leave for now
                         Initiate.econ.withdrawPlayer(player, ps.getCost());
-                        player.sendMessage(ChatColor.YELLOW + "Your new balance is " + ChatColor.GREEN + Initiate.econ.getBalance(player));
+
+                        if (ps.getCost() != 0) {
+                            player.sendMessage(ChatColor.YELLOW + "Your new balance is " + ChatColor.GREEN + Initiate.econ.getBalance(player));
+                        }
+
                         if (ps.hasCooldown() && !ps.inCooldown(player)) {
                             ps.cooldown(player);
                         }

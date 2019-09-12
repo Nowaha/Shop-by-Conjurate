@@ -1,10 +1,10 @@
 package conj.shop.data;
 
 import conj.shop.addons.Placeholder;
-import conj.shop.tools.ItemSerialize;
 import conj.shop.commands.control.Manager;
 import conj.shop.data.enums.*;
 import conj.shop.tools.InventoryCreator;
+import conj.shop.tools.ItemSerialize;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

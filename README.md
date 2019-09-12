@@ -1,13 +1,13 @@
 # Shop-by-Conjurate
 1.14 update for the Shop plugin by Conjurate.
  
-### Original Spigot page: 
+### Original Spigot page: (Conjurate)
 https://www.spigotmc.org/resources/shop.8185/
 
-### Updated Spigot page:
+### Updated Spigot page: (Nowaha)
 https://www.spigotmc.org/resources/66651/
 
-### Latest build [![Build Status](https://travis-ci.com/Huskehhh/Shop-by-Conjurate.svg?branch=master)](https://travis-ci.com/Huskehhh/Shop-by-Conjurate)
+### Latest build: Huskehhh [![Build Status](https://travis-ci.com/Huskehhh/Shop-by-Conjurate.svg?branch=master)](https://travis-ci.com/Huskehhh/Shop-by-Conjurate)
 Latest build is available at
 
 https://ci.husk.pro/job/Shop-By-Conjurate/
@@ -23,4 +23,4 @@ to compile use the following command:
 
 ### Issues, bugs or feature requests
 
-Please use the issue tracker of the repository
+Please use the issue tracker of the repository and include version!
