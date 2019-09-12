@@ -112,7 +112,6 @@ public class GUI implements Listener {
         final PageOpenEvent e = new PageOpenEvent(player, this.data, this, this.page, 0, this.getInventory());
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             Bukkit.getServer().getPluginManager().callEvent(e);
-
             if (!e.isCancelled()) {
                 player.openInventory(this.inventory);
                 this.register();
@@ -139,6 +138,7 @@ public class GUI implements Listener {
             Initiate.log((event.getWhoClicked().getName() + " clicked " + (top ? "top" : "bottom") + " of " + this.data + " on page " + this.page != null) ? this.page.getID() : "null");
             final PageClickEvent e = new PageClickEvent(player, this.data, this, this.page, event.getSlot(), event.getRawSlot(), item, event.getInventory(), event.getClickedInventory(), event.getClick(), top, event.getView());
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> Bukkit.getServer().getPluginManager().callEvent(e), 0);
+            event.setCancelled(true);
         }
     }
 

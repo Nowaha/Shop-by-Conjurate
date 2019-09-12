@@ -461,13 +461,14 @@ public class Page {
         final ItemStack item = this.getInventory().getItem(slot);
 
         // Item doesn't get removed unless the ItemStack equals exactly the matching shop item. eg, a name will break this. This ensures otherwise
-        ItemStack sellItem = new ItemStack(item.getType(), item.getAmount());
 
         int failed = 0;
-        for (int x = 0; x < amount; ++x) {
-            final Map<Integer, ItemStack> map = player.getInventory().removeItem(sellItem);
-            if (!map.values().isEmpty()) {
-                ++failed;
+
+        for (ItemStack itemStack : player.getInventory().getContents()) {
+            if (itemStack.getType() == item.getType()) {
+                if (amount >= itemStack.getAmount()) {
+                    failed = amount - itemStack.getAmount();
+                }
             }
         }
 
