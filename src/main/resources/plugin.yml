@@ -1,33 +1,31 @@
 name: Shop
-version: 2.1.2
+version: ${project.version}
 description: Create and manage shops.
 author: Conjurate
-main: conj.Shop.base.Initiate
+main: conj.shop.Initiate
 softdepend: [PlaceholderAPI, Citizens]
 depend: [Vault]
-api-version: 1.14
-
+api-version: 1.13
 commands:
   shop:
-    description: Shop's main command.
+    description: shop's main command.
     aliases: cshop
-
 permissions:
   shop.worth.*:
-    description: Gives access to all Shop worth commands
+    description: Gives access to all shop worth commands
     children:
       shop.worth.set: true
       shop.worth.list: true
       shop.worth.item: true
   shop.citizen.*:
-    description: Gives access to all Shop citizens commands
+    description: Gives access to all shop citizens commands
     children:
       shop.citizen.page: true
       shop.citizen.permission.add: true
       shop.citizen.permission.remove: true
       shop.citizen.permission.clear: true
   shop.page.*:
-    description: Gives access to all Shop page commands
+    description: Gives access to all shop page commands
     children:
       shop.page.create: true
       shop.page.delete: true
@@ -43,13 +41,13 @@ permissions:
       shop.page.recover: true
       shop.page.properties: true
   shop.blacklist.*:
-    description: Gives access to all Shop blacklist commands
+    description: Gives access to all shop blacklist commands
     children:
       shop.blacklist.add: true
       shop.blacklist.remove: true
       shop.blacklist.list: true
   shop.*:
-    description: Gives access to all Shop commands
+    description: Gives access to all shop commands
     children:
       shop.blacklist.*: true
       shop.page.*: true
