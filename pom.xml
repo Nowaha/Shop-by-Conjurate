@@ -66,8 +66,8 @@
             <url>https://jitpack.io</url>
         </repository>
         <repository>
-            <id>husk</id>
-            <url>http://maven.husk.pro/repository/internal/</url>
+            <id>everything</id>
+            <url>http://repo.citizensnpcs.co/</url>
         </repository>
         <repository>
             <id>placeholderapi</id>
@@ -96,7 +96,7 @@
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizensapi</artifactId>
-            <version>2.0.25</version>
+            <version>2.0.25-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
