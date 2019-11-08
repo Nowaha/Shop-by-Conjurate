@@ -1,0 +1,18 @@
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                    Shop                                                      | #
+# |                                                                                              | #
+# |                       https://github.com/Huskehhh/Shop                                       | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+# Options: yml, mysql (Default: yml)
+storage: yml
+
+# Configuration for the MySQL database, unused if storage is set to yml
+mysql:
+  hostname: localhost
+  port: 3306
+  database: shop_database
+  username: shop
+  password: password
+  useSSL: false

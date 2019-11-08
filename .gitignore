@@ -64,4 +64,10 @@ pip-log.txt
 
 # Deploy script
 *.sh
-*.java___jb_tmp___
+
+# Local DB info
+db.txt
+
+# gradle
+/build/
+/.gradle/
