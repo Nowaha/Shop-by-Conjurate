@@ -68,7 +68,7 @@ public class Initiate extends JavaPlugin {
         plugin = this;
 
         Initiate.shop_purchase = new ArrayList<String>();
-        final String[] add = {"&aYou have purchased &b%quantity% &r%item% &afor &2%cost%", "&cA total of &4%failed% &cfailed to purchase.", "&eYour new balance is &2%balance%"};
+        final String[] add = {"&aYou have purchased &b%quantity% &r%item% &afor &2%cost%", "&eYour new balance is &2%balance%"};
 
         String[] array;
         for (int length = (array = add).length, i = 0; i < length; ++i) {

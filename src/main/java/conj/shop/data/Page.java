@@ -448,9 +448,14 @@ public class Page {
             s = s.replaceAll("%item%", Editor.getItemName(item));
             s = s.replaceAll("%quantity%", String.valueOf(amount - failed));
             s = s.replaceAll("%cost%", DoubleUtil.toString(finalprice));
-            s = s.replaceAll("%failed%", String.valueOf(failed));
+
             player.sendMessage(s);
         }
+
+        if (failed > 0) {
+            player.sendMessage(ChatColor.RED + "A total of " + failed + " failed to purchase!");
+        }
+
         if (ps.hasCooldown() && !ps.inCooldown(player)) {
             ps.cooldown(player);
         }
