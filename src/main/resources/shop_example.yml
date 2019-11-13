@@ -1,0 +1,5 @@
+shop_id:
+  name: "Some shop name"
+  data:
+    slot:
+      10: Base64 itemstack

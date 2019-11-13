@@ -30,9 +30,11 @@ public class ShopPlugin extends JavaPlugin {
 
         if (getConfig().getString("storage").equalsIgnoreCase("mysql")) {
             log.info("Storage type set to MySQL... Loading database now!");
+            setupMySQL();
             loadMySQL();
         } else {
             log.info("Storage type set to yml... Loading shops now!");
+            loadYml();
         }
 
         if (!setupEconomy()) {
@@ -57,18 +59,34 @@ public class ShopPlugin extends JavaPlugin {
         return true;
     }
 
+    private void setupMySQL() {
+        String createRegistryTable = "CREATE TABLE `shop_registry` (\n" +
+                "  `shop_id` varchar(32) NOT NULL,\n" +
+                "  `shop_name` text NOT NULL\n" +
+                ") ENGINE=InnoDB DEFAULT CHARSET=latin1;";
 
-    private void loadMySQL() {
-        String createTable = "CREATE TABLE IF NOT EXISTS";
+        String createDataTable = "CREATE TABLE IF NOT EXISTS `shop_data` (\n" +
+                "  `shop_id` varchar(42) NOT NULL,\n" +
+                "  `slot` int(2) NOT NULL,\n" +
+                "  `itemstack` text NOT NULL,\n" +
+                "  `buy_amount` int(11) NOT NULL,\n" +
+                "  `sell_amount` int(11) NOT NULL,\n" +
+                "  `function` text NOT NULL\n" +
+                ") ENGINE=InnoDB DEFAULT CHARSET=latin1;";
 
         // Load object
         mysql = new MySQL(getConfig().getString("mysql.hostname"), getConfig().getString("mysql.port"),
                 getConfig().getString("mysql.database"), getConfig().getString("mysql.username"),
                 getConfig().getString("mysql.password"), getConfig().getBoolean("mysql.useSSL"));
 
-        mysql.updateAsync(createTable);
+        mysql.updateAsync(createRegistryTable);
+        mysql.updateAsync(createDataTable);
 
         log.info("MySQL loaded, ready to roll!");
+    }
+
+    public void loadMySQL() {
+
     }
 
     private void loadYml() {
