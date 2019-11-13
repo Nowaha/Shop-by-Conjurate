@@ -1,6 +1,7 @@
 package pro.husk.shop.objects;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,8 +20,8 @@ public class Shop {
     String name;
 
     @Getter
-    HashMap<Integer, ShopItem> shopContents = new HashMap<>();
-
+    @Setter
+    HashMap<Integer, ShopItem> shopInventory = new HashMap<>();
 
     /**
      * Default constructor, takes a name value only
@@ -51,5 +52,9 @@ public class Shop {
             }
         }
         return null;
+    }
+
+    public void addShopItem(ShopItem shopItem) {
+        getShopInventory().put(shopItem.getSlot(), shopItem);
     }
 }
