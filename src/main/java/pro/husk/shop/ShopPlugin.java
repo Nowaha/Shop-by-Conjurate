@@ -25,7 +25,7 @@ public class ShopPlugin extends JavaPlugin {
 
     YamlFile exampleFile;
 
-    /***
+    /**
      * Everything that is needed as soon as the plugin starts up.
      * Prepare everything in here that could be needed as soon as the plugin is enabled.
      */
@@ -54,7 +54,7 @@ public class ShopPlugin extends JavaPlugin {
 
     }
 
-    /***
+    /**
      * This will attempt to hook onto Vault as a plugin dependency. This will allow
      * you to use the features the Vault API offers.
      * @return Whether the economy successfully loaded.
@@ -71,7 +71,7 @@ public class ShopPlugin extends JavaPlugin {
         return true;
     }
 
-    /***
+    /**
      * If the saving method was set to MySQL, this should be use to make sure
      * the MySQL databases are ready to be queried.
      */
@@ -105,7 +105,7 @@ public class ShopPlugin extends JavaPlugin {
 
     }
 
-    /***
+    /**
      * If the saving method was set to YAML, this should be use to make sure
      * the YAML files are ready to be modified and read.
      */
