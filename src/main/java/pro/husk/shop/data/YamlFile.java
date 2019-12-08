@@ -13,7 +13,7 @@ public class YamlFile {
 
     String filename;
 
-    /***
+    /**
      * Create a new file with a specific file name which will allow you to make custom
      * configuration files to contain any data you would like in the YAML format.
      *
@@ -26,7 +26,7 @@ public class YamlFile {
         reloadConfig();
     }
 
-    /***
+    /**
      * To make changes to the configuration file you will need to call this method first.
      * You can then continue to apply the changed to the data this returns.
      * Make sure to save the data with saveConfig() once you are done.
@@ -37,7 +37,7 @@ public class YamlFile {
         return config;
     }
 
-    /***
+    /**
      * This will save any changes made to the data through the YamlConfiguration variable.
      * It is good practise to call this whenever you finish modifying data inside of the
      * configuration variable. If you don't save it it will get lost if not saved later.
@@ -66,7 +66,7 @@ public class YamlFile {
         }
     }
 
-    /***
+    /**
      * This method will re-load the file into the configuration variable.
      * Any changes made to the file will now be applied.
      * This will void any unsaved data (saveConfig()).
