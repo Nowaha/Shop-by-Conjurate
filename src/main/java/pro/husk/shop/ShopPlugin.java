@@ -5,6 +5,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import pro.husk.mysql.MySQL;
+import pro.husk.shop.data.YamlFile;
 
 import java.util.logging.Logger;
 
@@ -22,6 +23,12 @@ public class ShopPlugin extends JavaPlugin {
     @Getter
     private static Economy economy = null;
 
+    YamlFile exampleFile;
+
+    /***
+     * Everything that is needed as soon as the plugin starts up.
+     * Prepare everything in here that could be needed as soon as the plugin is enabled.
+     */
     public void onEnable() {
         plugin = this;
         log = getLogger();
@@ -47,6 +54,11 @@ public class ShopPlugin extends JavaPlugin {
 
     }
 
+    /***
+     * This will attempt to hook onto Vault as a plugin dependency. This will allow
+     * you to use the features the Vault API offers.
+     * @return Whether the economy successfully loaded.
+     */
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
@@ -59,6 +71,10 @@ public class ShopPlugin extends JavaPlugin {
         return true;
     }
 
+    /***
+     * If the saving method was set to MySQL, this should be use to make sure
+     * the MySQL databases are ready to be queried.
+     */
     private void setupMySQL() {
         String createRegistryTable = "CREATE TABLE `shop_registry` (\n" +
                 "  `shop_id` varchar(32) NOT NULL,\n" +
@@ -89,7 +105,11 @@ public class ShopPlugin extends JavaPlugin {
 
     }
 
+    /***
+     * If the saving method was set to YAML, this should be use to make sure
+     * the YAML files are ready to be modified and read.
+     */
     private void loadYml() {
-
+        exampleFile = new YamlFile(this, "example");
     }
 }
