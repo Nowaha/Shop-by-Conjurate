@@ -1,5 +1,8 @@
-shop_id:
-  name: "Some shop name"
-  data:
-    slot:
-      10: Base64 itemstack
+name: "Some shop name"
+data:
+  slot:
+    10:
+      buy: 100
+      sell: 50
+      itemstack: base64
+      function: BOTH
