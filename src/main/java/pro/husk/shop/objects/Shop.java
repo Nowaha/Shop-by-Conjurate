@@ -2,6 +2,7 @@ package pro.husk.shop.objects;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,5 +57,9 @@ public class Shop {
 
     public void addShopItem(ShopItem shopItem) {
         getShopInventory().put(shopItem.getSlot(), shopItem);
+    }
+
+    public void purchaseItem(Player player) {
+
     }
 }

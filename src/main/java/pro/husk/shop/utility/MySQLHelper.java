@@ -50,9 +50,11 @@ public class MySQLHelper {
         CompletableFuture<ResultSet> completableFuture = ShopPlugin.getMysql().queryAsync("SELECT * FROM `shop_data`;");
 
         completableFuture.thenAccept(results -> {
-
             try {
-                while (results != null & results.next()) {
+
+                if (results == null) return;
+
+                while (results.next()) {
                     String uuidString = results.getString("shop_id");
                     int slot = results.getInt("slot");
                     UUID uuid = UUID.fromString(uuidString);
@@ -84,7 +86,7 @@ public class MySQLHelper {
      * @param shop object to save to MySQL
      */
     public void saveShopData(Shop shop) {
-        CompletableFuture completableFuture = CompletableFuture.runAsync(() -> {
+        CompletableFuture.runAsync(() -> {
             String uuidString = shop.getUuid().toString();
             String name = shop.getName();
 

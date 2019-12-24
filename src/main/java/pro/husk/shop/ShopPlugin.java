@@ -5,7 +5,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import pro.husk.mysql.MySQL;
-import pro.husk.shop.data.YamlFile;
+import pro.husk.shop.utility.YamlFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class ShopPlugin extends JavaPlugin {
     private static Economy economy = null;
 
     @Getter
-    private List<YamlFile> shopFiles = new ArrayList<>();
+    YamlFile shopData;
 
     /**
      * Everything that is needed as soon as the plugin starts up.
@@ -60,6 +60,7 @@ public class ShopPlugin extends JavaPlugin {
     /**
      * This will attempt to hook onto Vault as a plugin dependency. This will allow
      * you to use the features the Vault API offers.
+     *
      * @return Whether the economy successfully loaded.
      */
     private boolean setupEconomy() {
@@ -113,6 +114,6 @@ public class ShopPlugin extends JavaPlugin {
      * the YAML files are ready to be modified and read.
      */
     private void loadYml() {
-        
+        YamlFile.loadShopsFromYML();
     }
 }
