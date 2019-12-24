@@ -7,6 +7,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pro.husk.mysql.MySQL;
 import pro.husk.shop.data.YamlFile;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class ShopPlugin extends JavaPlugin {
@@ -23,7 +25,8 @@ public class ShopPlugin extends JavaPlugin {
     @Getter
     private static Economy economy = null;
 
-    YamlFile exampleFile;
+    @Getter
+    private List<YamlFile> shopFiles = new ArrayList<>();
 
     /**
      * Everything that is needed as soon as the plugin starts up.
@@ -110,6 +113,6 @@ public class ShopPlugin extends JavaPlugin {
      * the YAML files are ready to be modified and read.
      */
     private void loadYml() {
-        exampleFile = new YamlFile(this, "example");
+        
     }
 }
