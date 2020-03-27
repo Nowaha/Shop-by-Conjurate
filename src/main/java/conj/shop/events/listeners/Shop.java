@@ -231,7 +231,7 @@ public class Shop implements Listener {
                         }
                     } else if (ps.getFunction().equals(Function.SELL)) {
                         final ItemStack item = page.getInventory().getItem(slot);
-                        if (inventoryContains(item, player.getInventory())) {
+                        if (player.getInventory().containsAtLeast(item, 1)) {
                             this.sellItem(player, page, slot, 0, "unconfirmed", event.getInventoryView());
                         }
                     } else if (ps.getFunction().equals(Function.TRADE)) {
@@ -665,12 +665,5 @@ public class Shop implements Listener {
         inv.addLore(49, " ");
         inv.addLore(49, "&2%confirm%");
         return inv;
-    }
-
-    private boolean inventoryContains(ItemStack item, Inventory inv) {
-        for (ItemStack itemStack : inv.getContents()) {
-            if (item.getType() == itemStack.getType()) return true;
-        }
-        return false;
     }
 }
