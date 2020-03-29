@@ -670,8 +670,11 @@ public class Shop implements Listener {
     private boolean containsItem(Player player, ItemStack itemStack) {
         for (ItemStack item : player.getInventory().getContents()) {
             if (item.getType().equals(itemStack.getType())) {
-                if (item.getItemMeta().equals(itemStack.getItemMeta())) {
-                    return true;
+                String itemName = itemStack.getItemMeta().getDisplayName();
+                String playerInvItemName = item.getItemMeta().getDisplayName();
+
+                if (itemName != null && playerInvItemName != null) {
+                    if (itemName.equalsIgnoreCase(playerInvItemName)) return true;
                 }
             }
         }
