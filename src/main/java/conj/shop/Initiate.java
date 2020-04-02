@@ -16,6 +16,7 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -95,7 +96,11 @@ public class Initiate extends JavaPlugin {
         this.setupPermissions();
 
         // Register command
-        this.getCommand("shop").setExecutor(new Control());
+        Control control = new Control();
+        PluginCommand command = this.getCommand("shop");
+        command.setExecutor(control);
+        command.setTabCompleter(control);
+        
 
         // Register events
         this.getServer().getPluginManager().registerEvents(new Sign(), this);
