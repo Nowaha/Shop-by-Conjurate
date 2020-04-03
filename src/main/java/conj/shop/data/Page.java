@@ -465,14 +465,37 @@ public class Page {
         final PageSlot ps = this.getPageSlot(slot);
         final ItemStack item = this.getInventory().getItem(slot);
 
-        // Item doesn't get removed unless the ItemStack equals exactly the matching shop item. eg, a name will break this. This ensures otherwise
-        ItemStack sellItem = new ItemStack(item.getType(), item.getAmount());
+        if (item == null) return;
 
-        int failed = 0;
-        for (int x = 0; x < amount; ++x) {
-            final Map<Integer, ItemStack> map = player.getInventory().removeItem(sellItem);
-            if (!map.values().isEmpty()) {
-                ++failed;
+        int amountToRemove = amount;
+
+        int failed = 0; // re-impl
+
+        // Fail if user doesn't have the appropriate amount of items
+        if (Shop.getContainsAmount(player, item) < amount) {
+            player.sendMessage(ChatColor.RED + "You don't have " + amount + " of those!");
+            return;
+        }
+
+        // New logic for selling
+        for (ItemStack search : player.getInventory()) {
+            if (search != null && search.getType() == item.getType()) {
+                int searchAmount = search.getAmount();
+
+                if (amountToRemove - searchAmount == 0) {
+                    player.getInventory().removeItem(search);
+                } else if (amountToRemove - searchAmount > 0) {
+                    System.out.println(">");
+                    amountToRemove = amountToRemove - searchAmount;
+                    player.getInventory().removeItem(search);
+                } else if (amountToRemove - searchAmount < 0) {
+                    ItemStack readd = search.clone();
+                    System.out.println("<");
+                    player.getInventory().removeItem(search);
+
+                    readd.setAmount(searchAmount - amountToRemove);
+                    player.getInventory().addItem(readd);
+                }
             }
         }
 

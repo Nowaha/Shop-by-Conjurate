@@ -231,7 +231,10 @@ public class Shop implements Listener {
                         }
                     } else if (ps.getFunction().equals(Function.SELL)) {
                         final ItemStack item = page.getInventory().getItem(slot);
-                        if (containsItem(player, item)) {
+
+                        if (item == null) return;
+
+                        if (item.getAmount() <= getContainsAmount(player, item)) {
                             this.sellItem(player, page, slot, 0, "unconfirmed", event.getInventoryView());
                         }
                     } else if (ps.getFunction().equals(Function.TRADE)) {
@@ -667,17 +670,22 @@ public class Shop implements Listener {
         return inv;
     }
 
-    private boolean containsItem(Player player, ItemStack itemStack) {
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (item != null && item.getType().equals(itemStack.getType())) {
-                String itemName = itemStack.getItemMeta().getDisplayName();
-                String playerInvItemName = item.getItemMeta().getDisplayName();
+    public static int getContainsAmount(Player player, ItemStack itemStack) {
+        int count = 0;
 
-                if (itemName != null && playerInvItemName != null) {
-                    if (itemName.equalsIgnoreCase(playerInvItemName)) return true;
+        for (ItemStack item : player.getInventory().getStorageContents()) {
+            if (item != null && item.getType().equals(itemStack.getType())) {
+                if (itemStack.getItemMeta().getDisplayName() != null && item.getItemMeta().getDisplayName() != null) {
+                    String itemName = itemStack.getItemMeta().getDisplayName();
+                    String playerInvItemName = item.getItemMeta().getDisplayName();
+
+                    if (itemName.equals(playerInvItemName)) {
+                        count += item.getAmount();
+                    }
                 }
             }
         }
-        return true;
+
+        return count;
     }
 }
