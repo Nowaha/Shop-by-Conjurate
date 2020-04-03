@@ -19,3 +19,8 @@ jobs:
           java-version: 1.8
       - name: Build with Maven
         run: mvn clean package
+      - uses: actions/upload-artifact@v1
+        if: success()
+        with:
+          name: Shop-By-Conjurate*
+          path: target/
