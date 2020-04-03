@@ -485,12 +485,10 @@ public class Page {
                 if (amountToRemove - searchAmount == 0) {
                     player.getInventory().removeItem(search);
                 } else if (amountToRemove - searchAmount > 0) {
-                    System.out.println(">");
                     amountToRemove = amountToRemove - searchAmount;
                     player.getInventory().removeItem(search);
                 } else if (amountToRemove - searchAmount < 0) {
                     ItemStack readd = search.clone();
-                    System.out.println("<");
                     player.getInventory().removeItem(search);
 
                     readd.setAmount(searchAmount - amountToRemove);
