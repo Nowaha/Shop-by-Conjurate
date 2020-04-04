@@ -278,17 +278,31 @@ public class Control implements CommandExecutor, TabCompleter {
             List<String> commands = Manager.getAvailableCommands(player, args[0]);
             boolean match;
             for (String availableCommand : commands) {
-                String[] splittedCommand = ChatColor.stripColor(availableCommand).split(" "); 
+                String[] splittedCommand = ChatColor.stripColor(availableCommand).split(" ");
                 if (splittedCommand.length > args.length) {
                     match = true;
-                    for (int i = 0; i < args.length-1; i++) {
-                        if (!splittedCommand[i+1].startsWith("<")&&!splittedCommand[i+1].equalsIgnoreCase(args[i])) {
+                    for (int i = 0; i < args.length - 1; i++) {
+                        if (!splittedCommand[i + 1].startsWith("<")
+                                && !splittedCommand[i + 1].equalsIgnoreCase(args[i])) {
                             match = false;
                             break;
                         }
                     }
                     if (match) {
-                        list.add(splittedCommand[args.length]);
+                        if (splittedCommand[args.length].toLowerCase().contains("<page>")) {
+                            for (Page p : Manager.pages) {
+
+                                if (args[args.length - 1].length() == 0
+                                        || args[args.length - 1].toLowerCase().startsWith(p.getID().substring(0, 1))) {
+                                    list.add(p.getID());
+                                }
+                            }
+                        } else {
+                            if (args[args.length - 1].length() == 0 || args[args.length - 1].toLowerCase()
+                                    .startsWith(splittedCommand[args.length].substring(0, 1))) {
+                                list.add(splittedCommand[args.length]);
+                            }
+                        }
                     }
                 }
             }
