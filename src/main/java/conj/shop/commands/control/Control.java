@@ -14,14 +14,17 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Control implements CommandExecutor {
+public class Control implements CommandExecutor, TabCompleter {
     public static void help(final Player player, final int index) {
-        final String header = ChatColor.GRAY + "  === " + ChatColor.DARK_GREEN + "shop" + ChatColor.GRAY + " === " + ChatColor.DARK_GREEN + "Page " + ChatColor.GREEN + "%index%" + ChatColor.GRAY + "/" + ChatColor.GREEN + "%size%" + ChatColor.GRAY + " ===";
+        final String header = ChatColor.GRAY + "  === " + ChatColor.DARK_GREEN + "shop" + ChatColor.GRAY + " === "
+                + ChatColor.DARK_GREEN + "Page " + ChatColor.GREEN + "%index%" + ChatColor.GRAY + "/" + ChatColor.GREEN
+                + "%size%" + ChatColor.GRAY + " ===";
         final List<String> help = new ArrayList<String>();
         if (player.hasPermission("shop.use")) {
             help.add(ChatColor.GREEN + "/shop");
@@ -71,7 +74,8 @@ public class Control implements CommandExecutor {
         if (split.isEmpty()) {
             index = 0;
         }
-        header = header.replaceAll("%size%", new StringBuilder().append(split.size()).toString()).replaceAll("%index%", new StringBuilder().append(index).toString());
+        header = header.replaceAll("%size%", new StringBuilder().append(split.size()).toString()).replaceAll("%index%",
+                new StringBuilder().append(index).toString());
         player.sendMessage(header);
         for (int x = 0; split.size() > x; ++x) {
             if (x == index - 1) {
@@ -100,7 +104,8 @@ public class Control implements CommandExecutor {
                         player.sendMessage(Config.PERMISSION_ERROR.toString());
                         return false;
                     }
-                    if (Manager.get().getBlacklist().contains(player.getWorld().getName()) && !player.hasPermission("shop.blacklist.bypass." + player.getWorld().getName())) {
+                    if (Manager.get().getBlacklist().contains(player.getWorld().getName())
+                            && !player.hasPermission("shop.blacklist.bypass." + player.getWorld().getName())) {
                         player.sendMessage(Config.BLACKLIST_ERROR.toString());
                         return false;
                     }
@@ -108,7 +113,8 @@ public class Control implements CommandExecutor {
                     if (p != null) {
                         p.openPage(player);
                     } else if (player.isOp()) {
-                        player.sendMessage(ChatColor.RED + "Change MAIN_PAGE in the config to the page you would like to be opened when using this command");
+                        player.sendMessage(ChatColor.RED
+                                + "Change MAIN_PAGE in the config to the page you would like to be opened when using this command");
                     }
                     return false;
                 } else {
@@ -120,7 +126,9 @@ public class Control implements CommandExecutor {
                                 return false;
                             }
                             Initiate.debug = !Initiate.debug;
-                            player.sendMessage((Initiate.debug ? new StringBuilder().append(ChatColor.GREEN).toString() : new StringBuilder().append(ChatColor.RED).toString()) + "Debug has been " + (Initiate.debug ? "enabled" : "disabled"));
+                            player.sendMessage((Initiate.debug ? new StringBuilder().append(ChatColor.GREEN).toString()
+                                    : new StringBuilder().append(ChatColor.RED).toString()) + "Debug has been "
+                                    + (Initiate.debug ? "enabled" : "disabled"));
                             return false;
                         } else if (command.equals("reload")) {
                             if (!player.hasPermission("shop.reload")) {
@@ -148,9 +156,13 @@ public class Control implements CommandExecutor {
                             player.sendMessage(ChatColor.GREEN + "shop backup created");
                             return false;
                         } else if (command.equals("console")) {
-                            if (args.length == 2 && args[1].equalsIgnoreCase("help") && player.hasPermission("shop.console")) {
+                            if (args.length == 2 && args[1].equalsIgnoreCase("help")
+                                    && player.hasPermission("shop.console")) {
                                 final List<String> commands = Manager.getAvailableCommands(player, "console");
-                                final String header = ChatColor.GRAY + "  === " + ChatColor.DARK_GREEN + "shop Console Help" + ChatColor.GRAY + " === " + ChatColor.DARK_GREEN + "Page " + ChatColor.GREEN + "%index%" + ChatColor.GRAY + "/" + ChatColor.GREEN + "%size%" + ChatColor.GRAY + " ===";
+                                final String header = ChatColor.GRAY + "  === " + ChatColor.DARK_GREEN
+                                        + "shop Console Help" + ChatColor.GRAY + " === " + ChatColor.DARK_GREEN
+                                        + "Page " + ChatColor.GREEN + "%index%" + ChatColor.GRAY + "/" + ChatColor.GREEN
+                                        + "%size%" + ChatColor.GRAY + " ===";
                                 list(player, commands, 1, header, 10);
                                 return false;
                             }
@@ -209,5 +221,92 @@ public class Control implements CommandExecutor {
             }
         }
         return false;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (!(sender instanceof Player) || args.length == 0) {
+            return null;
+        }
+        Player player = (Player) sender;
+        ArrayList<String> list = new ArrayList<>(3);
+
+        if (args.length == 1) {
+            if (player.hasPermission("shop.tools")
+                    && (args[0].length() == 0 || args[0].toLowerCase().startsWith("t"))) {
+                list.add("tools");
+            }
+            if (player.hasPermission("shop.save") && (args[0].length() == 0 || args[0].toLowerCase().startsWith("s"))) {
+                list.add("save");
+            }
+            if (player.hasPermission("shop.backup")
+                    && (args[0].length() == 0 || args[0].toLowerCase().startsWith("b"))) {
+                list.add("backup");
+            }
+            if (player.hasPermission("shop.reload")
+                    && (args[0].length() == 0 || args[0].toLowerCase().startsWith("r"))) {
+                list.add("reload");
+            }
+            if (player.hasPermission("shop.debug")
+                    && (args[0].length() == 0 || args[0].toLowerCase().startsWith("d"))) {
+                list.add("debug");
+            }
+
+            // ---- sub-commands ----
+
+            if ((args[0].length() == 0 || args[0].toLowerCase().startsWith("p"))
+                    && !Manager.getAvailableCommands(player, "page").isEmpty()) {
+                list.add("page");
+            }
+            if ((args[0].length() == 0 || args[0].toLowerCase().startsWith("w"))
+                    && !Manager.getAvailableCommands(player, "worth").isEmpty()) {
+                list.add("worth");
+            }
+            if ((args[0].length() == 0 || args[0].toLowerCase().startsWith("b"))
+                    && !Manager.getAvailableCommands(player, "blacklist").isEmpty()) {
+                list.add("blacklist");
+            }
+            if ((args[0].length() == 0 || args[0].toLowerCase().startsWith("c")) && Initiate.citizens
+                    && !Manager.getAvailableCommands(player, "citizen").isEmpty()) {
+                list.add("citizen");
+            }
+            if ((args[0].length() == 0 || args[0].toLowerCase().startsWith("c"))
+                    && !Manager.getAvailableCommands(player, "console").isEmpty()) {
+                list.add("console");
+            }
+        } else {
+            List<String> commands = Manager.getAvailableCommands(player, args[0]);
+            boolean match;
+            for (String availableCommand : commands) {
+                String[] splittedCommand = ChatColor.stripColor(availableCommand).split(" ");
+                if (splittedCommand.length > args.length) {
+                    match = true;
+                    for (int i = 0; i < args.length - 1; i++) {
+                        if (!splittedCommand[i + 1].startsWith("<")
+                                && !splittedCommand[i + 1].equalsIgnoreCase(args[i])) {
+                            match = false;
+                            break;
+                        }
+                    }
+                    if (match) {
+                        if (splittedCommand[args.length].toLowerCase().contains("<page>")) {
+                            for (Page p : Manager.pages) {
+
+                                if (args[args.length - 1].length() == 0
+                                        || args[args.length - 1].toLowerCase().startsWith(p.getID().substring(0, 1))) {
+                                    list.add(p.getID());
+                                }
+                            }
+                        } else {
+                            if (args[args.length - 1].length() == 0 || args[args.length - 1].toLowerCase()
+                                    .startsWith(splittedCommand[args.length].substring(0, 1))) {
+                                list.add(splittedCommand[args.length]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return list;
     }
 }
