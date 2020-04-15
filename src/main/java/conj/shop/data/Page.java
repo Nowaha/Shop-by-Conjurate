@@ -480,19 +480,21 @@ public class Page {
         // New logic for selling
         for (ItemStack search : player.getInventory()) {
             if (search != null && search.getType() == item.getType()) {
-                int searchAmount = search.getAmount();
+                if (search.getItemMeta() != null && search.getItemMeta().equals(item.getItemMeta())) {
+                    int searchAmount = search.getAmount();
 
-                if (amountToRemove - searchAmount == 0) {
-                    player.getInventory().removeItem(search);
-                } else if (amountToRemove - searchAmount > 0) {
-                    amountToRemove = amountToRemove - searchAmount;
-                    player.getInventory().removeItem(search);
-                } else if (amountToRemove - searchAmount < 0) {
-                    ItemStack readd = search.clone();
-                    player.getInventory().removeItem(search);
+                    if (amountToRemove - searchAmount == 0) {
+                        player.getInventory().removeItem(search);
+                    } else if (amountToRemove - searchAmount > 0) {
+                        amountToRemove = amountToRemove - searchAmount;
+                        player.getInventory().removeItem(search);
+                    } else if (amountToRemove - searchAmount < 0) {
+                        ItemStack readd = search.clone();
+                        player.getInventory().removeItem(search);
 
-                    readd.setAmount(searchAmount - amountToRemove);
-                    player.getInventory().addItem(readd);
+                        readd.setAmount(searchAmount - amountToRemove);
+                        player.getInventory().addItem(readd);
+                    }
                 }
             }
         }
