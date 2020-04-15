@@ -21,6 +21,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -480,7 +481,7 @@ public class Page {
         // New logic for selling
         for (ItemStack search : player.getInventory()) {
             if (search != null && search.getType() == item.getType()) {
-                if (search.getItemMeta() != null && search.getItemMeta().equals(item.getItemMeta())) {
+                if (itemMetaIsTheSame(search, item)) {
                     int searchAmount = search.getAmount();
 
                     if (amountToRemove - searchAmount == 0) {
@@ -518,6 +519,20 @@ public class Page {
         if (ps.hasCooldown() && !ps.inCooldown(player)) {
             ps.cooldown(player);
         }
+    }
+
+    private boolean itemMetaIsTheSame(ItemStack search, ItemStack item) {
+        if (!item.hasItemMeta() && !search.hasItemMeta()) {
+            return true;
+        } else {
+            ItemMeta searchMeta = search.getItemMeta();
+            ItemMeta itemMeta = item.getItemMeta();
+
+            if (searchMeta != null && itemMeta != null) {
+                return itemMeta.equals(searchMeta);
+            }
+        }
+        return false;
     }
 
     public void updateViewers(final boolean hard) {
