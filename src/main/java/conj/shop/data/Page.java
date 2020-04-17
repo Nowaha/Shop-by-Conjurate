@@ -486,6 +486,7 @@ public class Page {
 
                     if (amountToRemove - searchAmount == 0) {
                         player.getInventory().removeItem(search);
+                        break;
                     } else if (amountToRemove - searchAmount > 0) {
                         amountToRemove = amountToRemove - searchAmount;
                         player.getInventory().removeItem(search);
