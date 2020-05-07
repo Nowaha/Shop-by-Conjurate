@@ -484,7 +484,7 @@ public class Page {
             failed = amount - playerTotalAmount;
             amountToRemove = playerTotalAmount;
 
-            player.sendMessage(ChatColor.RED + "Failed to sell " + failed + " of those!");
+            if (failed > 0) player.sendMessage(ChatColor.RED + "Failed to sell " + failed + " of those!");
         }
 
         // New logic for selling
