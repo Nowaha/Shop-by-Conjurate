@@ -426,24 +426,31 @@ public class Page {
         final ItemCreator itemc = new ItemCreator(item);
         item = itemc.placehold(player, this, slot);
         int affordable = new VaultAddon(Initiate.econ).getAffordable(player, ps.getCost(), amount);
+
         if (Initiate.econ.getBalance(player) < ps.getCost() * amount) {
             return;
         }
+
         for (int x = 0; x < amount; ++x) {
             final Map<Integer, ItemStack> map = player.getInventory().addItem(item);
             if (!map.values().isEmpty()) {
                 --affordable;
             }
         }
+
         final int failed = amount - affordable;
         double finalprice = ps.getCost() * affordable;
+
         if (finalprice <= 0.0) {
             finalprice = 0.0;
         }
+
         if (finalprice > 0.0) {
             Initiate.econ.withdrawPlayer(player, finalprice);
         }
+
         final List<String> purchase = Config.SHOP_PURCHASE.getList();
+
         for (String s : purchase) {
             s = Placeholder.placehold(player, s, this);
             s = s.replaceAll("%item%", Editor.getItemName(item));
@@ -472,10 +479,12 @@ public class Page {
 
         int failed = 0; // re-impl
 
-        // Fail if user doesn't have the appropriate amount of items
-        if (Shop.getContainsAmount(player, item) < amount) {
-            player.sendMessage(ChatColor.RED + "You don't have " + amount + " of those!");
-            return;
+        int playerTotalAmount = Shop.getContainsAmount(player, item);
+        if (playerTotalAmount < amount) {
+            failed = amount - playerTotalAmount;
+            amountToRemove = playerTotalAmount;
+
+            player.sendMessage(ChatColor.RED + "Failed to sell " + failed + " of those!");
         }
 
         // New logic for selling
@@ -507,13 +516,17 @@ public class Page {
 
         final int affordable = amount - failed;
         double finalprice = ps.getSell() * affordable;
+
         if (finalprice <= 0.0) {
             finalprice = 0.0;
         }
+
         if (finalprice > 0.0) {
             Initiate.econ.depositPlayer(player, finalprice);
         }
+
         final List<String> sell = Config.SHOP_SELL.getList();
+
         for (String s : sell) {
             s = Placeholder.placehold(player, s, this);
             s = s.replaceAll("%item%", Editor.getItemName(item));
@@ -521,6 +534,7 @@ public class Page {
             s = s.replaceAll("%cost%", DoubleUtil.toString(finalprice));
             player.sendMessage(s);
         }
+
         if (ps.hasCooldown() && !ps.inCooldown(player)) {
             ps.cooldown(player);
         }

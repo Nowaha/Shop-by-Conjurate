@@ -100,7 +100,7 @@ public class Initiate extends JavaPlugin {
         PluginCommand command = this.getCommand("shop");
         command.setExecutor(control);
         command.setTabCompleter(control);
-        
+
 
         // Register events
         this.getServer().getPluginManager().registerEvents(new Sign(), this);
