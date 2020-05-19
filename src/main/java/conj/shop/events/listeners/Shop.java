@@ -22,9 +22,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -91,17 +91,22 @@ public class Shop implements Listener {
         return worth;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void pickupPrevention(final PlayerPickupItemEvent event) {
-        final Manager manager = Manager.get();
-        final String pagename = manager.getOpenPage(event.getPlayer());
-        final Page page = manager.getPage(pagename);
-        if (page != null && page.getType() == 1) {
-            event.setCancelled(true);
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void pickupPrevention(EntityPickupItemEvent event) {
+        Entity entity = event.getEntity();
+
+        if (entity instanceof Player) {
+            Player player = (Player) entity;
+            final Manager manager = Manager.get();
+            final String pagename = manager.getOpenPage(player);
+            final Page page = manager.getPage(pagename);
+            if (page != null && page.getType() == 1) {
+                event.setCancelled(true);
+            }
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void removeEntity(final PlayerInteractEntityEvent event) {
         if (Initiate.debug) {
             if (!event.getHand().equals(EquipmentSlot.HAND)) {
@@ -159,7 +164,7 @@ public class Shop implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void ItemviewClick(final PageClickEvent event) {
         final Player player = event.getPlayer();
         final int slot = event.getSlot();
@@ -282,7 +287,7 @@ public class Shop implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void tradeItemClick(final PageClickEvent event) {
         final Player player = event.getPlayer();
         final int slot = event.getSlot();
@@ -322,7 +327,7 @@ public class Shop implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void purchaseItemClick(final PageClickEvent event) {
         final Player player = event.getPlayer();
         final int slot = event.getSlot();

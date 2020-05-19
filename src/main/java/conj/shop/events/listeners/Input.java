@@ -49,7 +49,7 @@ public class Input implements Listener {
         return this.slot;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void enterInput(final PlayerCommandPreprocessEvent event) {
         final Player player = event.getPlayer();
         if (this.player == null) {
@@ -61,7 +61,7 @@ public class Input implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void enterInput(final AsyncPlayerChatEvent event) {
         final Player player = event.getPlayer();
         if (this.player == null) {

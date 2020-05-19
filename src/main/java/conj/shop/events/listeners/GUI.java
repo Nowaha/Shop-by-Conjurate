@@ -120,7 +120,7 @@ public class GUI implements Listener {
         }, 0);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void InteractEditor(final InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
@@ -142,7 +142,7 @@ public class GUI implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void InteractEditor(final PlayerQuitEvent event) {
         final Player player = event.getPlayer();
         if (this.viewer.equals(player.getUniqueId().toString())) {
@@ -150,7 +150,7 @@ public class GUI implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void InteractEditor(final InventoryCloseEvent event) {
         if (!(event.getPlayer() instanceof Player)) {
             return;
