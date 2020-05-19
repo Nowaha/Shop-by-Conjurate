@@ -175,6 +175,7 @@ public class Initiate extends JavaPlugin {
     }
 
     public void onDisable() {
+    	CitizensAPI.getTraitFactory().deregisterTrait(TraitInfo.create(NPCAddon.class).withName("shop"));
         Autosave.save();
     }
 
