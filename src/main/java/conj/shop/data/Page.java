@@ -337,13 +337,14 @@ public class Page {
             }
             final Inventory open = player.getOpenInventory().getTopInventory();
             final List<Integer> slots = this.getVisibleSlots(player);
-            Initiate.log(player.getName() + " : " + this.getID() + " : " + DoubleUtil.toString(Shop.getInventoryWorth(player, open, this)));
+            double worth = Shop.getInventoryWorth(player, open, this);
+            Initiate.log(player.getName() + " : " + this.getID() + " : " + DoubleUtil.toString(worth));
             for (final int s : slots) {
                 final ItemStack i = this.getInventoryFlat(player).getItem(s);
                 if (i != null) {
                     final ItemCreator ic = new ItemCreator(i);
                     ic.placehold(player, this, s);
-                    ic.replace("%worth%", DoubleUtil.toString(Shop.getInventoryWorth(player, open, this)));
+                    ic.replace("%worth%", DoubleUtil.toString(worth));
                     open.setItem(s, ic.getItem());
                 }
             }
@@ -355,7 +356,6 @@ public class Page {
         if (!manage.getOpenPage(player).equalsIgnoreCase("")) {
             manage.setPreviousPage(player, manage.getOpenPage(player));
         }
-        manage.setOpenPage(player, this.id);
         final Inventory inv = this.getInventory(player);
         if (this.getFill() != null) {
             final InventoryCreator ic = new InventoryCreator(inv);

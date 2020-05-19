@@ -280,6 +280,7 @@ public class Shop implements Listener {
                     if (first2 != -1 && worth > 0.0) {
                         top.setItem(first2, item);
                         player.getInventory().setItem(event.getSlot(), null);
+                        Manager.get().setOpenPage(player, page.getID());
                         page.updateView(player, false);
                     }
                 }

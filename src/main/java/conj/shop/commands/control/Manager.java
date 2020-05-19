@@ -6,6 +6,7 @@ import conj.shop.data.Page;
 import conj.shop.data.PageSlot;
 import conj.shop.tools.ItemSerialize;
 import net.citizensnpcs.api.npc.NPC;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

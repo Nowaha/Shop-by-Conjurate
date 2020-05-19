@@ -159,7 +159,7 @@ public class Initiate extends JavaPlugin {
         // Citizens
         if (Bukkit.getPluginManager().getPlugin("Citizens") != null) {
             try {
-                CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NPCAddon.class).withName("shop"));
+            	CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NPCAddon.class).withName("shop"));
                 Initiate.citizens = true;
                 this.getLogger().info("Successfully hooked into Citizens.");
             } catch (NullPointerException | NoClassDefFoundError npe) {
