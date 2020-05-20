@@ -61,7 +61,7 @@ public class Input implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void enterInput(final AsyncPlayerChatEvent event) {
         final Player player = event.getPlayer();
         if (this.player == null) {
