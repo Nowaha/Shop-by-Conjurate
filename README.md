@@ -7,9 +7,6 @@ https://www.spigotmc.org/resources/shop.8185/
 ## Updated Spigot page: (Nowaha)
 https://www.spigotmc.org/resources/66651/
 
-## Latest Build
-[Download here](https://ci.husk.pro/job/Shop-By-Conjurate/)
-
 ## Compiling
 You must have Apache Maven installed to compile. (http://maven.apache.org)
 
